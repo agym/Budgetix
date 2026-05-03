@@ -1,0 +1,90 @@
+<div class="auth-split">
+
+  <!-- LEFT PANEL -->
+  <div class="auth-left">
+    <div class="left-blobs">
+      <div class="blob blob-1"></div>
+      <div class="blob blob-2"></div>
+      <div class="blob blob-3"></div>
+    </div>
+    <div class="left-content">
+      <div class="left-logo">
+        <div class="left-logo-icon"><i class="pi pi-wallet"></i></div>
+        <span>Budgetix</span>
+      </div>
+      <h1 class="left-headline">{{ 'AUTH.BRAND_TAGLINE' | translate }}</h1>
+      <p class="left-sub">{{ 'AUTH.BRAND_SUBTITLE' | translate }}</p>
+      <div class="left-features">
+        <div class="left-feat">
+          <div class="lf-icon"><i class="pi pi-chart-bar"></i></div>
+          <div>
+            <div class="lf-title">{{ 'AUTH.BRAND_FEAT1_TITLE' | translate }}</div>
+            <div class="lf-desc">{{ 'AUTH.BRAND_FEAT1_DESC' | translate }}</div>
+          </div>
+        </div>
+        <div class="left-feat">
+          <div class="lf-icon lf-green"><i class="pi pi-flag"></i></div>
+          <div>
+            <div class="lf-title">{{ 'AUTH.BRAND_FEAT2_TITLE' | translate }}</div>
+            <div class="lf-desc">{{ 'AUTH.BRAND_FEAT2_DESC' | translate }}</div>
+          </div>
+        </div>
+        <div class="left-feat">
+          <div class="lf-icon lf-purple"><i class="pi pi-lightbulb"></i></div>
+          <div>
+            <div class="lf-title">{{ 'AUTH.BRAND_FEAT3_TITLE' | translate }}</div>
+            <div class="lf-desc">{{ 'AUTH.BRAND_FEAT3_DESC' | translate }}</div>
+          </div>
+        </div>
+      </div>
+      <div class="stat-cards">
+        <div class="stat-card sc-1">
+          <div class="sc-label">Net Worth</div>
+          <div class="sc-value sc-green">$24,850</div>
+          <div class="sc-change">↑ 8.2% this month</div>
+        </div>
+        <div class="stat-card sc-2">
+          <div class="sc-label">Savings Goal</div>
+          <div class="sc-progress">
+            <div class="sc-bar"><div class="sc-fill" style="width:68%"></div></div>
+            <span>68%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="left-footer">Trusted by 10,000+ users worldwide</div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="auth-right">
+    <div class="auth-right-topbar">
+      <a routerLink="/" class="back-home">
+        <i class="pi pi-arrow-left"></i>
+        <span>{{ 'AUTH.BACK_HOME' | translate }}</span>
+      </a>
+      <app-language-switcher />
+    </div>
+    <div class="auth-right-body">
+      <div class="auth-form-wrap">
+        @if (showTabs()) {
+          <nav class="auth-nav-tabs">
+            <a routerLink="/auth/login" routerLinkActive="active" class="auth-nav-tab">
+              <i class="pi pi-sign-in"></i>
+              <span>{{ 'AUTH.TABS.SIGN_IN' | translate }}</span>
+            </a>
+            <a routerLink="/auth/register" routerLinkActive="active" class="auth-nav-tab">
+              <i class="pi pi-user-plus"></i>
+              <span>{{ 'AUTH.TABS.CREATE' | translate }}</span>
+            </a>
+          </nav>
+        }
+        <router-outlet />
+      </div>
+    </div>
+    <div class="auth-mobile-brand">
+      <div class="mob-logo-icon"><i class="pi pi-wallet"></i></div>
+      <span class="mob-logo-name">Budgetix</span>
+    </div>
+  </div>
+
+</div>

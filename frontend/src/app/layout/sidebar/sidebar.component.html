@@ -1,0 +1,43 @@
+<aside class="sidebar" [class.collapsed]="collapsed">
+
+  <div class="sidebar-brand">
+    <div class="brand-icon">
+      <i class="pi pi-wallet"></i>
+    </div>
+    @if (!collapsed) {
+      <span class="brand-name">Budgetix</span>
+      <div class="brand-spacer"></div>
+    }
+    <button class="collapse-btn" (click)="toggle.emit()" [title]="collapsed ? 'Expand' : 'Collapse'">
+      <i [class]="collapsed ? 'pi pi-angle-right' : 'pi pi-angle-left'"></i>
+    </button>
+  </div>
+
+  <nav class="sidebar-nav">
+    @for (group of navGroups; track group.heading) {
+      @if (group.heading && !collapsed) {
+        <div class="nav-group-heading">{{ group.heading }}</div>
+      }
+      @for (item of group.items; track item.route) {
+        <a [routerLink]="item.route"
+           routerLinkActive="active"
+           class="nav-item"
+           [title]="collapsed ? item.label : ''">
+          <i [class]="'pi ' + item.icon"></i>
+          @if (!collapsed) {
+            <span>{{ item.label }}</span>
+          }
+        </a>
+      }
+    }
+  </nav>
+
+  @if (!collapsed) {
+    <div class="sidebar-footer">
+      <div class="sidebar-footer-inner">
+        <div class="footer-label">Version 1.0</div>
+      </div>
+    </div>
+  }
+
+</aside>

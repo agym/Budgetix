@@ -1,0 +1,94 @@
+<p-toast />
+<div class="page-header">
+  <h1>Reports</h1>
+  <p>Detailed financial analysis and export</p>
+</div>
+
+<div class="card filter-bar">
+  <div class="flex align-items-center gap-3 flex-wrap">
+    <p-dropdown [options]="monthOptions" [(ngModel)]="selectedMonth" optionLabel="label" optionValue="value"
+                placeholder="Month" [style]="{'width': '140px'}" (onChange)="load()" />
+    <p-dropdown [options]="yearOptions" [(ngModel)]="selectedYear" optionLabel="label" optionValue="value"
+                placeholder="Year" [style]="{'width': '110px'}" (onChange)="load()" />
+    <div class="ml-auto flex gap-2">
+      <p-button label="Export CSV" icon="pi pi-download" severity="secondary" size="small" (onClick)="exportCsv()" [loading]="exporting()" />
+      <p-button label="Export PDF" icon="pi pi-file-pdf" severity="secondary" size="small" (onClick)="exportPdf()" [loading]="exportingPdf()" />
+    </div>
+  </div>
+</div>
+
+@if (report()) {
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-label">Total Income</div>
+      <div class="kpi-value text-income">{{ report()!.totalIncome | currency }}</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Total Expenses</div>
+      <div class="kpi-value text-expense">{{ report()!.totalExpenses | currency }}</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Net Savings</div>
+      <div class="kpi-value" [class.text-income]="report()!.netSavings >= 0" [class.text-expense]="report()!.netSavings < 0">
+        {{ report()!.netSavings | currency }}
+      </div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Savings Rate</div>
+      <div class="kpi-value">{{ report()!.savingsRate | number:'1.1-1' }}%</div>
+      <div class="kpi-sub" [class.positive]="report()!.savingsRate >= 20" [class.negative]="report()!.savingsRate < 10">
+        {{ report()!.savingsRate >= 20 ? 'Great!' : report()!.savingsRate >= 10 ? 'Average' : 'Low' }}
+      </div>
+    </div>
+  </div>
+
+  <div class="charts-row">
+    <div class="card chart-card">
+      <div class="section-title">Spending by Category</div>
+      <div echarts [options]="pieOptions()" style="height:260px"></div>
+    </div>
+    <div class="card chart-card">
+      <div class="section-title">Income vs Expenses</div>
+      <div echarts [options]="gaugeOptions()" style="height:260px"></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:1.5rem">
+    <div class="section-title mb-3">Category Breakdown</div>
+    <p-table [value]="report()!.categoryBreakdown" [sortField]="'amount'" [sortOrder]="-1" styleClass="p-datatable-sm">
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="categoryName">Category <p-sortIcon field="categoryName"/></th>
+          <th pSortableColumn="amount" style="text-align:right">Amount <p-sortIcon field="amount"/></th>
+          <th pSortableColumn="percentage" style="text-align:right">% of Expenses <p-sortIcon field="percentage"/></th>
+          <th pSortableColumn="transactionCount" style="text-align:right">Transactions <p-sortIcon field="transactionCount"/></th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-row>
+        <tr>
+          <td>{{ row.categoryName }}</td>
+          <td style="text-align:right;font-weight:600">{{ row.amount | currency }}</td>
+          <td style="text-align:right">
+            <div class="flex align-items-center justify-content-end gap-2">
+              <div class="progress-mini">
+                <div class="progress-fill" [style.width.%]="row.percentage"></div>
+              </div>
+              {{ row.percentage | number:'1.1-1' }}%
+            </div>
+          </td>
+          <td style="text-align:right">{{ row.transactionCount }}</td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr><td colspan="4" style="text-align:center;padding:2rem;color:var(--surface-500)">No data for selected period</td></tr>
+      </ng-template>
+    </p-table>
+  </div>
+}
+
+@if (!report() && !loading()) {
+  <div class="empty-state">
+    <i class="pi pi-chart-bar"></i>
+    <p>No report data for the selected period.</p>
+  </div>
+}

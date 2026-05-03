@@ -1,0 +1,87 @@
+<p-toast /><p-confirmDialog />
+<div class="page-header">
+  <h1>Budgets</h1>
+  <p>Track your spending limits by category</p>
+</div>
+
+<div class="flex align-items-center gap-3 mb-3">
+  <p-dropdown [options]="monthOptions" [(ngModel)]="selectedMonth" optionLabel="label" optionValue="value"
+              (onChange)="load()" [style]="{width:'140px'}"/>
+  <p-dropdown [options]="yearOptions" [(ngModel)]="selectedYear" optionLabel="label" optionValue="value"
+              (onChange)="load()" [style]="{width:'110px'}"/>
+  <div class="ml-auto">
+    <p-button label="Add Budget" icon="pi pi-plus" (onClick)="openCreate()" />
+  </div>
+</div>
+
+<div class="budgets-grid">
+  @for (b of budgets(); track b.id) {
+    <div class="card budget-card">
+      <div class="flex align-items-center justify-content-between mb-2">
+        <div class="flex align-items-center gap-2">
+          @if (b.category?.icon) {
+            <i [class]="'pi ' + b.category!.icon" [style.color]="b.category?.color"></i>
+          }
+          <span class="budget-name">{{ b.category?.name ?? 'Global Budget' }}</span>
+        </div>
+        <div class="flex gap-1">
+          <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger"
+                    size="small" (onClick)="deleteBudget(b)" />
+        </div>
+      </div>
+
+      <div class="budget-amounts">
+        <span class="text-expense">{{ b.spent | currency }}</span>
+        <span class="text-muted"> / {{ b.amount | currency }}</span>
+      </div>
+
+      <p-progressBar [value]="b.usagePercent"
+                     [style]="{'height':'8px','margin-top':'0.5rem'}"
+                     [styleClass]="b.usagePercent >= 100 ? 'p-progressbar-danger' : b.usagePercent >= 80 ? 'p-progressbar-warning' : ''"
+                     [showValue]="false"/>
+
+      <div class="flex justify-content-between mt-1">
+        <small class="text-muted">{{ b.usagePercent | number:'1.0-0' }}% used</small>
+        <small [class.text-income]="b.remaining >= 0" [class.text-expense]="b.remaining < 0">
+          {{ b.remaining | currency }} left
+        </small>
+      </div>
+
+      @if (b.rollover && b.rolledAmount > 0) {
+        <div class="mt-1">
+          <small class="text-muted">+ {{ b.rolledAmount | currency }} rolled over</small>
+        </div>
+      }
+    </div>
+  }
+
+  @if (budgets().length === 0) {
+    <div class="empty-state">
+      <i class="pi pi-chart-bar"></i>
+      <p>No budgets for this period. Set your first budget!</p>
+    </div>
+  }
+</div>
+
+<p-dialog [(visible)]="showForm" header="New Budget" [modal]="true" [style]="{width:'420px'}">
+  <form [formGroup]="form" class="flex flex-column gap-3 pt-2">
+    <div class="field">
+      <label>Category (leave empty for global)</label>
+      <p-dropdown formControlName="categoryId" [options]="categoryOptions()"
+                  optionLabel="name" optionValue="id" placeholder="Global budget"
+                  [showClear]="true" [style]="{width:'100%'}"/>
+    </div>
+    <div class="field">
+      <label>Budget Amount *</label>
+      <input pInputText formControlName="amount" type="number" placeholder="0.00" [style]="{width:'100%'}"/>
+    </div>
+    <div class="field flex-row align-items-center gap-2">
+      <input type="checkbox" formControlName="rollover" id="rollover"/>
+      <label for="rollover">Enable rollover (carry unspent balance)</label>
+    </div>
+  </form>
+  <ng-template pTemplate="footer">
+    <p-button label="Cancel" [text]="true" (onClick)="showForm=false"/>
+    <p-button label="Create" (onClick)="submit()"/>
+  </ng-template>
+</p-dialog>

@@ -1,0 +1,15 @@
+package com.budgetix.common.enums;
+
+public enum InsightType {
+    SPENDING_INCREASE,
+    SPENDING_DECREASE,
+    LOW_SAVINGS_RATE,
+    HIGH_SAVINGS_RATE,
+    SUBSCRIPTION_SUMMARY,
+    INCOME_CHANGE,
+    BUDGET_ON_TRACK,
+    BUDGET_EXCEEDED,
+    GOAL_MILESTONE,
+    UNUSUAL_SPENDING,
+    MONTHLY_SUMMARY
+}

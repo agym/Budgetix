@@ -1,0 +1,137 @@
+<p-toast />
+<p-confirmDialog />
+
+<div class="page-header">
+  <h1>Transactions</h1>
+  <p>Manage your income and expenses</p>
+</div>
+
+<div class="card" style="margin-bottom:1rem">
+  <div class="flex align-items-center gap-3 flex-wrap">
+    <input pInputText placeholder="Search..." [(ngModel)]="search" (input)="onSearch()" [style]="{'width': '220px'}"/>
+
+    <p-dropdown [options]="typeOptions" [(ngModel)]="filterType" placeholder="All Types"
+                (onChange)="loadTransactions()" optionLabel="label" optionValue="value"
+                [showClear]="true" [style]="{'width': '150px'}"/>
+
+    <p-dropdown [options]="accountOptions()" [(ngModel)]="filterAccount" placeholder="All Accounts"
+                (onChange)="loadTransactions()" optionLabel="name" optionValue="id"
+                [showClear]="true" [style]="{'width': '180px'}"/>
+
+    <div class="ml-auto flex gap-2">
+      <p-button label="Import CSV" icon="pi pi-upload" severity="secondary" (onClick)="showImport=true" />
+      <p-button label="Add Transaction" icon="pi pi-plus" (onClick)="openCreate()" />
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <p-table [value]="transactions()" [loading]="loading()" dataKey="id"
+           [(selection)]="selectedTxs" [paginator]="true" [rows]="20"
+           [totalRecords]="totalRecords()" [lazy]="true" (onLazyLoad)="onLazyLoad($event)"
+           styleClass="p-datatable-sm">
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width:3rem"><p-tableHeaderCheckbox /></th>
+        <th pSortableColumn="date">Date <p-sortIcon field="date"/></th>
+        <th>Description</th>
+        <th>Category</th>
+        <th>Account</th>
+        <th pSortableColumn="amount">Amount <p-sortIcon field="amount"/></th>
+        <th>Type</th>
+        <th style="width:100px">Actions</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-tx>
+      <tr>
+        <td><p-tableCheckbox [value]="tx" /></td>
+        <td>{{ tx.date | date:'mediumDate' }}</td>
+        <td>{{ tx.description || '—' }}</td>
+        <td>
+          @if (tx.category) {
+            <span class="flex align-items-center gap-1">
+              <i [class]="'pi ' + (tx.category.icon || 'pi-tag')" [style.color]="tx.category.color"></i>
+              {{ tx.category.name }}
+            </span>
+          } @else {
+            <span class="text-muted">Uncategorized</span>
+          }
+        </td>
+        <td>{{ tx.account?.name }}</td>
+        <td [class.text-income]="tx.type==='INCOME'" [class.text-expense]="tx.type==='EXPENSE'">
+          <strong>{{ tx.type === 'INCOME' ? '+' : '-' }}{{ tx.amount | currency }}</strong>
+        </td>
+        <td>
+          <span [class]="'badge-' + tx.type.toLowerCase()">{{ tx.type }}</span>
+        </td>
+        <td>
+          <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="secondary"
+                    (onClick)="openEdit(tx)" />
+          <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger"
+                    (onClick)="confirmDelete(tx)" />
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr><td colspan="8">
+        <div class="empty-state"><i class="pi pi-credit-card"></i><p>No transactions found</p></div>
+      </td></tr>
+    </ng-template>
+  </p-table>
+
+  @if (selectedTxs.length > 0) {
+    <div class="flex align-items-center gap-2 mt-2">
+      <span class="text-muted">{{ selectedTxs.length }} selected</span>
+      <p-button label="Delete Selected" icon="pi pi-trash" severity="danger" [outlined]="true"
+                size="small" (onClick)="bulkDelete()" />
+    </div>
+  }
+</div>
+
+<p-dialog [(visible)]="showForm" [header]="editId ? 'Edit Transaction' : 'New Transaction'"
+          [modal]="true" [style]="{width:'480px'}" [draggable]="false">
+  <form [formGroup]="form" class="flex flex-column gap-3 pt-2">
+    <div class="field">
+      <label>Type *</label>
+      <p-dropdown formControlName="type" [options]="typeOptions" optionLabel="label" optionValue="value"
+                  placeholder="Select type" [style]="{width:'100%'}"/>
+    </div>
+    <div class="field">
+      <label>Amount *</label>
+      <input pInputText formControlName="amount" type="number" placeholder="0.00" [style]="{width:'100%'}"/>
+    </div>
+    <div class="field">
+      <label>Account *</label>
+      <p-dropdown formControlName="accountId" [options]="accountOptions()" optionLabel="name" optionValue="id"
+                  placeholder="Select account" [style]="{width:'100%'}"/>
+    </div>
+    <div class="field">
+      <label>Category</label>
+      <p-dropdown formControlName="categoryId" [options]="flatCategories()" optionLabel="name" optionValue="id"
+                  placeholder="Select category" [showClear]="true" [style]="{width:'100%'}"/>
+    </div>
+    <div class="field">
+      <label>Description</label>
+      <input pInputText formControlName="description" placeholder="What was this for?" [style]="{width:'100%'}"/>
+    </div>
+    <div class="field">
+      <label>Date *</label>
+      <p-calendar formControlName="date" [showTime]="false" dateFormat="yy-mm-dd" [style]="{width:'100%'}"/>
+    </div>
+  </form>
+  <ng-template pTemplate="footer">
+    <p-button label="Cancel" [text]="true" (onClick)="showForm=false"/>
+    <p-button [label]="editId ? 'Save' : 'Create'" (onClick)="submit()" [loading]="submitting()"/>
+  </ng-template>
+</p-dialog>
+
+<p-dialog [(visible)]="showImport" header="Import CSV" [modal]="true" [style]="{width:'400px'}">
+  <div class="flex flex-column gap-3">
+    <p class="text-muted">CSV format: <code>date,description,amount,type</code></p>
+    <p-dropdown [options]="accountOptions()" [(ngModel)]="importAccountId"
+                optionLabel="name" optionValue="id" placeholder="Select account" [style]="{width:'100%'}"/>
+    <p-fileUpload mode="basic" accept=".csv" chooseLabel="Choose CSV File"
+                  (onSelect)="onCsvSelected($event)" [auto]="false" />
+    <p-button label="Import" icon="pi pi-upload" (onClick)="importCsv()" [disabled]="!csvFile || !importAccountId" />
+  </div>
+</p-dialog>

@@ -1,0 +1,23 @@
+<div class="lang-wrapper">
+  <button class="lang-btn" (click)="open.set(!open())" [class.active]="open()">
+    <span class="flag">{{ current().flag }}</span>
+    <span class="code">{{ current().code.toUpperCase() }}</span>
+    <i class="pi pi-chevron-down caret" [class.rotated]="open()"></i>
+  </button>
+  @if (open()) {
+    <div class="lang-dropdown">
+      @for (lang of langs; track lang.code) {
+        <button
+          class="lang-option"
+          [class.selected]="lang.code === current().code"
+          (click)="select(lang)">
+          <span class="flag">{{ lang.flag }}</span>
+          <span>{{ lang.label }}</span>
+          @if (lang.code === current().code) {
+            <i class="pi pi-check check-icon"></i>
+          }
+        </button>
+      }
+    </div>
+  }
+</div>

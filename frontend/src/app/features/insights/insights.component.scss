@@ -1,0 +1,25 @@
+.insights-grid { display:flex; flex-direction:column; gap:1rem; }
+.insight-card { border-left: 4px solid var(--primary); }
+.insight-positive {
+  border-left-color: #22c55e;
+  .insight-icon { background: #dcfce7; color: #15803d; }
+}
+.insight-negative {
+  border-left-color: #ef4444;
+  .insight-icon { background: #fee2e2; color: #dc2626; }
+}
+.insight-info {
+  border-left-color: #06b6d4;
+  .insight-icon { background: #cffafe; color: #0e7490; }
+}
+.insight-warning {
+  border-left-color: #f59e0b;
+  .insight-icon { background: #fef3c7; color: #92400e; }
+}
+.insight-icon {
+  width:42px; height:42px; border-radius:10px;
+  background:var(--surface-100); display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  i { font-size:1.1rem; }
+}
+.insight-title { font-weight:600; font-size:1rem; margin-bottom:0.25rem; }
+.insight-message { color:var(--surface-700); margin:0; }

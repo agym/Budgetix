@@ -1,0 +1,33 @@
+<header class="topbar">
+  <div class="topbar-left">
+    <button class="icon-btn menu-btn" (click)="menuToggle.emit()" [title]="'TOPBAR.NOTIFICATIONS' | translate">
+      <i class="pi pi-bars"></i>
+    </button>
+  </div>
+
+  <div class="topbar-right">
+    <app-language-switcher class="topbar-lang" />
+
+    <button class="icon-btn notif-btn" routerLink="/settings" [title]="'TOPBAR.NOTIFICATIONS' | translate">
+      <i class="pi pi-bell"></i>
+      @if (unreadCount() > 0) {
+        <span class="notif-badge">{{ unreadCount() > 9 ? '9+' : unreadCount() }}</span>
+      }
+    </button>
+
+    <div class="divider"></div>
+
+    <div class="user-chip" routerLink="/settings">
+      <div class="user-avatar">{{ initials() }}</div>
+      <div class="user-info">
+        <span class="user-name">{{ user()?.name }}</span>
+        <span class="user-role">{{ 'TOPBAR.PERSONAL_ACCOUNT' | translate }}</span>
+      </div>
+      <i class="pi pi-chevron-down chevron"></i>
+    </div>
+
+    <button class="icon-btn logout-btn" (click)="logout()" [title]="'TOPBAR.SIGN_OUT' | translate">
+      <i class="pi pi-sign-out"></i>
+    </button>
+  </div>
+</header>

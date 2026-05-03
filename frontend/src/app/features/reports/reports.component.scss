@@ -1,0 +1,10 @@
+.filter-bar { margin-bottom: 1.5rem; }
+.kpi-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:1rem; margin-bottom:1.5rem; }
+.kpi-sub { font-size:0.8rem; margin-top:0.25rem; }
+.kpi-sub.positive { color:#22c55e; }
+.kpi-sub.negative { color:#ef4444; }
+.charts-row { display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; }
+.chart-card { overflow:hidden; }
+@media(max-width:900px) { .charts-row { grid-template-columns:1fr; } }
+.progress-mini { width:80px; height:6px; background:var(--surface-200); border-radius:3px; overflow:hidden; }
+.progress-fill { height:100%; background:var(--primary); border-radius:3px; }

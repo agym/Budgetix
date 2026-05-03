@@ -1,0 +1,53 @@
+<div class="auth-card">
+  <div class="ac-body">
+  <div class="ac-icon-header">
+    <div class="ac-icon-ring ac-icon-orange"><i class="pi pi-envelope"></i></div>
+  </div>
+  <h2 class="ac-title">{{ 'AUTH.VERIFY.TITLE' | translate }}</h2>
+  <p class="ac-subtitle">
+    {{ 'AUTH.VERIFY.SUBTITLE' | translate }}
+    @if (email()) { <strong> {{ email() }}</strong> }
+  </p>
+
+  @if (error()) {
+    <div class="ac-alert ac-alert-error">
+      <i class="pi pi-exclamation-circle"></i>
+      <span>{{ 'AUTH.VERIFY.ERROR' | translate }}</span>
+    </div>
+  }
+
+  @if (success()) {
+    <div class="ac-alert ac-alert-success">
+      <i class="pi pi-check-circle"></i>
+      <span>{{ 'AUTH.VERIFY.SUCCESS' | translate }}</span>
+    </div>
+    <a routerLink="/auth/login" class="ac-submit"
+       style="display:flex;justify-content:center;margin-top:1rem;text-decoration:none;">
+      <i class="pi pi-sign-in"></i> {{ 'AUTH.VERIFY.SIGN_IN' | translate }}
+    </a>
+  }
+
+  @if (!success()) {
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <div class="ac-field">
+        <input pInputText formControlName="code"
+               [placeholder]="'AUTH.VERIFY.CODE_PLACEHOLDER' | translate"
+               maxlength="6" inputmode="numeric"
+               class="otp-inp" autocomplete="one-time-code"
+               [class.invalid]="form.get('code')?.touched && form.get('code')?.invalid" />
+        @if (form.get('code')?.touched && form.get('code')?.invalid) {
+          <small class="ac-field-error">{{ 'AUTH.VERIFY.CODE_ERROR' | translate }}</small>
+        }
+      </div>
+      <button type="submit" class="ac-submit" [class.loading]="loading()">
+        @if (loading()) { <i class="pi pi-spin pi-spinner"></i> } @else { <i class="pi pi-check"></i> }
+        {{ 'AUTH.VERIFY.SUBMIT' | translate }}
+      </button>
+    </form>
+    <p class="ac-footer" style="margin-top: 1.5rem">
+      {{ 'AUTH.VERIFY.RESEND' | translate }}
+      <a href="#" (click)="resend($event)">{{ 'AUTH.VERIFY.RESEND_LINK' | translate }}</a>
+    </p>
+  }
+  </div>
+</div>

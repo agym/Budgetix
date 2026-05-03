@@ -1,0 +1,75 @@
+<p-toast /><p-confirmDialog />
+<div class="page-header">
+  <h1>Accounts</h1>
+  <p>Manage your bank accounts, cash, and cards</p>
+</div>
+
+<div class="flex justify-content-end mb-3">
+  <p-button label="Add Account" icon="pi pi-plus" (onClick)="openCreate()" />
+</div>
+
+<div class="accounts-grid">
+  @for (account of accounts(); track account.id) {
+    <div class="card account-card" [style.border-left]="'4px solid ' + (account.color || '#6366f1')">
+      <div class="flex align-items-center justify-content-between">
+        <div class="flex align-items-center gap-3">
+          <div class="account-icon" [style.background]="account.color || '#6366f1'">
+            <i [class]="'pi ' + (account.icon || 'pi-wallet')"></i>
+          </div>
+          <div>
+            <div class="account-name">{{ account.name }}</div>
+            <div class="account-type text-muted">{{ account.type | titlecase }}</div>
+          </div>
+        </div>
+        <div class="account-balance" [class.text-income]="account.balance >= 0"
+             [class.text-expense]="account.balance < 0">
+          {{ account.balance | currency:account.currency }}
+        </div>
+      </div>
+      <div class="flex gap-2 mt-3 justify-content-end">
+        <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="secondary" (onClick)="openEdit(account)" />
+        <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger" (onClick)="confirmDelete(account)" />
+      </div>
+    </div>
+  }
+
+  @if (accounts().length === 0) {
+    <div class="empty-state">
+      <i class="pi pi-building-columns"></i>
+      <p>No accounts yet. Add your first account!</p>
+    </div>
+  }
+</div>
+
+<p-dialog [(visible)]="showForm" [header]="editId ? 'Edit Account' : 'New Account'"
+          [modal]="true" [style]="{width:'420px'}">
+  <form [formGroup]="form" class="flex flex-column gap-3 pt-2">
+    <div class="field">
+      <label>Name *</label>
+      <input pInputText formControlName="name" placeholder="e.g. Main Bank Account" [style]="{width:'100%'}"/>
+    </div>
+    <div class="field">
+      <label>Type *</label>
+      <p-dropdown formControlName="type" [options]="typeOptions" optionLabel="label" optionValue="value"
+                  [style]="{width:'100%'}"/>
+    </div>
+    @if (!editId) {
+      <div class="field">
+        <label>Initial Balance</label>
+        <input pInputText formControlName="initialBalance" type="number" placeholder="0.00" [style]="{width:'100%'}"/>
+      </div>
+    }
+    <div class="field">
+      <label>Currency</label>
+      <input pInputText formControlName="currency" placeholder="USD" [style]="{width:'100%'}"/>
+    </div>
+    <div class="field">
+      <label>Color</label>
+      <input type="color" formControlName="color" style="width:60px;height:36px;border:none;padding:0;cursor:pointer"/>
+    </div>
+  </form>
+  <ng-template pTemplate="footer">
+    <p-button label="Cancel" [text]="true" (onClick)="showForm=false"/>
+    <p-button [label]="editId ? 'Save' : 'Create'" (onClick)="submit()"/>
+  </ng-template>
+</p-dialog>

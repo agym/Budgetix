@@ -1,0 +1,141 @@
+<p-toast />
+<div class="page-header">
+  <h1>Settings</h1>
+  <p>Manage your account, preferences and notifications</p>
+</div>
+
+<p-tabView>
+  <p-tabPanel header="Profile">
+    <div class="settings-section">
+      <div class="avatar-row">
+        <p-avatar [label]="initials()" size="xlarge" shape="circle" styleClass="user-avatar" />
+        <div>
+          <div class="user-name-display">{{ user()?.name }}</div>
+          <small class="text-muted">{{ user()?.email }}</small>
+        </div>
+      </div>
+      <p-divider />
+      <form [formGroup]="profileForm" (ngSubmit)="saveProfile()">
+        <div class="form-grid">
+          <div class="field">
+            <label>Full Name</label>
+            <input pInputText formControlName="name" placeholder="Your name" />
+          </div>
+          <div class="field">
+            <label>Currency</label>
+            <input pInputText formControlName="currency" placeholder="USD" maxlength="3" />
+          </div>
+          <div class="field">
+            <label>Monthly Income</label>
+            <input pInputText formControlName="monthlyIncome" type="number" placeholder="0.00" />
+          </div>
+          <div class="field">
+            <label>Timezone</label>
+            <input pInputText formControlName="timezone" placeholder="UTC" />
+          </div>
+        </div>
+        <p-button type="submit" label="Save Profile" icon="pi pi-check"
+                  [loading]="savingProfile()" [disabled]="profileForm.invalid" />
+      </form>
+    </div>
+  </p-tabPanel>
+
+  <p-tabPanel header="Security">
+    <div class="settings-section">
+      <h3>Change Password</h3>
+      <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">
+        <div class="form-col">
+          <div class="field">
+            <label>Current Password</label>
+            <input pInputText type="password" formControlName="currentPassword" placeholder="Current password" />
+          </div>
+          <div class="field">
+            <label>New Password</label>
+            <input pInputText type="password" formControlName="newPassword" placeholder="New password (min 8 chars)" />
+          </div>
+          <div class="field">
+            <label>Confirm New Password</label>
+            <input pInputText type="password" formControlName="confirmPassword" placeholder="Confirm new password" />
+            @if (passwordForm.errors?.['mismatch'] && passwordForm.touched) {
+              <small class="text-danger">Passwords do not match</small>
+            }
+          </div>
+          <p-button type="submit" label="Change Password" icon="pi pi-lock"
+                    [loading]="savingPassword()"
+                    [disabled]="passwordForm.invalid || !!passwordForm.errors?.['mismatch']" />
+        </div>
+      </form>
+
+      <p-divider />
+
+      <h3>Two-Factor Authentication</h3>
+      <div class="two-factor-row">
+        <div>
+          <p class="mb-1">Protect your account with an extra layer of security.</p>
+          <p-tag [value]="twoFactorEnabled() ? 'Enabled' : 'Disabled'"
+                 [severity]="twoFactorEnabled() ? 'success' : 'secondary'" />
+        </div>
+        <p-button [label]="twoFactorEnabled() ? 'Disable 2FA' : 'Enable 2FA'"
+                  [severity]="twoFactorEnabled() ? 'danger' : 'success'"
+                  [outlined]="true"
+                  (onClick)="toggleTwoFactor()"
+                  [loading]="toggling2FA()" />
+      </div>
+    </div>
+  </p-tabPanel>
+
+  <p-tabPanel header="Notifications">
+    <div class="settings-section">
+      <h3>Notification Preferences</h3>
+      <div class="notif-toggles">
+        @for (pref of notifPrefs; track pref.key) {
+          <div class="notif-row">
+            <div>
+              <div class="notif-label">{{ pref.label }}</div>
+              <small class="text-muted">{{ pref.description }}</small>
+            </div>
+            <p-toggleButton [(ngModel)]="pref.value" onLabel="On" offLabel="Off" onIcon="pi pi-check" offIcon="pi pi-times" />
+          </div>
+        }
+      </div>
+      <p-button label="Save Preferences" icon="pi pi-check" (onClick)="saveNotifPrefs()" [loading]="savingNotif()" [style]="{'margin-top': '1rem'}" />
+
+      <p-divider />
+
+      <div class="flex align-items-center justify-content-between mb-3">
+        <h3 style="margin:0">Recent Notifications</h3>
+        <p-button label="Mark all read" size="small" [text]="true" (onClick)="markAllRead()" />
+      </div>
+
+      <p-table [value]="notifications()" styleClass="p-datatable-sm" [rows]="10" [paginator]="notifications().length > 10">
+        <ng-template pTemplate="body" let-n>
+          <tr [class.unread-row]="!n.read">
+            <td>
+              <div class="flex align-items-start gap-2">
+                <i class="pi" [class]="getNotifIcon(n.type)" style="margin-top:3px"></i>
+                <div>
+                  <div style="font-weight:500">{{ n.title }}</div>
+                  <small class="text-muted">{{ n.message }}</small>
+                </div>
+              </div>
+            </td>
+            <td style="white-space:nowrap;text-align:right">
+              <small class="text-muted">{{ n.createdAt | date:'mediumDate' }}</small>
+            </td>
+            <td style="text-align:right;width:80px">
+              @if (!n.read) {
+                <p-button icon="pi pi-check" [rounded]="true" [text]="true" size="small"
+                          severity="success" title="Mark read" (onClick)="markRead(n)" />
+              }
+              <p-button icon="pi pi-trash" [rounded]="true" [text]="true" size="small"
+                        severity="danger" title="Delete" (onClick)="deleteNotif(n)" />
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr><td colspan="3" style="text-align:center;padding:2rem;color:var(--surface-500)">No notifications</td></tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </p-tabPanel>
+</p-tabView>

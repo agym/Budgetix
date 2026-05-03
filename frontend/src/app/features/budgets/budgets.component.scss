@@ -1,0 +1,6 @@
+.budgets-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:1rem; }
+.budget-name { font-weight:600; }
+.budget-amounts { font-size:1.1rem; margin-top:0.25rem; }
+.field { display:flex; flex-direction:column; gap:0.25rem; }
+.field.flex-row { flex-direction:row; }
+label { font-weight:500; font-size:0.875rem; }

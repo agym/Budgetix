@@ -1,0 +1,39 @@
+<p-toast />
+<div class="page-header">
+  <h1>Insights</h1>
+  <p>Smart observations about your financial habits</p>
+</div>
+
+<div class="flex justify-content-end mb-3">
+  <p-button label="Generate Insights" icon="pi pi-lightbulb" (onClick)="generate()" [loading]="generating()" />
+</div>
+
+@if (insights().length > 0) {
+  <div class="insights-grid">
+    @for (insight of insights(); track insight.id) {
+      <div class="card insight-card" [class]="'insight-' + getCategory(insight.type)">
+        <div class="flex align-items-start justify-content-between gap-3">
+          <div class="flex gap-3">
+            <div class="insight-icon">
+              <i [class]="'pi ' + getIcon(insight.type)"></i>
+            </div>
+            <div>
+              <div class="insight-title">{{ insight.title }}</div>
+              <p class="insight-message">{{ insight.message }}</p>
+              <small class="text-muted">{{ insight.createdAt | date:'mediumDate' }}</small>
+            </div>
+          </div>
+          <p-button icon="pi pi-times" [rounded]="true" [text]="true" severity="secondary"
+                    size="small" (onClick)="dismiss(insight)" title="Dismiss" />
+        </div>
+      </div>
+    }
+  </div>
+}
+
+@if (insights().length === 0) {
+  <div class="empty-state">
+    <i class="pi pi-lightbulb"></i>
+    <p>No insights yet. Click "Generate Insights" to analyze your finances.</p>
+  </div>
+}

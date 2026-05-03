@@ -1,0 +1,13 @@
+.accounts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px,1fr)); gap:1rem; }
+.account-card { cursor: default; transition: box-shadow 0.15s; }
+.account-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+.account-icon {
+  width:44px; height:44px; border-radius:12px;
+  display:flex; align-items:center; justify-content:center; color:white;
+  i { font-size:1.2rem; }
+}
+.account-name { font-weight:600; font-size:1rem; }
+.account-type { font-size:0.8rem; }
+.account-balance { font-size:1.25rem; font-weight:700; }
+.field { display:flex; flex-direction:column; gap:0.25rem; }
+label { font-weight:500; font-size:0.875rem; }

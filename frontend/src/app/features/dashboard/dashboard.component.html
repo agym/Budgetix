@@ -1,0 +1,111 @@
+<div class="page-header">
+  <h1>Dashboard</h1>
+  <p>Your financial overview for this month</p>
+</div>
+
+@if (!loading()) {
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-label">Total Income</div>
+      <div class="kpi-value text-income">{{ overview()?.totalIncome | currency }}</div>
+      <div class="kpi-change" [class.positive]="(overview()?.incomeChangePercent ?? 0) > 0"
+           [class.negative]="(overview()?.incomeChangePercent ?? 0) < 0">
+        <i class="pi" [class.pi-arrow-up]="(overview()?.incomeChangePercent ?? 0) > 0"
+                      [class.pi-arrow-down]="(overview()?.incomeChangePercent ?? 0) < 0"
+                      [class.pi-minus]="(overview()?.incomeChangePercent ?? 0) === 0"></i>
+        {{ (overview()?.incomeChangePercent ?? 0) | number:'1.1-1' }}% vs last month
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-label">Total Expenses</div>
+      <div class="kpi-value text-expense">{{ overview()?.totalExpenses | currency }}</div>
+      <div class="kpi-change" [class.negative]="(overview()?.expenseChangePercent ?? 0) > 0"
+           [class.positive]="(overview()?.expenseChangePercent ?? 0) < 0">
+        <i class="pi" [class.pi-arrow-up]="(overview()?.expenseChangePercent ?? 0) > 0"
+                      [class.pi-arrow-down]="(overview()?.expenseChangePercent ?? 0) < 0"
+                      [class.pi-minus]="(overview()?.expenseChangePercent ?? 0) === 0"></i>
+        {{ (overview()?.expenseChangePercent ?? 0) | number:'1.1-1' }}% vs last month
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-label">Net Savings</div>
+      <div class="kpi-value"
+           [class.text-income]="(overview()?.netSavings ?? 0) >= 0"
+           [class.text-expense]="(overview()?.netSavings ?? 0) < 0">
+        {{ overview()?.netSavings | currency }}
+      </div>
+      <div class="kpi-change">
+        Savings rate: <strong>{{ overview()?.savingsRate | number:'1.1-1' }}%</strong>
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-label">Net Worth</div>
+      <div class="kpi-value">{{ overview()?.netWorth | currency }}</div>
+      <div class="kpi-change">All accounts combined</div>
+    </div>
+  </div>
+
+  <div class="projection-grid">
+    <div class="proj-card">
+      <div class="proj-icon"><i class="pi pi-calendar"></i></div>
+      <div>
+        <div class="proj-label">Avg Daily Spend</div>
+        <div class="proj-value">{{ overview()?.avgDailySpend | currency }}</div>
+      </div>
+    </div>
+    <div class="proj-card">
+      <div class="proj-icon"><i class="pi pi-chart-line"></i></div>
+      <div>
+        <div class="proj-label">Projected Month Expense</div>
+        <div class="proj-value">{{ overview()?.projectedMonthlyExpense | currency }}</div>
+      </div>
+    </div>
+    <div class="proj-card">
+      <div class="proj-icon"><i class="pi pi-wallet"></i></div>
+      <div>
+        <div class="proj-label">Projected End Balance</div>
+        <div class="proj-value"
+             [class.text-income]="(overview()?.projectedEndBalance ?? 0) >= 0"
+             [class.text-expense]="(overview()?.projectedEndBalance ?? 0) < 0">
+          {{ overview()?.projectedEndBalance | currency }}
+        </div>
+      </div>
+    </div>
+    @if (overview()?.daysUntilZero !== undefined) {
+      <div class="proj-card">
+        <div class="proj-icon warn"><i class="pi pi-exclamation-triangle"></i></div>
+        <div>
+          <div class="proj-label">Burn Rate Warning</div>
+          <div class="proj-value text-expense">
+            ~{{ overview()?.daysUntilZero | number:'1.0-0' }} days until $0
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+
+  <div class="charts-grid">
+    <div class="card chart-card">
+      <div class="section-title">Income vs Expenses (6 months)</div>
+      <div echarts [options]="barChartOptions()" class="chart"></div>
+    </div>
+    <div class="card chart-card">
+      <div class="section-title">Spending by Category</div>
+      <div echarts [options]="pieChartOptions()" class="chart"></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:1.5rem">
+    <div class="section-title">Daily Trend — Running Net</div>
+    <div echarts [options]="lineChartOptions()" style="height:220px"></div>
+  </div>
+} @else {
+  <div class="kpi-grid">
+    @for (i of [1,2,3,4]; track i) {
+      <p-skeleton height="110px" borderRadius="12px" />
+    }
+  </div>
+}

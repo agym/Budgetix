@@ -1,0 +1,256 @@
+<!-- NAV -->
+<header class="lp-nav" [class.scrolled]="scrolled()">
+  <div class="lp-container lp-nav-inner">
+    <div class="lp-logo">
+      <div class="lp-logo-icon"><i class="pi pi-wallet"></i></div>
+      <span class="lp-logo-name">Budgetix</span>
+    </div>
+    <nav class="lp-links">
+      <a href="#features">{{ 'NAV.FEATURES' | translate }}</a>
+      <a href="#how-it-works">{{ 'NAV.HOW_IT_WORKS' | translate }}</a>
+      <a href="#security">{{ 'NAV.SECURITY' | translate }}</a>
+    </nav>
+    <div class="lp-nav-ctas">
+      <app-language-switcher />
+      <button class="lp-btn-ghost" (click)="openModal('login')">{{ 'NAV.SIGN_IN' | translate }}</button>
+      <button class="lp-btn-primary" (click)="openModal('register')">{{ 'NAV.GET_STARTED' | translate }}</button>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="lp-hero">
+  <div class="lp-hero-bg">
+    <div class="hero-blob hero-blob-1"></div>
+    <div class="hero-blob hero-blob-2"></div>
+    <div class="hero-blob hero-blob-3"></div>
+    <div class="hero-grid"></div>
+  </div>
+  <div class="lp-container lp-hero-inner">
+    <div class="hero-badge hero-anim-1">
+      <span class="badge-star">✦</span>{{ 'HERO.BADGE' | translate }}
+    </div>
+    <h1 class="hero-title hero-anim-2">
+      {{ 'HERO.TITLE_1' | translate }}<br>
+      <span class="hero-gradient">{{ 'HERO.TITLE_2' | translate }}</span>
+    </h1>
+    <p class="hero-sub hero-anim-3">{{ 'HERO.SUBTITLE' | translate }}</p>
+    <div class="hero-ctas hero-anim-4">
+      <button class="lp-btn-hero" (click)="openModal('register')">
+        {{ 'HERO.CTA_PRIMARY' | translate }} <i class="pi pi-arrow-right"></i>
+      </button>
+      <button class="lp-btn-hero-ghost" (click)="openModal('login')">
+        {{ 'HERO.CTA_SECONDARY' | translate }} <i class="pi pi-sign-in"></i>
+      </button>
+    </div>
+
+    <div class="hero-mockup hero-anim-5">
+      <div class="mockup-window">
+        <div class="mockup-titlebar">
+          <span class="dot dot-red"></span>
+          <span class="dot dot-yellow"></span>
+          <span class="dot dot-green"></span>
+          <span class="mockup-label">{{ 'HERO.MOCKUP_TITLE' | translate }}</span>
+        </div>
+        <div class="mockup-body">
+          <div class="m-kpis">
+            <div class="m-kpi">
+              <div class="m-kpi-label">{{ 'HERO.MOCKUP_NET_WORTH' | translate }}</div>
+              <div class="m-kpi-val m-success">$24,850</div>
+              <div class="m-kpi-chg m-up">↑ 8.2%</div>
+            </div>
+            <div class="m-kpi">
+              <div class="m-kpi-label">{{ 'HERO.MOCKUP_SPEND' | translate }}</div>
+              <div class="m-kpi-val m-danger">$3,240</div>
+              <div class="m-kpi-chg m-down">↓ 5%</div>
+            </div>
+            <div class="m-kpi">
+              <div class="m-kpi-label">{{ 'HERO.MOCKUP_SAVINGS' | translate }}</div>
+              <div class="m-kpi-val m-primary">32%</div>
+              <div class="m-kpi-chg m-up">{{ 'HERO.MOCKUP_ON_TRACK' | translate }}</div>
+            </div>
+          </div>
+          <div class="m-section-title">{{ 'HERO.MOCKUP_BUDGET' | translate }}</div>
+          <div class="m-bars">
+            @for (b of mockBars; track b.key) {
+              <div class="m-bar-row">
+                <span class="m-bar-label">{{ b.key | translate }}</span>
+                <div class="m-bar-track">
+                  <div class="m-bar-fill" [class]="'mf-' + b.cls"
+                       [style.width]="b.pct + '%'"
+                       [style.animation-delay]="b.delay"></div>
+                </div>
+                <span class="m-bar-pct">{{ b.pct }}%</span>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+      <div class="mockup-glow"></div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="lp-stats">
+  <div class="lp-container stats-grid">
+    @for (s of stats; track s.labelKey) {
+      <div class="stat-item reveal">
+        <div class="stat-value">{{ s.value }}</div>
+        <div class="stat-label">{{ s.labelKey | translate }}</div>
+      </div>
+    }
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="lp-features" id="features">
+  <div class="lp-container">
+    <div class="section-eyebrow reveal">{{ 'FEATURES.EYEBROW' | translate }}</div>
+    <h2 class="lp-section-title reveal d1">
+      {{ 'FEATURES.TITLE' | translate }}<br>{{ 'FEATURES.TITLE_2' | translate }}
+    </h2>
+    <div class="features-grid">
+      @for (f of features; track f.key; let i = $index) {
+        <div class="feature-card reveal" [class]="'d' + ((i % 3) + 1)">
+          <div class="feature-icon" [class]="'fi-' + f.color">
+            <i [class]="'pi ' + f.icon"></i>
+          </div>
+          <h3>{{ 'FEATURES.' + f.key + '.TITLE' | translate }}</h3>
+          <p>{{ 'FEATURES.' + f.key + '.DESC' | translate }}</p>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="lp-how" id="how-it-works">
+  <div class="lp-container">
+    <div class="section-eyebrow reveal">{{ 'HOW.EYEBROW' | translate }}</div>
+    <h2 class="lp-section-title reveal d1">{{ 'HOW.TITLE' | translate }}</h2>
+    <div class="steps-row">
+      @for (s of steps; track s.key; let i = $index; let last = $last) {
+        <div class="step reveal" [class]="'d' + (i + 1)">
+          <div class="step-num">{{ i + 1 }}</div>
+          <div class="step-icon"><i [class]="'pi ' + s.icon"></i></div>
+          <h3>{{ 'HOW.' + s.key + '.TITLE' | translate }}</h3>
+          <p>{{ 'HOW.' + s.key + '.DESC' | translate }}</p>
+          @if (!last) { <div class="step-connector"></div> }
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- SECURITY -->
+<section class="lp-security" id="security">
+  <div class="lp-container security-inner">
+    <div class="security-text reveal-left">
+      <div class="section-eyebrow sec-eyebrow">{{ 'SECURITY.EYEBROW' | translate }}</div>
+      <h2>{{ 'SECURITY.TITLE' | translate }}</h2>
+      <p>{{ 'SECURITY.DESC' | translate }}</p>
+      <ul class="security-list">
+        <li><i class="pi pi-shield"></i> {{ 'SECURITY.ITEM1' | translate }}</li>
+        <li><i class="pi pi-lock"></i> {{ 'SECURITY.ITEM2' | translate }}</li>
+        <li><i class="pi pi-eye-slash"></i> {{ 'SECURITY.ITEM3' | translate }}</li>
+        <li><i class="pi pi-server"></i> {{ 'SECURITY.ITEM4' | translate }}</li>
+      </ul>
+    </div>
+    <div class="security-visual reveal-right">
+      <div class="shield-card">
+        <div class="shield-ring"><i class="pi pi-shield"></i></div>
+        <div class="shield-text">{{ 'SECURITY.PROTECTED' | translate }}</div>
+        <div class="shield-sub">{{ 'SECURITY.ENCRYPTED' | translate }}</div>
+        <div class="shield-badges">
+          <span class="sbadge"><i class="pi pi-lock"></i> 2FA</span>
+          <span class="sbadge"><i class="pi pi-verified"></i> SOC 2</span>
+          <span class="sbadge"><i class="pi pi-shield"></i> AES-256</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="lp-cta-section">
+  <div class="lp-container lp-cta-inner reveal">
+    <div class="cta-eyebrow">{{ 'CTA.EYEBROW' | translate }}</div>
+    <h2>{{ 'CTA.TITLE' | translate }}</h2>
+    <p>{{ 'CTA.DESC' | translate }}</p>
+    <button class="lp-btn-cta" (click)="openModal('register')">
+      {{ 'CTA.BUTTON' | translate }} <i class="pi pi-arrow-right"></i>
+    </button>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="lp-footer">
+  <div class="lp-container footer-inner">
+    <div class="footer-brand">
+      <div class="lp-logo footer-logo">
+        <div class="lp-logo-icon"><i class="pi pi-wallet"></i></div>
+        <span class="lp-logo-name lp-logo-white">Budgetix</span>
+      </div>
+      <p>{{ 'FOOTER.TAGLINE' | translate }}</p>
+    </div>
+    <div class="footer-links">
+      <div class="fl-col">
+        <div class="fl-heading">{{ 'FOOTER.PRODUCT' | translate }}</div>
+        <a href="#features">{{ 'FOOTER.FEATURES' | translate }}</a>
+        <a href="#security">{{ 'FOOTER.SECURITY' | translate }}</a>
+        <a href="#how-it-works">{{ 'FOOTER.HOW_IT_WORKS' | translate }}</a>
+      </div>
+      <div class="fl-col">
+        <div class="fl-heading">{{ 'FOOTER.ACCOUNT' | translate }}</div>
+        <a (click)="openModal('login')" style="cursor:pointer">{{ 'FOOTER.SIGN_IN' | translate }}</a>
+        <a (click)="openModal('register')" style="cursor:pointer">{{ 'FOOTER.CREATE_ACCOUNT' | translate }}</a>
+        <a routerLink="/auth/forgot-password">{{ 'FOOTER.RESET_PASSWORD' | translate }}</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="lp-container">{{ 'FOOTER.COPYRIGHT' | translate }}</div>
+  </div>
+</footer>
+
+<!-- ── AUTH MODAL ─────────────────────────────────────────── -->
+@if (authModal() !== null) {
+  <div class="auth-modal-overlay" (click)="closeModal()">
+    <div class="auth-modal-box" (click)="$event.stopPropagation()">
+
+      <!-- Modal header -->
+      <div class="modal-header">
+        <div class="modal-brand">
+          <div class="modal-logo-icon"><i class="pi pi-wallet"></i></div>
+          <span class="modal-logo-name">Budgetix</span>
+        </div>
+        <button class="modal-close-btn" (click)="closeModal()" aria-label="Close">
+          <i class="pi pi-times"></i>
+        </button>
+      </div>
+
+      <!-- Tabs -->
+      <div class="modal-tabs">
+        <button class="modal-tab" [class.active]="authModal() === 'login'"
+                (click)="authModal.set('login')">
+          <i class="pi pi-sign-in"></i> {{ 'NAV.SIGN_IN' | translate }}
+        </button>
+        <button class="modal-tab" [class.active]="authModal() === 'register'"
+                (click)="authModal.set('register')">
+          <i class="pi pi-user-plus"></i> {{ 'AUTH.REGISTER.SUBMIT' | translate }}
+        </button>
+      </div>
+
+      <!-- Form -->
+      <div class="modal-form-body">
+        @if (authModal() === 'login') {
+          <app-login />
+        } @else {
+          <app-register />
+        }
+      </div>
+
+    </div>
+  </div>
+}

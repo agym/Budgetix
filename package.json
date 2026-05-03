@@ -1,0 +1,15 @@
+{
+  "name": "budgetix",
+  "private": true,
+  "scripts": {
+    "backend": "cd backend && npm run start:dev",
+    "frontend": "cd frontend && ng serve",
+    "dev": "concurrently \"npm run backend\" \"npm run frontend\"",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:reset": "docker-compose down -v && docker-compose up -d"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

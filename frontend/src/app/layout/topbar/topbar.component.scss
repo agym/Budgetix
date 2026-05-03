@@ -1,0 +1,56 @@
+.topbar {
+  height: var(--topbar-height); background: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 1.5rem; position: sticky; top: 0; z-index: 50;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.04);
+}
+.topbar-left, .topbar-right { display: flex; align-items: center; gap: 0.5rem; }
+
+.topbar-lang ::ng-deep .lang-btn {
+  background: #f1f5f9; border-color: #e2e8f0; color: #334155;
+}
+.topbar-lang ::ng-deep .lang-btn:hover { background: #e2e8f0; color: #0f172a; }
+.topbar-lang ::ng-deep .lang-dropdown { top: calc(100% + 8px); }
+
+.icon-btn {
+  background: none; border: none; cursor: pointer; padding: 0.5rem; border-radius: 8px;
+  color: #64748b; font-size: 1rem; transition: background 0.15s, color 0.15s;
+  display: flex; align-items: center; justify-content: center; width: 36px; height: 36px;
+}
+.icon-btn:hover { background: #f1f5f9; color: #0f172a; }
+
+.notif-btn { position: relative; }
+.notif-badge {
+  position: absolute; top: 4px; right: 4px;
+  min-width: 16px; height: 16px; background: #ef4444; color: white;
+  border-radius: 9999px; font-size: 0.6rem; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; padding: 0 3px;
+}
+
+.divider { width: 1px; height: 24px; background: #e2e8f0; margin: 0 0.25rem; }
+
+.user-chip {
+  display: flex; align-items: center; gap: 0.6rem;
+  padding: 0.35rem 0.6rem 0.35rem 0.4rem; border-radius: 10px; cursor: pointer;
+  border: 1px solid #e2e8f0; background: #f8fafc;
+  transition: background 0.15s, border-color 0.15s; max-width: 200px;
+}
+.user-chip:hover { background: #f1f5f9; border-color: #cbd5e1; }
+.user-avatar {
+  width: 30px; height: 30px; border-radius: 8px; flex-shrink: 0;
+  background: linear-gradient(135deg, #2563eb, #0ea5e9); color: white;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem; font-weight: 700; letter-spacing: 0.02em;
+}
+.user-info { display: flex; flex-direction: column; overflow: hidden; }
+.user-name { font-size: 0.82rem; font-weight: 600; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.user-role { font-size: 0.7rem; color: #94a3b8; white-space: nowrap; }
+.chevron { font-size: 0.65rem; color: #94a3b8; flex-shrink: 0; }
+
+.logout-btn:hover { background: #fef2f2; color: #ef4444; }
+
+@media (max-width: 640px) {
+  .user-info, .chevron { display: none; }
+  .user-chip { padding: 0.35rem; }
+}

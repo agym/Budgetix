@@ -1,0 +1,13 @@
+.goals-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:1rem; }
+.goal-icon {
+  width:40px; height:40px; border-radius:10px;
+  display:flex; align-items:center; justify-content:center; color:white;
+  i { font-size:1.1rem; }
+}
+.goal-name { font-weight:600; font-size:1rem; }
+.goal-progress-label { font-size:1rem; margin-top:0.5rem; }
+.field { display:flex; flex-direction:column; gap:0.25rem; }
+label { font-weight:500; font-size:0.875rem; }
+.badge-active { background:#dcfce7; color:#15803d; padding:2px 8px; border-radius:9999px; font-size:0.75rem; font-weight:600; }
+.badge-completed { background:#e0f2fe; color:#0369a1; padding:2px 8px; border-radius:9999px; font-size:0.75rem; font-weight:600; }
+.badge-paused { background:#fef9c3; color:#854d0e; padding:2px 8px; border-radius:9999px; font-size:0.75rem; font-weight:600; }

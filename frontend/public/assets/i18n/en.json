@@ -1,0 +1,219 @@
+{
+  "LANG": { "en": "English", "fr": "Français", "ar": "العربية" },
+
+  "NAV": {
+    "FEATURES": "Features",
+    "HOW_IT_WORKS": "How it works",
+    "SECURITY": "Security",
+    "SIGN_IN": "Sign in",
+    "GET_STARTED": "Get started free"
+  },
+
+  "HERO": {
+    "BADGE": "Smart personal finance for everyone",
+    "TITLE_1": "Master your money.",
+    "TITLE_2": "Build your future.",
+    "SUBTITLE": "Track every dollar, crush your budgets, and hit your savings goals — all in one powerful, beautifully simple dashboard.",
+    "CTA_PRIMARY": "Start free today",
+    "CTA_SECONDARY": "Sign in",
+    "MOCKUP_TITLE": "Budgetix — Dashboard",
+    "MOCKUP_NET_WORTH": "Net Worth",
+    "MOCKUP_SPEND": "Monthly Spend",
+    "MOCKUP_SAVINGS": "Savings Rate",
+    "MOCKUP_ON_TRACK": "On track ✓",
+    "MOCKUP_BUDGET": "Budget Progress",
+    "MOCKUP_FOOD": "Food & Dining",
+    "MOCKUP_HOUSING": "Housing",
+    "MOCKUP_TRANSPORT": "Transport",
+    "MOCKUP_ENTERTAIN": "Entertainment"
+  },
+
+  "STATS": {
+    "TRANSACTIONS": "Transactions tracked daily",
+    "WEALTH": "Total wealth monitored",
+    "UPTIME": "Platform uptime",
+    "RATING": "Average user rating"
+  },
+
+  "FEATURES": {
+    "EYEBROW": "Everything you need",
+    "TITLE": "Powerful features.",
+    "TITLE_2": "Zero complexity.",
+    "BUDGET": { "TITLE": "Budget Tracking", "DESC": "Set monthly budgets by category and get instant alerts when you're close to your limits." },
+    "GOALS": { "TITLE": "Savings Goals", "DESC": "Define financial goals with deadlines. Watch your progress grow month over month." },
+    "INSIGHTS": { "TITLE": "Smart Insights", "DESC": "AI-powered analysis spots unusual spending patterns before they become problems." },
+    "REPORTS": { "TITLE": "Detailed Reports", "DESC": "Export professional PDF and CSV reports with category breakdowns and trend analysis." },
+    "ACCOUNTS": { "TITLE": "Multi-Account", "DESC": "Connect all your accounts — checking, savings, investments — in a single unified view." },
+    "SECURITY": { "TITLE": "Bank-level Security", "DESC": "256-bit encryption, 2FA support and zero raw credential storage keeps your data safe." }
+  },
+
+  "HOW": {
+    "EYEBROW": "Simple by design",
+    "TITLE": "Up and running in minutes.",
+    "STEP1": { "TITLE": "Create your account", "DESC": "Sign up in under 60 seconds. No credit card required, no hidden fees." },
+    "STEP2": { "TITLE": "Add your accounts", "DESC": "Link your bank accounts and import existing transactions in seconds." },
+    "STEP3": { "TITLE": "Reach your goals", "DESC": "Set budgets, track goals and watch your net worth grow every month." }
+  },
+
+  "SECURITY": {
+    "EYEBROW": "Bank-level protection",
+    "TITLE": "Your data is safe with us.",
+    "DESC": "We use 256-bit AES encryption, two-factor authentication, and never store raw credentials. Your financial data stays private, always.",
+    "ITEM1": "256-bit AES encryption at rest & in transit",
+    "ITEM2": "Two-factor authentication (2FA) support",
+    "ITEM3": "Zero raw credential storage",
+    "ITEM4": "SOC 2 compliant infrastructure",
+    "PROTECTED": "Protected",
+    "ENCRYPTED": "All data encrypted end-to-end"
+  },
+
+  "CTA": {
+    "EYEBROW": "No credit card required",
+    "TITLE": "Ready to take control?",
+    "DESC": "Join thousands of people who've transformed their financial habits with Budgetix.",
+    "BUTTON": "Create your free account"
+  },
+
+  "FOOTER": {
+    "TAGLINE": "Smart personal finance for everyone. Track, budget, and grow your wealth.",
+    "PRODUCT": "Product",
+    "ACCOUNT": "Account",
+    "SIGN_IN": "Sign in",
+    "CREATE_ACCOUNT": "Create account",
+    "RESET_PASSWORD": "Reset password",
+    "FEATURES": "Features",
+    "SECURITY": "Security",
+    "HOW_IT_WORKS": "How it works",
+    "COPYRIGHT": "© 2026 Budgetix. All rights reserved."
+  },
+
+  "SESSION": {
+    "WARNING_TITLE": "Session Expiring Soon",
+    "WARNING_MSG": "You've been inactive for a while. Your session will expire in",
+    "SECONDS": "seconds",
+    "CONTINUE": "Continue Session",
+    "LOGOUT": "Sign Out"
+  },
+
+  "TOPBAR": {
+    "PERSONAL_ACCOUNT": "Personal Account",
+    "NOTIFICATIONS": "Notifications",
+    "SIGN_OUT": "Sign out"
+  },
+
+  "SIDEBAR": {
+    "OVERVIEW": "Overview",
+    "FINANCE": "Finance",
+    "INSIGHTS": "Insights",
+    "ACCOUNT": "Account",
+    "DASHBOARD": "Dashboard",
+    "TRANSACTIONS": "Transactions",
+    "ACCOUNTS": "Accounts",
+    "BUDGETS": "Budgets",
+    "GOALS": "Goals",
+    "REPORTS": "Reports",
+    "SETTINGS": "Settings",
+    "VERSION": "Version 1.0"
+  },
+
+  "AUTH": {
+    "BACK_HOME": "Back to Budgetix",
+    "OR": "or",
+    "TABS": {
+      "SIGN_IN": "Sign in",
+      "CREATE": "Create Account"
+    },
+    "GOOGLE_SIGNIN": "Continue with Google",
+    "GOOGLE_SIGNUP": "Sign up with Google",
+    "BRAND_TAGLINE": "Take control of your finances",
+    "BRAND_SUBTITLE": "Track every dollar, set smart budgets, and build real wealth — all in one place.",
+    "BRAND_FEAT1_TITLE": "Smart Budgeting",
+    "BRAND_FEAT1_DESC": "Set limits, track spend, get instant alerts",
+    "BRAND_FEAT2_TITLE": "Savings Goals",
+    "BRAND_FEAT2_DESC": "Save towards what matters most to you",
+    "BRAND_FEAT3_TITLE": "Deep Insights",
+    "BRAND_FEAT3_DESC": "Understand your money at a glance",
+    "LOGIN": {
+      "TITLE": "Welcome back",
+      "SUBTITLE": "Sign in to continue to Budgetix",
+      "EMAIL": "Email address",
+      "EMAIL_PLACEHOLDER": "you@example.com",
+      "EMAIL_ERROR": "Enter a valid email address",
+      "PASSWORD": "Password",
+      "PASSWORD_PLACEHOLDER": "Enter your password",
+      "PASSWORD_ERROR": "Password is required",
+      "FORGOT": "Forgot password?",
+      "SUBMIT": "Sign In",
+      "NO_ACCOUNT": "Don't have an account?",
+      "CREATE": "Create one free",
+      "TWO_FACTOR": "Two-Factor Code",
+      "TWO_FACTOR_PLACEHOLDER": "6-digit code",
+      "TWO_FACTOR_MSG": "Enter your two-factor authentication code.",
+      "EMAIL_UNVERIFIED": "Please verify your email before signing in.",
+      "INVALID_CREDS": "Invalid email or password. Please try again."
+    },
+    "REGISTER": {
+      "TITLE": "Create your account",
+      "SUBTITLE": "Start managing your finances smarter today",
+      "NAME": "Full name",
+      "NAME_PLACEHOLDER": "Jane Doe",
+      "NAME_ERROR": "Full name is required",
+      "EMAIL": "Email address",
+      "EMAIL_PLACEHOLDER": "you@example.com",
+      "EMAIL_ERROR": "Enter a valid email address",
+      "PASSWORD": "Password",
+      "PASSWORD_PLACEHOLDER": "At least 8 characters",
+      "PASSWORD_ERROR": "Minimum 8 characters required",
+      "CONFIRM": "Confirm password",
+      "CONFIRM_PLACEHOLDER": "Repeat your password",
+      "CONFIRM_ERROR": "Passwords do not match",
+      "SUBMIT": "Create Account",
+      "SUCCESS": "Account created! Please check your email to verify your account, then sign in.",
+      "HAS_ACCOUNT": "Already have an account?",
+      "SIGN_IN": "Sign in",
+      "EMAIL_EXISTS": "An account with this email already exists.",
+      "FAILED": "Registration failed. Please try again."
+    },
+    "FORGOT": {
+      "TITLE": "Reset your password",
+      "SUBTITLE": "Enter your email and we'll send you a reset code.",
+      "EMAIL": "Email address",
+      "EMAIL_PLACEHOLDER": "you@example.com",
+      "EMAIL_ERROR": "Enter a valid email address",
+      "SUBMIT": "Send Reset Code",
+      "SUCCESS": "Reset code sent! Check your inbox and follow the instructions.",
+      "ERROR": "Something went wrong. Please try again.",
+      "BACK": "Back to sign in"
+    },
+    "RESET": {
+      "TITLE": "Set new password",
+      "SUBTITLE": "Enter the reset code from your email and choose a new password.",
+      "CODE": "Reset code",
+      "CODE_PLACEHOLDER": "6-digit code",
+      "CODE_ERROR": "Enter the 6-digit reset code",
+      "PASSWORD": "New password",
+      "PASSWORD_PLACEHOLDER": "At least 8 characters",
+      "PASSWORD_ERROR": "Minimum 8 characters required",
+      "CONFIRM": "Confirm new password",
+      "CONFIRM_PLACEHOLDER": "Repeat new password",
+      "CONFIRM_ERROR": "Passwords do not match",
+      "SUBMIT": "Reset Password",
+      "SUCCESS": "Password reset successfully! You can now sign in.",
+      "ERROR": "Invalid or expired reset code. Please request a new one.",
+      "SIGN_IN": "Go to Sign In",
+      "BACK": "Back to sign in"
+    },
+    "VERIFY": {
+      "TITLE": "Verify your email",
+      "SUBTITLE": "Enter the 6-digit code sent to",
+      "CODE_PLACEHOLDER": "000000",
+      "CODE_ERROR": "Enter the 6-digit verification code",
+      "SUBMIT": "Verify Email",
+      "SUCCESS": "Email verified! You can now sign in to your account.",
+      "ERROR": "Invalid or expired code. Please try again.",
+      "SIGN_IN": "Continue to Sign In",
+      "RESEND": "Didn't receive it?",
+      "RESEND_LINK": "Resend code"
+    }
+  }
+}

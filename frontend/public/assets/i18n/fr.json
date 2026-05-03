@@ -1,0 +1,219 @@
+{
+  "LANG": { "en": "English", "fr": "Français", "ar": "العربية" },
+
+  "NAV": {
+    "FEATURES": "Fonctionnalités",
+    "HOW_IT_WORKS": "Comment ça marche",
+    "SECURITY": "Sécurité",
+    "SIGN_IN": "Connexion",
+    "GET_STARTED": "Commencer gratuitement"
+  },
+
+  "HERO": {
+    "BADGE": "Finance personnelle intelligente pour tous",
+    "TITLE_1": "Maîtrisez votre argent.",
+    "TITLE_2": "Construisez votre avenir.",
+    "SUBTITLE": "Suivez chaque dépense, respectez vos budgets et atteignez vos objectifs d'épargne — tout dans un tableau de bord puissant et élégant.",
+    "CTA_PRIMARY": "Commencer gratuitement",
+    "CTA_SECONDARY": "Connexion",
+    "MOCKUP_TITLE": "Budgetix — Tableau de bord",
+    "MOCKUP_NET_WORTH": "Patrimoine net",
+    "MOCKUP_SPEND": "Dépenses du mois",
+    "MOCKUP_SAVINGS": "Taux d'épargne",
+    "MOCKUP_ON_TRACK": "En bonne voie ✓",
+    "MOCKUP_BUDGET": "Avancement du budget",
+    "MOCKUP_FOOD": "Alimentation",
+    "MOCKUP_HOUSING": "Logement",
+    "MOCKUP_TRANSPORT": "Transport",
+    "MOCKUP_ENTERTAIN": "Loisirs"
+  },
+
+  "STATS": {
+    "TRANSACTIONS": "Transactions suivies par jour",
+    "WEALTH": "Patrimoine total suivi",
+    "UPTIME": "Disponibilité de la plateforme",
+    "RATING": "Note moyenne des utilisateurs"
+  },
+
+  "FEATURES": {
+    "EYEBROW": "Tout ce dont vous avez besoin",
+    "TITLE": "Fonctionnalités puissantes.",
+    "TITLE_2": "Zéro complexité.",
+    "BUDGET": { "TITLE": "Suivi du budget", "DESC": "Définissez des budgets mensuels par catégorie et recevez des alertes instantanées." },
+    "GOALS": { "TITLE": "Objectifs d'épargne", "DESC": "Fixez des objectifs financiers avec des délais. Regardez vos progrès mois après mois." },
+    "INSIGHTS": { "TITLE": "Analyses intelligentes", "DESC": "L'analyse alimentée par IA repère les habitudes de dépenses inhabituelles avant qu'elles deviennent des problèmes." },
+    "REPORTS": { "TITLE": "Rapports détaillés", "DESC": "Exportez des rapports PDF et CSV professionnels avec analyses par catégorie." },
+    "ACCOUNTS": { "TITLE": "Multi-comptes", "DESC": "Connectez tous vos comptes — courant, épargne, investissements — dans une vue unifiée." },
+    "SECURITY": { "TITLE": "Sécurité bancaire", "DESC": "Chiffrement 256 bits, support 2FA et aucun stockage d'identifiants bruts." }
+  },
+
+  "HOW": {
+    "EYEBROW": "Simple par conception",
+    "TITLE": "Opérationnel en quelques minutes.",
+    "STEP1": { "TITLE": "Créez votre compte", "DESC": "Inscrivez-vous en moins de 60 secondes. Aucune carte de crédit requise." },
+    "STEP2": { "TITLE": "Ajoutez vos comptes", "DESC": "Liez vos comptes bancaires et importez vos transactions existantes en quelques secondes." },
+    "STEP3": { "TITLE": "Atteignez vos objectifs", "DESC": "Fixez des budgets, suivez les objectifs et regardez votre patrimoine augmenter." }
+  },
+
+  "SECURITY": {
+    "EYEBROW": "Protection niveau bancaire",
+    "TITLE": "Vos données sont en sécurité.",
+    "DESC": "Nous utilisons le chiffrement AES 256 bits, l'authentification à deux facteurs et ne stockons jamais vos identifiants bruts.",
+    "ITEM1": "Chiffrement AES 256 bits au repos et en transit",
+    "ITEM2": "Support de l'authentification à deux facteurs (2FA)",
+    "ITEM3": "Zéro stockage d'identifiants bruts",
+    "ITEM4": "Infrastructure conforme SOC 2",
+    "PROTECTED": "Protégé",
+    "ENCRYPTED": "Toutes les données chiffrées de bout en bout"
+  },
+
+  "CTA": {
+    "EYEBROW": "Aucune carte de crédit requise",
+    "TITLE": "Prêt à prendre le contrôle ?",
+    "DESC": "Rejoignez des milliers de personnes qui ont transformé leurs habitudes financières avec Budgetix.",
+    "BUTTON": "Créer votre compte gratuit"
+  },
+
+  "FOOTER": {
+    "TAGLINE": "Finance personnelle intelligente pour tous. Suivez, budgétisez et développez votre patrimoine.",
+    "PRODUCT": "Produit",
+    "ACCOUNT": "Compte",
+    "SIGN_IN": "Connexion",
+    "CREATE_ACCOUNT": "Créer un compte",
+    "RESET_PASSWORD": "Réinitialiser le mot de passe",
+    "FEATURES": "Fonctionnalités",
+    "SECURITY": "Sécurité",
+    "HOW_IT_WORKS": "Comment ça marche",
+    "COPYRIGHT": "© 2026 Budgetix. Tous droits réservés."
+  },
+
+  "SESSION": {
+    "WARNING_TITLE": "Session bientôt expirée",
+    "WARNING_MSG": "Vous êtes inactif depuis un moment. Votre session expirera dans",
+    "SECONDS": "secondes",
+    "CONTINUE": "Continuer la session",
+    "LOGOUT": "Se déconnecter"
+  },
+
+  "TOPBAR": {
+    "PERSONAL_ACCOUNT": "Compte personnel",
+    "NOTIFICATIONS": "Notifications",
+    "SIGN_OUT": "Se déconnecter"
+  },
+
+  "SIDEBAR": {
+    "OVERVIEW": "Vue d'ensemble",
+    "FINANCE": "Finance",
+    "INSIGHTS": "Analyses",
+    "ACCOUNT": "Compte",
+    "DASHBOARD": "Tableau de bord",
+    "TRANSACTIONS": "Transactions",
+    "ACCOUNTS": "Comptes",
+    "BUDGETS": "Budgets",
+    "GOALS": "Objectifs",
+    "REPORTS": "Rapports",
+    "SETTINGS": "Paramètres",
+    "VERSION": "Version 1.0"
+  },
+
+  "AUTH": {
+    "BACK_HOME": "Retour à Budgetix",
+    "OR": "ou",
+    "TABS": {
+      "SIGN_IN": "Se connecter",
+      "CREATE": "Créer un compte"
+    },
+    "GOOGLE_SIGNIN": "Continuer avec Google",
+    "GOOGLE_SIGNUP": "S'inscrire avec Google",
+    "BRAND_TAGLINE": "Prenez le contrôle de vos finances",
+    "BRAND_SUBTITLE": "Suivez chaque euro, définissez des budgets intelligents et construisez une vraie richesse — au même endroit.",
+    "BRAND_FEAT1_TITLE": "Budget intelligent",
+    "BRAND_FEAT1_DESC": "Fixez des limites, suivez les dépenses, recevez des alertes",
+    "BRAND_FEAT2_TITLE": "Objectifs d'épargne",
+    "BRAND_FEAT2_DESC": "Épargnez pour ce qui compte vraiment",
+    "BRAND_FEAT3_TITLE": "Analyses profondes",
+    "BRAND_FEAT3_DESC": "Comprenez vos finances en un coup d'œil",
+    "LOGIN": {
+      "TITLE": "Bon retour",
+      "SUBTITLE": "Connectez-vous pour continuer sur Budgetix",
+      "EMAIL": "Adresse e-mail",
+      "EMAIL_PLACEHOLDER": "vous@exemple.com",
+      "EMAIL_ERROR": "Entrez une adresse e-mail valide",
+      "PASSWORD": "Mot de passe",
+      "PASSWORD_PLACEHOLDER": "Entrez votre mot de passe",
+      "PASSWORD_ERROR": "Le mot de passe est requis",
+      "FORGOT": "Mot de passe oublié ?",
+      "SUBMIT": "Se connecter",
+      "NO_ACCOUNT": "Vous n'avez pas de compte ?",
+      "CREATE": "Créez-en un gratuitement",
+      "TWO_FACTOR": "Code à deux facteurs",
+      "TWO_FACTOR_PLACEHOLDER": "Code à 6 chiffres",
+      "TWO_FACTOR_MSG": "Entrez votre code d'authentification à deux facteurs.",
+      "EMAIL_UNVERIFIED": "Veuillez vérifier votre e-mail avant de vous connecter.",
+      "INVALID_CREDS": "E-mail ou mot de passe invalide. Veuillez réessayer."
+    },
+    "REGISTER": {
+      "TITLE": "Créez votre compte",
+      "SUBTITLE": "Gérez vos finances plus intelligemment dès aujourd'hui",
+      "NAME": "Nom complet",
+      "NAME_PLACEHOLDER": "Jean Dupont",
+      "NAME_ERROR": "Le nom complet est requis",
+      "EMAIL": "Adresse e-mail",
+      "EMAIL_PLACEHOLDER": "vous@exemple.com",
+      "EMAIL_ERROR": "Entrez une adresse e-mail valide",
+      "PASSWORD": "Mot de passe",
+      "PASSWORD_PLACEHOLDER": "Au moins 8 caractères",
+      "PASSWORD_ERROR": "Minimum 8 caractères requis",
+      "CONFIRM": "Confirmer le mot de passe",
+      "CONFIRM_PLACEHOLDER": "Répétez votre mot de passe",
+      "CONFIRM_ERROR": "Les mots de passe ne correspondent pas",
+      "SUBMIT": "Créer un compte",
+      "SUCCESS": "Compte créé ! Vérifiez votre e-mail pour activer votre compte, puis connectez-vous.",
+      "HAS_ACCOUNT": "Vous avez déjà un compte ?",
+      "SIGN_IN": "Se connecter",
+      "EMAIL_EXISTS": "Un compte avec cet e-mail existe déjà.",
+      "FAILED": "Échec de l'inscription. Veuillez réessayer."
+    },
+    "FORGOT": {
+      "TITLE": "Réinitialisez votre mot de passe",
+      "SUBTITLE": "Entrez votre e-mail et nous vous enverrons un code de réinitialisation.",
+      "EMAIL": "Adresse e-mail",
+      "EMAIL_PLACEHOLDER": "vous@exemple.com",
+      "EMAIL_ERROR": "Entrez une adresse e-mail valide",
+      "SUBMIT": "Envoyer le code",
+      "SUCCESS": "Code envoyé ! Vérifiez votre boîte de réception.",
+      "ERROR": "Une erreur s'est produite. Veuillez réessayer.",
+      "BACK": "Retour à la connexion"
+    },
+    "RESET": {
+      "TITLE": "Définir un nouveau mot de passe",
+      "SUBTITLE": "Entrez le code de réinitialisation de votre e-mail et choisissez un nouveau mot de passe.",
+      "CODE": "Code de réinitialisation",
+      "CODE_PLACEHOLDER": "Code à 6 chiffres",
+      "CODE_ERROR": "Entrez le code de réinitialisation à 6 chiffres",
+      "PASSWORD": "Nouveau mot de passe",
+      "PASSWORD_PLACEHOLDER": "Au moins 8 caractères",
+      "PASSWORD_ERROR": "Minimum 8 caractères requis",
+      "CONFIRM": "Confirmer le nouveau mot de passe",
+      "CONFIRM_PLACEHOLDER": "Répétez le nouveau mot de passe",
+      "CONFIRM_ERROR": "Les mots de passe ne correspondent pas",
+      "SUBMIT": "Réinitialiser le mot de passe",
+      "SUCCESS": "Mot de passe réinitialisé ! Vous pouvez maintenant vous connecter.",
+      "ERROR": "Code invalide ou expiré. Veuillez en demander un nouveau.",
+      "SIGN_IN": "Aller à la connexion",
+      "BACK": "Retour à la connexion"
+    },
+    "VERIFY": {
+      "TITLE": "Vérifiez votre e-mail",
+      "SUBTITLE": "Entrez le code à 6 chiffres envoyé à",
+      "CODE_PLACEHOLDER": "000000",
+      "CODE_ERROR": "Entrez le code de vérification à 6 chiffres",
+      "SUBMIT": "Vérifier l'e-mail",
+      "SUCCESS": "E-mail vérifié ! Vous pouvez maintenant vous connecter.",
+      "ERROR": "Code invalide ou expiré. Veuillez réessayer.",
+      "SIGN_IN": "Continuer vers la connexion",
+      "RESEND": "Vous ne l'avez pas reçu ?",
+      "RESEND_LINK": "Renvoyer le code"
+    }
+  }
+}

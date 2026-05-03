@@ -1,0 +1,28 @@
+@if (visible()) {
+  <div class="st-backdrop">
+    <div class="st-dialog">
+      <div class="st-icon">
+        <div class="st-ring"></div>
+        <i class="pi pi-clock"></i>
+      </div>
+      <h3>{{ 'SESSION.WARNING_TITLE' | translate }}</h3>
+      <p>
+        {{ 'SESSION.WARNING_MSG' | translate }}
+        <strong class="countdown" [class.urgent]="countdown() <= 30">{{ countdown() }}</strong>
+        {{ 'SESSION.SECONDS' | translate }}.
+      </p>
+      <div class="st-progress">
+        <div class="st-progress-bar" [style.width]="progressPct() + '%'"></div>
+      </div>
+      <div class="st-actions">
+        <button class="st-btn-primary" (click)="continueSession()">
+          <i class="pi pi-check-circle"></i>
+          {{ 'SESSION.CONTINUE' | translate }}
+        </button>
+        <button class="st-btn-ghost" (click)="signOut()">
+          {{ 'SESSION.LOGOUT' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

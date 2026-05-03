@@ -1,0 +1,10 @@
+<div class="shell" [class.sidebar-collapsed]="collapsed()">
+  <app-sidebar [collapsed]="collapsed()" (toggle)="collapsed.set(!collapsed())" />
+  <div class="main-area">
+    <app-topbar (menuToggle)="collapsed.set(!collapsed())" />
+    <main class="content">
+      <router-outlet />
+    </main>
+  </div>
+</div>
+<app-session-timeout />

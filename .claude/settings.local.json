@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:www.hps-worldwide.com)",
+      "Bash(npx ng *)",
+      "Bash(npm install *)",
+      "Bash(mvn spring-boot:run)",
+      "PowerShell(Stop-Process -Id 20112 -Force)",
+      "Bash(netstat -ano)",
+      "Bash(findstr :3000)",
+      "PowerShell(Get-Content \"$env:TEMP\\\\backend_out.txt\" | Select-String \"ERROR|FAILED|Exception|Caused by|Started\" | Select-Object -Last 20)",
+      "Bash(mvn spring-boot:run -Dspring-boot.run.mainClass=com.budgetix.BudgetixApplication)",
+      "Bash(tee /tmp/backend_run.log)",
+      "Bash(echo \"EXIT:$?\")",
+      "Bash(curl -s http://localhost:3000/api/actuator/health)"
+    ]
+  }
+}

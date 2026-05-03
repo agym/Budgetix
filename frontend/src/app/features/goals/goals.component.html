@@ -1,0 +1,103 @@
+<p-toast /><p-confirmDialog />
+<div class="page-header">
+  <h1>Savings Goals</h1>
+  <p>Track your progress toward financial targets</p>
+</div>
+<div class="flex justify-content-end mb-3">
+  <p-button label="New Goal" icon="pi pi-plus" (onClick)="openCreate()" />
+</div>
+
+<div class="goals-grid">
+  @for (g of goals(); track g.id) {
+    <div class="card goal-card" [style.border-top]="'4px solid ' + (g.color || '#6366f1')">
+      <div class="flex align-items-center justify-content-between mb-2">
+        <div class="flex align-items-center gap-2">
+          <span class="goal-icon" [style.background]="g.color || '#6366f1'">
+            <i [class]="'pi ' + (g.icon || 'pi-flag')"></i>
+          </span>
+          <div>
+            <div class="goal-name">{{ g.name }}</div>
+            @if (g.deadline) {
+              <div class="text-muted" style="font-size:0.8rem">
+                Due: {{ g.deadline | date:'mediumDate' }}
+              </div>
+            }
+          </div>
+        </div>
+        <span [class]="'badge-' + g.status.toLowerCase()" style="font-size:0.7rem">{{ g.status }}</span>
+      </div>
+
+      <div class="goal-progress-label">
+        <span>{{ g.currentAmount | currency }}</span>
+        <span class="text-muted"> of {{ g.targetAmount | currency }}</span>
+      </div>
+
+      <p-progressBar [value]="g.progressPercent" [showValue]="false"
+                     [style]="{'height':'10px','margin':'0.5rem 0'}" />
+
+      <div class="flex justify-content-between">
+        <small class="text-muted">{{ g.progressPercent | number:'1.0-0' }}% complete</small>
+        <small class="text-income">{{ g.remaining | currency }} to go</small>
+      </div>
+
+      @if (g.status === 'ACTIVE') {
+        <div class="flex gap-2 mt-3">
+          <p-button label="Contribute" icon="pi pi-plus" size="small" [outlined]="true"
+                    (onClick)="openContribute(g)" class="flex-1"/>
+          <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger"
+                    (onClick)="deleteGoal(g)" />
+        </div>
+      }
+    </div>
+  }
+
+  @if (goals().length === 0) {
+    <div class="empty-state">
+      <i class="pi pi-flag"></i>
+      <p>No savings goals yet. Set your first target!</p>
+    </div>
+  }
+</div>
+
+<p-dialog [(visible)]="showForm" header="New Savings Goal" [modal]="true" [style]="{width:'420px'}">
+  <form [formGroup]="form" class="flex flex-column gap-3 pt-2">
+    <div class="field">
+      <label>Goal Name *</label>
+      <input pInputText formControlName="name" placeholder='e.g. "Buy a laptop"' [style]="{width:'100%'}"/>
+    </div>
+    <div class="field">
+      <label>Target Amount *</label>
+      <input pInputText formControlName="targetAmount" type="number" placeholder="1000" [style]="{width:'100%'}"/>
+    </div>
+    <div class="field">
+      <label>Deadline (optional)</label>
+      <p-calendar formControlName="deadline" [showButtonBar]="true" [style]="{width:'100%'}"/>
+    </div>
+    <div class="field">
+      <label>Color</label>
+      <input type="color" formControlName="color" style="width:60px;height:36px;border:none;padding:0"/>
+    </div>
+  </form>
+  <ng-template pTemplate="footer">
+    <p-button label="Cancel" [text]="true" (onClick)="showForm=false"/>
+    <p-button label="Create Goal" (onClick)="submit()"/>
+  </ng-template>
+</p-dialog>
+
+<p-dialog [(visible)]="showContribute" header="Add Contribution" [modal]="true" [style]="{width:'360px'}">
+  <div class="flex flex-column gap-3 pt-2">
+    <p>Contributing to: <strong>{{ selectedGoal?.name }}</strong></p>
+    <div class="field">
+      <label>Amount *</label>
+      <input pInputText [(ngModel)]="contributeAmount" type="number" placeholder="100" [style]="{width:'100%'}"/>
+    </div>
+    <div class="field">
+      <label>Note</label>
+      <input pInputText [(ngModel)]="contributeNote" placeholder="Optional note" [style]="{width:'100%'}"/>
+    </div>
+  </div>
+  <ng-template pTemplate="footer">
+    <p-button label="Cancel" [text]="true" (onClick)="showContribute=false"/>
+    <p-button label="Add" (onClick)="contribute()"/>
+  </ng-template>
+</p-dialog>
