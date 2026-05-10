@@ -16,3 +16,10 @@ backend/.env
 frontend/node_modules/
 frontend/dist/
 frontend/.angular/
+
+# Java build artifacts
+backend/target/classes/
+backend/target/
+
+# IDE / tool settings
+.claude/settings.local.json
