@@ -1,0 +1,1399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Budgetix — Bank Account Linking Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy:   #060d1f;
+    --dark:   #0a1628;
+    --card:   #0f1f3d;
+    --blue:   #2563eb;
+    --blue2:  #1d4ed8;
+    --cyan:   #06b6d4;
+    --green:  #22c55e;
+    --purple: #8b5cf6;
+    --orange: #f59e0b;
+    --red:    #ef4444;
+    --pink:   #ec4899;
+    --teal:   #14b8a6;
+    --text:   #f1f5f9;
+    --muted:  #64748b;
+    --border: rgba(255,255,255,0.07);
+  }
+
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--navy);
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  /* ── Grid overlay ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+
+  /* ── Layout ── */
+  .page { position: relative; z-index: 1; max-width: 960px; margin: 0 auto; padding: 4rem 2rem 6rem; }
+
+  /* ── Nav ── */
+  .topnav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(6,13,31,0.85); backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 0.9rem 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .topnav-logo { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; }
+  .topnav-logo .icon { width: 32px; height: 32px; border-radius: 8px; background: linear-gradient(135deg,#2563eb,#0ea5e9); display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+  .topnav-logo span { font-weight: 900; font-size: 1rem; color: white; letter-spacing: -0.03em; }
+  .topnav-links { display: flex; gap: 1.5rem; }
+  .topnav-links a { font-size: 0.8rem; font-weight: 600; color: var(--muted); text-decoration: none; transition: color 0.15s; }
+  .topnav-links a:hover { color: #60a5fa; }
+
+  /* ── Typography ── */
+  .section-label {
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.18em;
+    text-transform: uppercase; margin-bottom: 0.5rem;
+  }
+  .sl-blue   { color: #60a5fa; }
+  .sl-green  { color: #4ade80; }
+  .sl-purple { color: #c4b5fd; }
+  .sl-orange { color: #fbbf24; }
+  .sl-red    { color: #f87171; }
+  .sl-cyan   { color: #22d3ee; }
+  .sl-teal   { color: #2dd4bf; }
+  .sl-pink   { color: #f472b6; }
+
+  h1 { font-size: clamp(2.2rem,4vw,3.2rem); font-weight: 900; line-height: 1.05; letter-spacing: -0.03em; }
+  h2 { font-size: 1.6rem; font-weight: 800; letter-spacing: -0.025em; margin-bottom: 0.25rem; }
+  h3 { font-size: 1.05rem; font-weight: 700; }
+  h4 { font-size: 0.9rem; font-weight: 700; color: #cbd5e1; margin-bottom: 0.5rem; }
+
+  .lead { font-size: 1.1rem; color: #94a3b8; line-height: 1.7; max-width: 680px; }
+  p     { font-size: 0.93rem; color: #94a3b8; line-height: 1.7; }
+
+  .gradient-text { background: linear-gradient(135deg,#60a5fa 0%,#a78bfa 50%,#34d399 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+
+  /* ── Sections ── */
+  section { margin-top: 4.5rem; }
+  .section-header { margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border); }
+
+  /* ── Cards ── */
+  .card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 16px; padding: 1.5rem;
+    backdrop-filter: blur(8px);
+  }
+  .card-sm { padding: 1rem 1.25rem; border-radius: 12px; }
+
+  /* ── Grids ── */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.25rem; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 1rem; }
+
+  /* ── Steps / flow ── */
+  .flow { display: flex; flex-direction: column; gap: 0; }
+  .flow-item { display: flex; gap: 1.25rem; }
+  .flow-left { display: flex; flex-direction: column; align-items: center; }
+  .flow-num {
+    width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+    background: rgba(37,99,235,0.15); border: 1px solid rgba(37,99,235,0.4);
+    color: #60a5fa; font-weight: 800; font-size: 0.85rem;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .flow-line { width: 1px; flex: 1; background: rgba(37,99,235,0.15); margin: 0.3rem 0; min-height: 24px; }
+  .flow-body { padding-bottom: 2rem; flex: 1; }
+  .flow-body h3 { margin-bottom: 0.35rem; }
+  .flow-body p  { font-size: 0.88rem; }
+  .flow-item:last-child .flow-line { display: none; }
+  .flow-item:last-child .flow-body { padding-bottom: 0; }
+
+  /* ── Table ── */
+  .data-table { width: 100%; border-collapse: collapse; }
+  .data-table th {
+    text-align: left; font-size: 0.7rem; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted);
+    padding: 0.6rem 1rem; border-bottom: 1px solid var(--border);
+  }
+  .data-table td {
+    padding: 0.75rem 1rem; font-size: 0.87rem;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    vertical-align: middle;
+  }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table td:first-child { color: #e2e8f0; font-weight: 600; }
+
+  /* ── Tags / badges ── */
+  .tag { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.2rem 0.65rem; border-radius: 9999px; font-size: 0.72rem; font-weight: 600; }
+  .tag-blue   { background: rgba(37,99,235,0.15);  color: #93c5fd; border: 1px solid rgba(37,99,235,0.3); }
+  .tag-green  { background: rgba(34,197,94,0.15);  color: #86efac; border: 1px solid rgba(34,197,94,0.3); }
+  .tag-orange { background: rgba(245,158,11,0.15); color: #fcd34d; border: 1px solid rgba(245,158,11,0.3); }
+  .tag-red    { background: rgba(239,68,68,0.15);  color: #fca5a5; border: 1px solid rgba(239,68,68,0.3); }
+  .tag-purple { background: rgba(139,92,246,0.15); color: #c4b5fd; border: 1px solid rgba(139,92,246,0.3); }
+  .tag-cyan   { background: rgba(6,182,212,0.15);  color: #67e8f9; border: 1px solid rgba(6,182,212,0.3); }
+  .tag-teal   { background: rgba(20,184,166,0.15); color: #5eead4; border: 1px solid rgba(20,184,166,0.3); }
+
+  /* ── Icon badge ── */
+  .ib { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; flex-shrink: 0; margin-bottom: 0.75rem; }
+  .ib-blue   { background: rgba(37,99,235,0.2);  color: #60a5fa; }
+  .ib-green  { background: rgba(34,197,94,0.2);  color: #4ade80; }
+  .ib-purple { background: rgba(139,92,246,0.2); color: #c4b5fd; }
+  .ib-orange { background: rgba(245,158,11,0.2); color: #fbbf24; }
+  .ib-cyan   { background: rgba(6,182,212,0.2);  color: #22d3ee; }
+  .ib-red    { background: rgba(239,68,68,0.2);  color: #f87171; }
+  .ib-teal   { background: rgba(20,184,166,0.2); color: #2dd4bf; }
+  .ib-pink   { background: rgba(236,72,153,0.2); color: #f472b6; }
+
+  /* ── Code blocks ── */
+  pre {
+    background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px; padding: 1.25rem; overflow-x: auto;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;
+    line-height: 1.6; color: #e2e8f0; margin-top: 0.75rem;
+  }
+  .kw  { color: #c4b5fd; }
+  .str { color: #86efac; }
+  .cm  { color: #475569; font-style: italic; }
+  .fn  { color: #60a5fa; }
+  .num { color: #fbbf24; }
+  .ann { color: #f472b6; }
+
+  /* ── Alert boxes ── */
+  .alert {
+    border-radius: 12px; padding: 1rem 1.25rem;
+    display: flex; gap: 0.75rem; align-items: flex-start;
+    font-size: 0.88rem; line-height: 1.55;
+  }
+  .alert-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 0.05rem; }
+  .alert-content h4 { font-size: 0.88rem; font-weight: 700; margin-bottom: 0.25rem; }
+  .alert-content p  { font-size: 0.85rem; color: inherit; line-height: 1.5; }
+  .alert-red    { background: rgba(239,68,68,0.08);   border: 1px solid rgba(239,68,68,0.25);   color: #fca5a5; }
+  .alert-orange { background: rgba(245,158,11,0.08);  border: 1px solid rgba(245,158,11,0.25);  color: #fcd34d; }
+  .alert-green  { background: rgba(34,197,94,0.08);   border: 1px solid rgba(34,197,94,0.25);   color: #86efac; }
+  .alert-blue   { background: rgba(37,99,235,0.08);   border: 1px solid rgba(37,99,235,0.25);   color: #93c5fd; }
+
+  /* ── Checklist ── */
+  .checklist { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+  .checklist li { display: flex; align-items: flex-start; gap: 0.65rem; font-size: 0.88rem; color: #94a3b8; line-height: 1.5; }
+  .checklist li .ck { color: #4ade80; flex-shrink: 0; margin-top: 0.1rem; }
+  .checklist li .cx { color: #f87171; flex-shrink: 0; margin-top: 0.1rem; }
+  .checklist li strong { color: #e2e8f0; }
+
+  /* ── Effort row ── */
+  .effort-row { display: flex; align-items: center; justify-content: space-between; padding: 0.65rem 0; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 0.88rem; }
+  .effort-row:last-child { border-bottom: none; }
+  .effort-label { color: #cbd5e1; }
+  .effort-bar-wrap { flex: 1; margin: 0 1.25rem; height: 4px; background: rgba(255,255,255,0.08); border-radius: 9999px; }
+  .effort-bar { height: 100%; border-radius: 9999px; background: linear-gradient(90deg,#2563eb,#06b6d4); }
+  .effort-days { color: #60a5fa; font-weight: 700; font-size: 0.82rem; white-space: nowrap; }
+
+  /* ── Divider ── */
+  .divider { width: 100%; height: 1px; background: var(--border); margin: 2rem 0; }
+
+  /* ── Arch diagram ── */
+  .arch {
+    display: flex; align-items: center; justify-content: center;
+    gap: 0; flex-wrap: nowrap; overflow-x: auto; padding: 1rem 0;
+  }
+  .arch-box {
+    background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+    border-radius: 14px; padding: 1rem 1.25rem; text-align: center;
+    min-width: 120px; flex-shrink: 0;
+  }
+  .arch-box .arch-icon { font-size: 1.6rem; margin-bottom: 0.4rem; }
+  .arch-box .arch-name { font-size: 0.78rem; font-weight: 700; color: #e2e8f0; }
+  .arch-box .arch-sub  { font-size: 0.7rem; color: var(--muted); margin-top: 0.15rem; }
+  .arch-arrow { display: flex; flex-direction: column; align-items: center; padding: 0 0.5rem; gap: 0.15rem; }
+  .arch-arrow .arrow-line { width: 40px; height: 1px; background: rgba(37,99,235,0.4); position: relative; }
+  .arch-arrow .arrow-line::after { content:'▶'; position: absolute; right: -6px; top: -7px; color: #2563eb; font-size: 0.65rem; }
+  .arch-arrow .arrow-label { font-size: 0.65rem; color: #475569; font-weight: 600; text-align: center; }
+
+  /* ── Hero ── */
+  .hero {
+    padding: 5rem 0 3rem;
+    background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(37,99,235,0.18) 0%, transparent 70%);
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: rgba(37,99,235,0.12); border: 1px solid rgba(37,99,235,0.3);
+    border-radius: 9999px; padding: 0.3rem 0.9rem;
+    font-size: 0.75rem; font-weight: 600; color: #93c5fd;
+    margin-bottom: 1.5rem;
+  }
+  .hero-badge .dot { width: 6px; height: 6px; border-radius: 50%; background: #2563eb; animation: pulse 2s infinite; }
+
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+  /* ── TOC ── */
+  .toc { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem; }
+  .toc h4 { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; }
+  .toc ol { list-style: none; display: flex; flex-direction: column; gap: 0.4rem; counter-reset: toc; }
+  .toc ol li { display: flex; align-items: center; gap: 0.75rem; counter-increment: toc; }
+  .toc ol li::before { content: counter(toc,'0'counter(toc,decimal)); font-size: 0.72rem; font-weight: 700; color: var(--muted); min-width: 20px; }
+  .toc ol li a { font-size: 0.88rem; color: #94a3b8; text-decoration: none; transition: color 0.15s; }
+  .toc ol li a:hover { color: #60a5fa; }
+
+  /* ── Scrollbar ── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 9999px; }
+
+  /* ── Back to top ── */
+  .back-top {
+    position: fixed; bottom: 2rem; right: 2rem;
+    width: 40px; height: 40px; border-radius: 50%;
+    background: rgba(37,99,235,0.2); border: 1px solid rgba(37,99,235,0.4);
+    color: #60a5fa; font-size: 1rem; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    text-decoration: none; transition: background 0.15s;
+    z-index: 50;
+  }
+  .back-top:hover { background: rgba(37,99,235,0.35); }
+
+  /* ── Responsive ── */
+  @media (max-width: 680px) {
+    .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+    .arch { flex-direction: column; }
+    .arch-arrow { flex-direction: row; transform: rotate(0deg); }
+  }
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav class="topnav">
+  <a class="topnav-logo" href="#">
+    <div class="icon">💰</div>
+    <span>Budgetix</span>
+  </a>
+  <div class="topnav-links">
+    <a href="#overview">Overview</a>
+    <a href="#how-it-works">How It Works</a>
+    <a href="#aggregators">Aggregators</a>
+    <a href="#architecture">Architecture</a>
+    <a href="#security">Security</a>
+    <a href="#compliance">Compliance</a>
+    <a href="#implementation">Implementation</a>
+    <a href="#roadmap">Roadmap</a>
+  </div>
+</nav>
+
+<div class="page">
+
+  <!-- ── HERO ── -->
+  <div class="hero" id="top">
+    <div class="hero-badge"><span class="dot"></span> Technical Guide · Bank Account Linking</div>
+    <h1>Linking Real Bank<br><span class="gradient-text">Accounts to Budgetix</span></h1>
+    <p class="lead" style="margin-top:1.25rem">
+      A complete guide covering architecture, aggregator selection, security requirements, compliance obligations,
+      and a step-by-step implementation roadmap for connecting live bank data to Budgetix.
+    </p>
+    <div style="display:flex;gap:0.75rem;margin-top:1.75rem;flex-wrap:wrap">
+      <span class="tag tag-blue">Spring Boot backend</span>
+      <span class="tag tag-purple">Angular frontend</span>
+      <span class="tag tag-green">Open Banking / PSD2</span>
+      <span class="tag tag-orange">Plaid / Nordigen</span>
+      <span class="tag tag-cyan">AES-256 encryption</span>
+    </div>
+  </div>
+
+  <!-- ── TOC ── -->
+  <div class="toc" style="margin-top:2.5rem">
+    <h4>Contents</h4>
+    <ol>
+      <li><a href="#overview">What Is Bank Linking?</a></li>
+      <li><a href="#current-state">Current State of Budgetix</a></li>
+      <li><a href="#how-it-works">How the Linking Flow Works</a></li>
+      <li><a href="#aggregators">Choosing an Aggregator</a></li>
+      <li><a href="#architecture">Technical Architecture</a></li>
+      <li><a href="#backend">Backend Implementation</a></li>
+      <li><a href="#frontend">Frontend Implementation</a></li>
+      <li><a href="#dedup">Transaction Deduplication</a></li>
+      <li><a href="#security">Security Requirements</a></li>
+      <li><a href="#compliance">Compliance & Legal</a></li>
+      <li><a href="#roadmap">Implementation Roadmap</a></li>
+      <li><a href="#costs">Cost Breakdown</a></li>
+    </ol>
+  </div>
+
+  <!-- ══════════════════════════════════════════════ -->
+  <!-- 1. OVERVIEW -->
+  <!-- ══════════════════════════════════════════════ -->
+  <section id="overview">
+    <div class="section-header">
+      <div class="section-label sl-blue">01 — Overview</div>
+      <h2>What Is Bank Linking?</h2>
+    </div>
+
+    <p style="margin-bottom:1.5rem">
+      Bank linking lets users connect their real bank, credit card, and investment accounts to Budgetix so that
+      transactions are imported automatically — no manual entry, no CSV files. The user logs in to their bank
+      once through a secure overlay; from then on, new transactions appear in Budgetix within hours.
+    </p>
+
+    <div class="alert alert-blue" style="margin-bottom:1.5rem">
+      <span class="alert-icon">💡</span>
+      <div class="alert-content">
+        <h4>Key principle</h4>
+        <p>You do <strong>not</strong> connect directly to the bank. You use a licensed <strong>financial data aggregator</strong>
+        as middleware. The aggregator holds the regulatory licences and handles bank-specific integrations. Your app
+        only talks to the aggregator's clean REST API.</p>
+      </div>
+    </div>
+
+    <div class="grid-3" style="margin-top:1.5rem">
+      <div class="card">
+        <div class="ib ib-green">🏦</div>
+        <h3>Automatic Imports</h3>
+        <p style="margin-top:0.4rem;font-size:0.85rem">New transactions pulled daily (or on-demand). No manual entry needed.</p>
+      </div>
+      <div class="card">
+        <div class="ib ib-blue">✏️</div>
+        <h3>Manual Entry Stays</h3>
+        <p style="margin-top:0.4rem;font-size:0.85rem">Cash transactions, shared expenses, or corrections are always entered manually. Both modes coexist.</p>
+      </div>
+      <div class="card">
+        <div class="ib ib-purple">📄</div>
+        <h3>CSV Import Stays</h3>
+        <p style="margin-top:0.4rem;font-size:0.85rem">For banks not supported by the aggregator, or for historical data migration.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════ -->
+  <!-- 2. CURRENT STATE -->
+  <!-- ══════════════════════════════════════════════ -->
+  <section id="current-state">
+    <div class="section-header">
+      <div class="section-label sl-orange">02 — Current State</div>
+      <h2>What Budgetix Has Today</h2>
+    </div>
+
+    <div class="card">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>Status</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Manual transaction entry</td>
+            <td><span class="tag tag-green">✓ Done</span></td>
+            <td style="color:#94a3b8">Full CRUD, category assignment, notes</td>
+          </tr>
+          <tr>
+            <td>CSV import</td>
+            <td><span class="tag tag-green">✓ Done</span></td>
+            <td style="color:#94a3b8">Bulk insert via <code style="font-family:monospace;font-size:0.8em;background:rgba(255,255,255,0.06);padding:0.1rem 0.4rem;border-radius:4px">POST /transactions/import</code></td>
+          </tr>
+          <tr>
+            <td>Receipt photo upload</td>
+            <td><span class="tag tag-green">✓ Done</span></td>
+            <td style="color:#94a3b8">Backend ready; UI not yet wired</td>
+          </tr>
+          <tr>
+            <td>Real bank account linking</td>
+            <td><span class="tag tag-red">✗ Not built</span></td>
+            <td style="color:#94a3b8">This document defines what's needed</td>
+          </tr>
+          <tr>
+            <td>Automatic transaction sync</td>
+            <td><span class="tag tag-red">✗ Not built</span></td>
+            <td style="color:#94a3b8">Depends on bank linking</td>
+          </tr>
+          <tr>
+            <td>Bank transaction deduplication</td>
+            <td><span class="tag tag-red">✗ Not built</span></td>
+            <td style="color:#94a3b8">Required once auto-import is live</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════ -->
+  <!-- 3. HOW IT WORKS -->
+  <!-- ══════════════════════════════════════════════ -->
+  <section id="how-it-works">
+    <div class="section-header">
+      <div class="section-label sl-cyan">03 — How It Works</div>
+      <h2>The Full Linking Flow</h2>
+    </div>
+
+    <p style="margin-bottom:2rem">
+      Bank linking follows a standardised OAuth-style handshake. The user never enters their bank credentials
+      into Budgetix — everything sensitive happens inside the aggregator's secure overlay.
+    </p>
+
+    <!-- Architecture diagram -->
+    <div class="card" style="margin-bottom:2rem;overflow-x:auto">
+      <div class="arch">
+        <div class="arch-box" style="border-color:rgba(37,99,235,0.3)">
+          <div class="arch-icon">👤</div>
+          <div class="arch-name">User</div>
+          <div class="arch-sub">Browser</div>
+        </div>
+        <div class="arch-arrow">
+          <div class="arrow-line"></div>
+          <div class="arrow-label">clicks<br>"Connect"</div>
+        </div>
+        <div class="arch-box" style="border-color:rgba(139,92,246,0.3)">
+          <div class="arch-icon">🖥️</div>
+          <div class="arch-name">Budgetix</div>
+          <div class="arch-sub">Angular UI</div>
+        </div>
+        <div class="arch-arrow">
+          <div class="arrow-line"></div>
+          <div class="arrow-label">Link token<br>request</div>
+        </div>
+        <div class="arch-box" style="border-color:rgba(6,182,212,0.3)">
+          <div class="arch-icon">⚙️</div>
+          <div class="arch-name">Budgetix</div>
+          <div class="arch-sub">Spring Boot API</div>
+        </div>
+        <div class="arch-arrow">
+          <div class="arrow-line"></div>
+          <div class="arrow-label">API call</div>
+        </div>
+        <div class="arch-box" style="border-color:rgba(245,158,11,0.3)">
+          <div class="arch-icon">🔗</div>
+          <div class="arch-name">Aggregator</div>
+          <div class="arch-sub">Plaid / Nordigen</div>
+        </div>
+        <div class="arch-arrow">
+          <div class="arrow-line"></div>
+          <div class="arrow-label">bank login<br>OAuth</div>
+        </div>
+        <div class="arch-box" style="border-color:rgba(34,197,94,0.3)">
+          <div class="arch-icon">🏦</div>
+          <div class="arch-name">Bank</div>
+          <div class="arch-sub">HSBC, Chase…</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step by step -->
+    <div class="flow">
+      <div class="flow-item">
+        <div class="flow-left">
+          <div class="flow-num">1</div>
+          <div class="flow-line"></div>
+        </div>
+        <div class="flow-body">
+          <h3>User clicks "Connect Bank Account"</h3>
+          <p>The Accounts screen shows an optional button. Clicking it triggers a call to
+          <code style="font-family:monospace;background:rgba(255,255,255,0.06);padding:0.1rem 0.4rem;border-radius:4px">POST /bank/link/token</code>
+          on the Budgetix backend.</p>
+        </div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-left">
+          <div class="flow-num">2</div>
+          <div class="flow-line"></div>
+        </div>
+        <div class="flow-body">
+          <h3>Backend creates a Link token</h3>
+          <p>The backend calls the aggregator's API with the user's ID and scopes (transactions, balances).
+          The aggregator returns a short-lived <strong>link_token</strong> (expires in 30 minutes).
+          The backend forwards it to the frontend.</p>
+        </div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-left">
+          <div class="flow-num">3</div>
+          <div class="flow-line"></div>
+        </div>
+        <div class="flow-body">
+          <h3>Aggregator's secure overlay opens</h3>
+          <p>The frontend initialises the aggregator's SDK (e.g. Plaid Link) using the link_token.
+          A pre-built, hosted UI opens where the user selects their bank and logs in with their
+          bank credentials. <strong>Budgetix never sees these credentials.</strong></p>
+        </div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-left">
+          <div class="flow-num">4</div>
+          <div class="flow-line"></div>
+        </div>
+        <div class="flow-body">
+          <h3>Aggregator returns a public_token</h3>
+          <p>After the user successfully authenticates with their bank, the aggregator's overlay
+          calls a success callback with a one-time <strong>public_token</strong>. This is safe to
+          pass to your backend — it is useless on its own.</p>
+        </div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-left">
+          <div class="flow-num">5</div>
+          <div class="flow-line"></div>
+        </div>
+        <div class="flow-body">
+          <h3>Backend exchanges public_token → access_token</h3>
+          <p>The backend calls
+          <code style="font-family:monospace;background:rgba(255,255,255,0.06);padding:0.1rem 0.4rem;border-radius:4px">POST /bank/link/exchange</code>,
+          which exchanges the public_token for a permanent <strong>access_token</strong> via the aggregator API.
+          The access_token is <strong>encrypted and stored</strong> in the <code style="font-family:monospace;background:rgba(255,255,255,0.06);padding:0.1rem 0.4rem;border-radius:4px">bank_connections</code> table.
+          It is never sent to the frontend again.</p>
+        </div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-left">
+          <div class="flow-num">6</div>
+          <div class="flow-line"></div>
+        </div>
+        <div class="flow-body">
+          <h3>Initial sync — transactions imported</h3>
+          <p>Immediately after exchange, the backend fetches up to 90 days of historical
+          transactions and inserts them into the <code style="font-family:monospace;background:rgba(255,255,255,0.06);padding:0.1rem 0.4rem;border-radius:4px">transactions</code> table,
+          tagged with the aggregator's stable transaction ID to prevent duplicates.</p>
+        </div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-left">
+          <div class="flow-num">7</div>
+        </div>
+        <div class="flow-body">
+          <h3>Ongoing nightly sync</h3>
+          <p>A scheduled job runs every night (or on-demand) per connected account,
+          fetching new transactions using a <strong>cursor</strong> (a pointer to the last synced position
+          in the bank's transaction stream). Only new transactions are inserted.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════ -->
+  <!-- 4. AGGREGATORS -->
+  <!-- ══════════════════════════════════════════════ -->
+  <section id="aggregators">
+    <div class="section-header">
+      <div class="section-label sl-purple">04 — Aggregators</div>
+      <h2>Choosing a Financial Data Aggregator</h2>
+    </div>
+
+    <p style="margin-bottom:1.5rem">
+      The right aggregator depends on where your users are. All major providers offer a free sandbox
+      environment for development and testing.
+    </p>
+
+    <div class="card">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Provider</th>
+            <th>Region</th>
+            <th>Model</th>
+            <th>Free Tier</th>
+            <th>Cost (prod)</th>
+            <th>Rec.</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Plaid</td>
+            <td style="color:#94a3b8">US, CA, UK, EU</td>
+            <td style="color:#94a3b8">OAuth + screen-scraping</td>
+            <td style="color:#94a3b8">Sandbox only</td>
+            <td style="color:#94a3b8">~$0.30–$1.50 / account / mo</td>
+            <td><span class="tag tag-blue">Best overall</span></td>
+          </tr>
+          <tr>
+            <td>Nordigen / GoCardless</td>
+            <td style="color:#94a3b8">EU (PSD2)</td>
+            <td style="color:#94a3b8">Open Banking only</td>
+            <td style="color:#94a3b8">Free up to 50 req/day</td>
+            <td style="color:#94a3b8">Usage-based, very low</td>
+            <td><span class="tag tag-green">Best for EU / free</span></td>
+          </tr>
+          <tr>
+            <td>TrueLayer</td>
+            <td style="color:#94a3b8">UK, EU, AU</td>
+            <td style="color:#94a3b8">Open Banking</td>
+            <td style="color:#94a3b8">Sandbox only</td>
+            <td style="color:#94a3b8">Usage-based</td>
+            <td><span class="tag tag-purple">Good for UK</span></td>
+          </tr>
+          <tr>
+            <td>Yodlee</td>
+            <td style="color:#94a3b8">US, global</td>
+            <td style="color:#94a3b8">Screen-scraping + OAuth</td>
+            <td style="color:#94a3b8">No</td>
+            <td style="color:#94a3b8">Enterprise contract</td>
+            <td><span class="tag tag-orange">Enterprise only</span></td>
+          </tr>
+          <tr>
+            <td>MX</td>
+            <td style="color:#94a3b8">US-first</td>
+            <td style="color:#94a3b8">OAuth + scraping</td>
+            <td style="color:#94a3b8">No</td>
+            <td style="color:#94a3b8">Enterprise contract</td>
+            <td><span class="tag tag-orange">Enterprise only</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="grid-2" style="margin-top:1.5rem">
+      <div class="alert alert-blue">
+        <span class="alert-icon">🌍</span>
+        <div class="alert-content">
+          <h4>For global reach → Plaid</h4>
+          <p>Covers 12,000+ banks across US, Canada, UK, and EU. Has official Java SDK, excellent documentation,
+          and Sandbox environment with pre-built test credentials.</p>
+        </div>
+      </div>
+      <div class="alert alert-green">
+        <span class="alert-icon">🇪🇺</span>
+        <div class="alert-content">
+          <h4>For EU-only → Nordigen (free)</h4>
+          <p>PSD2-compliant, covers 2,000+ EU banks, free tier available. No Java SDK — use their REST API directly.
+          Ideal if your user base is primarily European.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="alert alert-orange" style="margin-top:1.25rem">
+      <span class="alert-icon">⚠️</span>
+      <div class="alert-content">
+        <h4>Screen-scraping vs Open Banking</h4>
+        <p><strong>Screen-scraping</strong> (Plaid legacy, Yodlee) simulates a browser logging into the bank's website.
+        It works with almost any bank but some banks actively block it and it breaks when UIs change.
+        <strong>Open Banking / PSD2</strong> uses official bank APIs — more reliable, legally sanctioned in EU/UK,
+        but requires the bank to have implemented the standard. Plaid now uses Open Banking where available.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════ -->
+  <!-- 5. ARCHITECTURE -->
+  <!-- ══════════════════════════════════════════════ -->
+  <section id="architecture">
+    <div class="section-header">
+      <div class="section-label sl-teal">05 — Architecture</div>
+      <h2>What Gets Added to Budgetix</h2>
+    </div>
+
+    <div class="grid-2" style="margin-bottom:1.5rem">
+      <div>
+        <h4>New backend files</h4>
+        <pre><code>src/main/java/com/budgetix/
+└── banklink/
+    ├── entity/
+    │   ├── <span class="fn">BankConnection</span>.java   <span class="cm">← stores access token</span>
+    │   └── <span class="fn">BankAccount</span>.java      <span class="cm">← linked account metadata</span>
+    ├── dto/
+    │   ├── <span class="fn">BankLinkRequest</span>.java
+    │   └── <span class="fn">BankLinkResponse</span>.java
+    ├── controller/
+    │   └── <span class="fn">BankLinkController</span>.java
+    ├── service/
+    │   ├── <span class="fn">PlaidService</span>.java     <span class="cm">← wraps Plaid SDK</span>
+    │   └── <span class="fn">BankSyncService</span>.java  <span class="cm">← fetch + deduplicate</span>
+    └── scheduler/
+        └── <span class="fn">BankSyncScheduler</span>.java <span class="cm">← nightly cron</span></code></pre>
+      </div>
+      <div>
+        <h4>New frontend files</h4>
+        <pre><code>src/app/features/
+└── accounts/
+    ├── bank-link/
+    │   ├── <span class="fn">bank-link</span>.component.ts  <span class="cm">← opens Plaid Link</span>
+    │   └── <span class="fn">bank-link</span>.component.html
+    └── connected-banks/
+        ├── <span class="fn">connected-banks</span>.component.ts
+        └── <span class="fn">connected-banks</span>.component.html
+
+src/app/core/services/
+└── <span class="fn">bank-link.service</span>.ts     <span class="cm">← API calls</span>
+
+src/app/core/models/
+└── <span class="fn">bank-link.model</span>.ts       <span class="cm">← interfaces</span></code></pre>
+      </div>
+    </div>
+
+    <h4>New database tables</h4>
+    <pre><code><span class="cm">-- Stores one row per linked institution per user</span>
+<span class="kw">CREATE TABLE</span> bank_connections (
+  id                <span class="fn">UUID</span>          <span class="kw">PRIMARY KEY</span> <span class="kw">DEFAULT</span> gen_random_uuid(),
+  user_id           <span class="fn">UUID</span>          <span class="kw">NOT NULL REFERENCES</span> users(id) <span class="kw">ON DELETE CASCADE</span>,
+  institution_id    <span class="fn">VARCHAR</span>(<span class="num">50</span>),
+  institution_name  <span class="fn">VARCHAR</span>(<span class="num">100</span>)  <span class="kw">NOT NULL</span>,
+  plaid_item_id     <span class="fn">VARCHAR</span>(<span class="num">150</span>)  <span class="kw">UNIQUE NOT NULL</span>,
+  access_token_enc  <span class="fn">TEXT</span>          <span class="kw">NOT NULL</span>,   <span class="cm">-- AES-256 encrypted, NEVER plaintext</span>
+  cursor            <span class="fn">VARCHAR</span>(<span class="num">500</span>),             <span class="cm">-- Plaid sync cursor</span>
+  last_synced_at    <span class="fn">TIMESTAMP</span>,
+  is_active         <span class="fn">BOOLEAN</span>       <span class="kw">DEFAULT</span> <span class="kw">true</span>,
+  created_at        <span class="fn">TIMESTAMP</span>     <span class="kw">DEFAULT</span> now()
+);
+
+<span class="cm">-- Links a bank_connection to a Budgetix Account entity</span>
+<span class="kw">CREATE TABLE</span> bank_accounts (
+  id                <span class="fn">UUID</span>          <span class="kw">PRIMARY KEY</span> <span class="kw">DEFAULT</span> gen_random_uuid(),
+  connection_id     <span class="fn">UUID</span>          <span class="kw">NOT NULL REFERENCES</span> bank_connections(id) <span class="kw">ON DELETE CASCADE</span>,
+  account_id        <span class="fn">UUID</span>          <span class="kw">NOT NULL REFERENCES</span> accounts(id) <span class="kw">ON DELETE CASCADE</span>,
+  plaid_account_id  <span class="fn">VARCHAR</span>(<span class="num">100</span>)  <span class="kw">NOT NULL</span>,
+  account_name      <span class="fn">VARCHAR</span>(<span class="num">150</span>),
+  account_type      <span class="fn">VARCHAR</span>(<span class="num">50</span>)
+);
+
+<span class="cm">-- Add a column to transactions to track imported rows</span>
+<span class="kw">ALTER TABLE</span> transactions
+  <span class="kw">ADD COLUMN</span> plaid_transaction_id <span class="fn">VARCHAR</span>(<span class="num">200</span>) <span class="kw">UNIQUE</span>;  <span class="cm">-- null for manual entries</span></code></pre>
+  </section>
+
+  <!-- ══════════════════════════════════════════════ -->
+  <!-- 6. BACKEND IMPLEMENTATION -->
+  <!-- ══════════════════════════════════════════════ -->
+  <section id="backend">
+    <div class="section-header">
+      <div class="section-label sl-blue">06 — Backend</div>
+      <h2>Backend Implementation</h2>
+    </div>
+
+    <h4 style="margin-bottom:0.75rem">Three core API endpoints</h4>
+    <div class="card" style="margin-bottom:1.5rem">
+      <table class="data-table">
+        <thead>
+          <tr><th>Method</th><th>Endpoint</th><th>Purpose</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="tag tag-blue">POST</span></td>
+            <td style="font-family:monospace;font-size:0.82em;color:#67e8f9">/bank/link/token</td>
+            <td style="color:#94a3b8">Create a short-lived link_token from the aggregator. Returned to frontend to open the overlay.</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-blue">POST</span></td>
+            <td style="font-family:monospace;font-size:0.82em;color:#67e8f9">/bank/link/exchange</td>
+            <td style="color:#94a3b8">Exchange public_token for access_token. Encrypt and persist. Trigger initial sync.</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-blue">POST</span></td>
+            <td style="font-family:monospace;font-size:0.82em;color:#67e8f9">/bank/sync/{connectionId}</td>
+            <td style="color:#94a3b8">Manually trigger a sync for one connection. Fetch new transactions from aggregator.</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-red">DELETE</span></td>
+            <td style="font-family:monospace;font-size:0.82em;color:#67e8f9">/bank/connections/{id}</td>
+            <td style="color:#94a3b8">Revoke access token at aggregator, delete connection record. GDPR right-to-erasure.</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-cyan">GET</span></td>
+            <td style="font-family:monospace;font-size:0.82em;color:#67e8f9">/bank/connections</td>
+            <td style="color:#94a3b8">List all connected institutions for the authenticated user.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h4 style="margin-bottom:0.75rem">PlaidService — key methods</h4>
+    <pre><code><span class="ann">@Service</span>
+<span class="ann">@RequiredArgsConstructor</span>
+<span class="kw">public class</span> <span class="fn">PlaidService</span> {
+
+    <span class="kw">private final</span> PlaidApi plaidClient;
+    <span class="kw">private final</span> EncryptionService encryptionService;
+
+    <span class="cm">/** Step 2: create link token to hand to frontend */</span>
+    <span class="kw">public</span> String <span class="fn">createLinkToken</span>(UUID userId) {
+        LinkTokenCreateRequest req = LinkTokenCreateRequest.builder()
+            .user(LinkTokenCreateRequestUser.builder().clientUserId(userId.toString()).build())
+            .clientName(<span class="str">"Budgetix"</span>)
+            .products(List.of(Products.TRANSACTIONS))
+            .countryCodes(List.of(CountryCode.US, CountryCode.GB))
+            .language(<span class="str">"en"</span>)
+            .build();
+        <span class="kw">return</span> plaidClient.linkTokenCreate(req).getLinkToken();
+    }
+
+    <span class="cm">/** Step 5: exchange public_token → access_token */</span>
+    <span class="kw">public</span> String <span class="fn">exchangePublicToken</span>(String publicToken) {
+        ItemPublicTokenExchangeResponse resp =
+            plaidClient.itemPublicTokenExchange(
+                ItemPublicTokenExchangeRequest.builder().publicToken(publicToken).build()
+            );
+        <span class="cm">// encrypt before returning — never store plaintext</span>
+        <span class="kw">return</span> encryptionService.encrypt(resp.getAccessToken());
+    }
+
+    <span class="cm">/** Step 6 & 7: fetch transactions using cursor (incremental) */</span>
+    <span class="kw">public</span> TransactionsSyncResponse <span class="fn">syncTransactions</span>(String encryptedToken, String cursor) {
+        String token = encryptionService.decrypt(encryptedToken);
+        TransactionsSyncRequest req = TransactionsSyncRequest.builder()
+            .accessToken(token)
+            .cursor(cursor)   <span class="cm">// null on first call → full history</span>
+            .build();
+        <span class="kw">return</span> plaidClient.transactionsSync(req);
+    }
+}</code></pre>
+
+    <h4 style="margin-top:1.5rem;margin-bottom:0.75rem">BankSyncService — deduplication logic</h4>
+    <pre><code><span class="ann">@Transactional</span>
+<span class="kw">public</span> <span class="kw">int</span> <span class="fn">sync</span>(BankConnection connection) {
+    TransactionsSyncResponse resp = plaidService.syncTransactions(
+        connection.getAccessTokenEnc(), connection.getCursor()
+    );
+
+    <span class="kw">int</span> imported = <span class="num">0</span>;
+    <span class="kw">for</span> (Transaction tx : resp.getAdded()) {
+        <span class="cm">// skip if we already have this plaid_transaction_id</span>
+        <span class="kw">if</span> (transactionRepository.existsByPlaidTransactionId(tx.getTransactionId())) <span class="kw">continue</span>;
+
+        Transaction entity = mapPlaidTransaction(tx, connection);
+        transactionRepository.save(entity);
+        budgetUpdateService.updateBudgetSpent(entity);
+        imported++;
+    }
+
+    <span class="cm">// save new cursor position for next sync</span>
+    connection.setCursor(resp.getNextCursor());
+    connection.setLastSyncedAt(LocalDateTime.now());
+    bankConnectionRepository.save(connection);
+
+    <span class="kw">return</span> imported;
+}</code></pre>
+  </section>
+
+  <!-- ══════════════════════════════════════════════ -->
+  <!-- 7. FRONTEND IMPLEMENTATION -->
+  <!-- ══════════════════════════════════════════════ -->
+  <section id="frontend">
+    <div class="section-header">
+      <div class="section-label sl-purple">07 — Frontend</div>
+      <h2>Frontend Implementation</h2>
+    </div>
+
+    <p style="margin-bottom:1.5rem">
+      The aggregator provides a pre-built link UI (an iframe/overlay). You initialise it with the
+      link_token from your backend and handle the callbacks.
+    </p>
+
+    <h4 style="margin-bottom:0.75rem">Install the Plaid Link script</h4>
+    <pre><code><span class="cm">// angular.json → scripts array</span>
+<span class="str">"https://cdn.plaid.com/link/v2/stable/link-initialize.js"</span>
+
+<span class="cm">// or load it lazily in the component:</span>
+<span class="kw">private</span> <span class="fn">loadPlaidScript</span>(): Promise&lt;void&gt; {
+  <span class="kw">return new</span> Promise(resolve => {
+    <span class="kw">const</span> s = document.createElement(<span class="str">'script'</span>);
+    s.src = <span class="str">'https://cdn.plaid.com/link/v2/stable/link-initialize.js'</span>;
+    s.onload = () => resolve();
+    document.head.appendChild(s);
+  });
+}</code></pre>
+
+    <h4 style="margin-top:1.5rem;margin-bottom:0.75rem">BankLinkComponent — full flow</h4>
+    <pre><code><span class="ann">@Component</span>({ ... })
+<span class="kw">export class</span> <span class="fn">BankLinkComponent</span> {
+  <span class="kw">private</span> bankLink = inject(BankLinkService);
+  loading = signal(<span class="kw">false</span>);
+
+  <span class="fn">connectBank</span>(): void {
+    this.loading.set(<span class="kw">true</span>);
+
+    <span class="cm">// 1. Get link token from our backend</span>
+    this.bankLink.getLinkToken().subscribe(({ linkToken }) => {
+
+      <span class="cm">// 2. Open Plaid Link overlay</span>
+      (<span class="kw">window as any</span>).Plaid.create({
+        token: linkToken,
+
+        <span class="cm">// 3. User authenticated → send public_token to our backend</span>
+        onSuccess: (publicToken: string, metadata: any) => {
+          this.bankLink.exchangeToken(publicToken, metadata.institution).subscribe({
+            next: () => {
+              this.loading.set(<span class="kw">false</span>);
+              <span class="cm">// refresh account list</span>
+            }
+          });
+        },
+
+        onExit: () => this.loading.set(<span class="kw">false</span>),
+        onEvent: (eventName: string) => console.debug(<span class="str">'Plaid event:'</span>, eventName),
+      }).open();
+    });
+  }
+}</code></pre>
+
+    <h4 style="margin-top:1.5rem;margin-bottom:0.75rem">What users see in the Accounts screen</h4>
+    <div class="grid-2">
+      <div class="card" style="border-color:rgba(37,99,235,0.25)">
+        <div style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.75rem">Manual / CSV accounts</div>
+        <div style="background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:10px;padding:0.85rem;margin-bottom:0.6rem;display:flex;align-items:center;gap:0.75rem">
+          <div style="width:36px;height:36px;border-radius:10px;background:rgba(34,197,94,0.15);display:flex;align-items:center;justify-content:center">💵</div>
+          <div><div style="font-size:0.85rem;font-weight:600">Cash Wallet</div><div style="font-size:0.75rem;color:var(--muted)">Manual entry</div></div>
+          <div style="margin-left:auto;font-weight:700;color:#4ade80">$240.00</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:10px;padding:0.85rem;display:flex;align-items:center;gap:0.75rem">
+          <div style="width:36px;height:36px;border-radius:10px;background:rgba(37,99,235,0.15);display:flex;align-items:center;justify-content:center">🏦</div>
+          <div><div style="font-size:0.85rem;font-weight:600">Chase Checking</div><div style="font-size:0.75rem;color:#22d3ee">🔗 Connected · synced 2h ago</div></div>
+          <div style="margin-left:auto;font-weight:700;color:#4ade80">$3,421.50</div>
+        </div>
+      </div>
+      <div class="card">
+        <div style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.75rem">Connect a bank</div>
+        <div style="background:rgba(37,99,235,0.08);border:1px dashed rgba(37,99,235,0.3);border-radius:10px;padding:1.25rem;text-align:center">
+          <div style="font-size:1.5rem;margin-bottom:0.5rem">🏦</div>
+          <div style="font-size:0.85rem;font-weight:600;margin-bottom:0.3rem">Link a bank account</div>
+          <div style="font-size:0.78rem;color:var(--muted);margin-bottom:0.85rem">Auto-import transactions securely</div>
+          <div style="background:rgba(37,99,235,0.2);border:1px solid rgba(37,99,235,0.4);border-radius:8px;padding:0.5rem 1rem;font-size:0.8rem;font-weight:700;color:#93c5fd;display:inline-block;cursor:pointer">+ Connect Bank</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════ -->
+  <!-- 8. DEDUPLICATION -->
+  <!-- ══════════════════════════════════════════════ -->
+  <section id="dedup">
+    <div class="section-header">
+      <div class="section-label sl-orange">08 — Deduplication</div>
+      <h2>Transaction Deduplication</h2>
+    </div>
+
+    <p style="margin-bottom:1.5rem">
+      This is the most complex part. A user who previously entered transactions manually and then links their bank
+      will end up with duplicates unless you handle it explicitly.
+    </p>
+
+    <div class="grid-2" style="margin-bottom:1.5rem">
+      <div class="card" style="border-color:rgba(239,68,68,0.2)">
+        <h3 style="color:#f87171;margin-bottom:0.75rem">Problem scenarios</h3>
+        <ul class="checklist">
+          <li><span class="cx">✗</span><span>User manually enters "Starbucks $4.50" then bank imports the same charge</span></li>
+          <li><span class="cx">✗</span><span>Sync runs twice due to scheduler retry — inserts the same transaction twice</span></li>
+          <li><span class="cx">✗</span><span>Pending transaction becomes posted — aggregator returns different IDs</span></li>
+        </ul>
+      </div>
+      <div class="card" style="border-color:rgba(34,197,94,0.2)">
+        <h3 style="color:#4ade80;margin-bottom:0.75rem">Solutions implemented</h3>
+        <ul class="checklist">
+          <li><span class="ck">✓</span><span><strong>plaid_transaction_id UNIQUE constraint</strong> on transactions table — DB-level dedup</span></li>
+          <li><span class="ck">✓</span><span><strong>Cursor-based sync</strong> — only fetches transactions since the last cursor, no re-fetching old ones</span></li>
+          <li><span class="ck">✓</span><span><strong>Manual vs linked badge</strong> — imported rows have non-null plaid_transaction_id, helping users spot and merge duplicates</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="alert alert-orange">
+      <span class="alert-icon">⚠️</span>
+      <div class="alert-content">
+        <h4>Pending → Posted transactions</h4>
+        <p>Banks show transactions as "pending" before they settle. Plaid may return a pending transaction with one ID,
+        then the same settled transaction with a different ID. Handle this by matching on amount + date + description
+        within a 3-day window, and flagging the manual or pending entry as a duplicate rather than creating a new row.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════ -->
+  <!-- 9. SECURITY -->
+  <!-- ══════════════════════════════════════════════ -->
+  <section id="security">
+    <div class="section-header">
+      <div class="section-label sl-red">09 — Security</div>
+      <h2>Security Requirements</h2>
+    </div>
+
+    <div class="alert alert-red" style="margin-bottom:2rem">
+      <span class="alert-icon">🔴</span>
+      <div class="alert-content">
+        <h4>Non-negotiable — these are blocking requirements</h4>
+        <p>Failing any of these requirements puts user financial data at risk and may violate banking regulations.
+        They must all be in place before going live.</p>
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-bottom:1.5rem">
+
+      <div class="card">
+        <div class="ib ib-red">🔐</div>
+        <h3>Encrypt access_token at rest</h3>
+        <p style="margin-top:0.4rem;font-size:0.85rem">The aggregator access_token grants read access to a user's bank. Encrypt it with AES-256-GCM before storing in the database. Store the encryption key in an environment variable or a secrets manager (AWS Secrets Manager, HashiCorp Vault), never in the codebase.</p>
+        <pre style="margin-top:0.85rem"><code><span class="cm">// EncryptionService.java</span>
+<span class="kw">private</span> SecretKey key = <span class="cm">/* from env */</span>;
+<span class="fn">String encrypt</span>(String plain) { <span class="cm">/* AES-256-GCM */</span> }
+<span class="fn">String decrypt</span>(String cipher) { <span class="cm">/* reverse */</span> }</code></pre>
+      </div>
+
+      <div class="card">
+        <div class="ib ib-orange">🚫</div>
+        <h3>Never send access_token to frontend</h3>
+        <p style="margin-top:0.4rem;font-size:0.85rem">The access_token lives exclusively in the backend. API responses to the frontend must never include it — not in connection list responses, not in logs, not in error messages. Only the public_token (one-time, short-lived) ever travels to the backend.</p>
+      </div>
+
+      <div class="card">
+        <div class="ib ib-cyan">🔒</div>
+        <h3>HTTPS everywhere</h3>
+        <p style="margin-top:0.4rem;font-size:0.85rem">All traffic must use TLS 1.2 or higher. This includes the backend API, the Plaid Link overlay callback, and webhook endpoints. In production, terminate TLS at Nginx or your load balancer. Never allow HTTP fallback.</p>
+      </div>
+
+      <div class="card">
+        <div class="ib ib-purple">✅</div>
+        <h3>Webhook signature validation</h3>
+        <p style="margin-top:0.4rem;font-size:0.85rem">Aggregators send webhooks for events like "new transactions available" or "token expired". Validate the <code style="font-family:monospace;background:rgba(255,255,255,0.06);padding:0.1rem 0.3rem;border-radius:4px">plaid-verification-key</code> header on every incoming webhook. Reject any request that fails validation.</p>
+      </div>
+
+      <div class="card">
+        <div class="ib ib-green">🗑️</div>
+        <h3>User can disconnect at any time</h3>
+        <p style="margin-top:0.4rem;font-size:0.85rem">The DELETE /bank/connections/{id} endpoint must call the aggregator's item/remove API to revoke the access_token at source, then delete the local record. Imported transactions are kept (user data), but the bank connection is fully severed.</p>
+      </div>
+
+      <div class="card">
+        <div class="ib ib-teal">📋</div>
+        <h3>Explicit user consent</h3>
+        <p style="margin-top:0.4rem;font-size:0.85rem">Before opening the link overlay, display a clear consent screen explaining: what data will be read (transactions, balances), how long access is retained, and how to disconnect. Log the timestamp and user ID of this consent for audit purposes.</p>
+      </div>
+
+    </div>
+
+    <h4 style="margin-bottom:1rem">Complete security checklist</h4>
+    <div class="card">
+      <ul class="checklist">
+        <li><span class="ck">✓</span><span><strong>AES-256-GCM encryption</strong> on access_token with unique IV per record</span></li>
+        <li><span class="ck">✓</span><span><strong>Encryption key in secrets manager</strong> — never hardcoded or in application.yml</span></li>
+        <li><span class="ck">✓</span><span><strong>access_token excluded</strong> from all DTO responses and logs</span></li>
+        <li><span class="ck">✓</span><span><strong>TLS 1.2+</strong> enforced on all endpoints (Nginx config)</span></li>
+        <li><span class="ck">✓</span><span><strong>Webhook signature validation</strong> on every incoming aggregator webhook</span></li>
+        <li><span class="ck">✓</span><span><strong>User isolation</strong> — all bank_connections queries filter by user_id from JWT (never by request body)</span></li>
+        <li><span class="ck">✓</span><span><strong>Revoke on disconnect</strong> — call aggregator item/remove before deleting local record</span></li>
+        <li><span class="ck">✓</span><span><strong>Consent logging</strong> — timestamp + user ID stored when user accepts bank linking</span></li>
+        <li><span class="ck">✓</span><span><strong>Rate-limit /bank/** endpoints</strong> to prevent token-stuffing attacks</span></li>
+        <li><span class="ck">✓</span><span><strong>Audit log</strong> — log every sync event (user, connection, rows imported) without token data</span></li>
+        <li><span class="ck">✓</span><span><strong>Token rotation</strong> — handle ITEM_LOGIN_REQUIRED webhooks by prompting user to re-authenticate</span></li>
+        <li><span class="ck">✓</span><span><strong>Data minimisation</strong> — only store fields you display (amount, date, description, category). Do not cache full bank API responses.</span></li>
+      </ul>
+    </div>
+
+    <h4 style="margin-top:1.75rem;margin-bottom:0.75rem">What Budgetix does NOT do (scope boundaries)</h4>
+    <div class="card">
+      <ul class="checklist">
+        <li><span class="cx">✗</span><span>Budgetix <strong>never stores or sees bank login credentials</strong> — the aggregator overlay handles all authentication</span></li>
+        <li><span class="cx">✗</span><span>Budgetix <strong>does not initiate payments or transfers</strong> — read-only access only</span></li>
+        <li><span class="cx">✗</span><span>Budgetix <strong>does not store full account numbers</strong> — only the last 4 digits from the aggregator metadata</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════ -->
+  <!-- 10. COMPLIANCE -->
+  <!-- ══════════════════════════════════════════════ -->
+  <section id="compliance">
+    <div class="section-header">
+      <div class="section-label sl-pink">10 — Compliance</div>
+      <h2>Legal &amp; Regulatory Requirements</h2>
+    </div>
+
+    <div class="grid-2" style="margin-bottom:1.5rem">
+      <div class="card" style="border-color:rgba(37,99,235,0.25)">
+        <div class="ib ib-blue">🇺🇸</div>
+        <h3>United States — Regulation E</h3>
+        <p style="margin-top:0.4rem;font-size:0.85rem">Plaid holds the required licences and handles Reg E compliance for US users. You must display a clear disclosure before linking (Plaid provides a standard consent template). Users must be able to revoke access at any time.</p>
+        <div style="margin-top:0.85rem">
+          <span class="tag tag-green">Handled by Plaid</span>
+          <span class="tag tag-orange" style="margin-left:0.4rem">Consent UI required</span>
+        </div>
+      </div>
+
+      <div class="card" style="border-color:rgba(139,92,246,0.25)">
+        <div class="ib ib-purple">🇪🇺</div>
+        <h3>European Union — PSD2 + GDPR</h3>
+        <p style="margin-top:0.4rem;font-size:0.85rem">
+          <strong>PSD2</strong> regulates account access — use a PSD2-licensed aggregator (Nordigen, TrueLayer) for EU users. Banks must have an Open Banking API; screen-scraping is not permitted.<br><br>
+          <strong>GDPR</strong> applies to all financial data. You need a lawful basis for processing (explicit consent), a Data Processing Agreement with your aggregator, a documented right-to-erasure flow, and a Privacy Policy update.
+        </p>
+        <div style="margin-top:0.85rem">
+          <span class="tag tag-red">DPA with aggregator required</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:1.5rem">
+      <h4 style="margin-bottom:1rem">What you must add to your Privacy Policy</h4>
+      <ul class="checklist">
+        <li><span class="ck">✓</span><span>Which financial data is collected (transaction history, balances, account metadata)</span></li>
+        <li><span class="ck">✓</span><span>Why it is collected (to provide spending tracking features)</span></li>
+        <li><span class="ck">✓</span><span>How long it is retained (and that users can request deletion)</span></li>
+        <li><span class="ck">✓</span><span>That a third-party aggregator (name it: e.g. Plaid Inc.) is used and has access to the data</span></li>
+        <li><span class="ck">✓</span><span>A link to the aggregator's own privacy policy</span></li>
+        <li><span class="ck">✓</span><span>That Budgetix has read-only access and cannot initiate payments</span></li>
+      </ul>
+    </div>
+
+    <div class="alert alert-orange">
+      <span class="alert-icon">⚖️</span>
+      <div class="alert-content">
+        <h4>Do you need your own banking licence?</h4>
+        <p><strong>No.</strong> The aggregator (Plaid, Nordigen) holds the regulatory licence. You are an "aggregation customer"
+        consuming their API. You do not need an FCA licence (UK), AISP registration (EU), or any US banking licence.
+        However, you must sign a Data Processing Agreement with the aggregator before going live.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════ -->
+  <!-- 11. IMPLEMENTATION ROADMAP -->
+  <!-- ══════════════════════════════════════════════ -->
+  <section id="implementation">
+    <div class="section-header">
+      <div class="section-label sl-green">11 — Implementation</div>
+      <h2>Step-by-Step Implementation Guide</h2>
+    </div>
+
+    <div class="flow">
+      <div class="flow-item">
+        <div class="flow-left">
+          <div class="flow-num" style="background:rgba(34,197,94,0.15);border-color:rgba(34,197,94,0.4);color:#4ade80">1</div>
+          <div class="flow-line" style="background:rgba(34,197,94,0.15)"></div>
+        </div>
+        <div class="flow-body">
+          <h3>Sign up for a sandbox account</h3>
+          <p>Register at <strong>dashboard.plaid.com</strong> (or <strong>nordigen.com</strong>). Get your <code style="font-family:monospace;background:rgba(255,255,255,0.06);padding:0.1rem 0.4rem;border-radius:4px">client_id</code> and <code style="font-family:monospace;background:rgba(255,255,255,0.06);padding:0.1rem 0.4rem;border-radius:4px">secret</code> from the dashboard. Add them to <code style="font-family:monospace;background:rgba(255,255,255,0.06);padding:0.1rem 0.4rem;border-radius:4px">application.yml</code> via environment variables — never hardcode them.</p>
+          <pre><code><span class="cm"># application.yml</span>
+plaid:
+  client-id: <span class="str">${PLAID_CLIENT_ID}</span>
+  secret:     <span class="str">${PLAID_SECRET}</span>
+  env:        sandbox   <span class="cm"># → development → production</span></code></pre>
+        </div>
+      </div>
+
+      <div class="flow-item">
+        <div class="flow-left">
+          <div class="flow-num" style="background:rgba(34,197,94,0.15);border-color:rgba(34,197,94,0.4);color:#4ade80">2</div>
+          <div class="flow-line" style="background:rgba(34,197,94,0.15)"></div>
+        </div>
+        <div class="flow-body">
+          <h3>Add pom.xml dependency</h3>
+          <pre><code><span class="cm">&lt;!-- Plaid Java SDK --&gt;</span>
+&lt;<span class="fn">dependency</span>&gt;
+  &lt;<span class="fn">groupId</span>&gt;com.plaid&lt;/<span class="fn">groupId</span>&gt;
+  &lt;<span class="fn">artifactId</span>&gt;plaid-java&lt;/<span class="fn">artifactId</span>&gt;
+  &lt;<span class="fn">version</span>&gt;28.3.0&lt;/<span class="fn">version</span>&gt;
+&lt;/<span class="fn">dependency</span>&gt;</code></pre>
+        </div>
+      </div>
+
+      <div class="flow-item">
+        <div class="flow-left">
+          <div class="flow-num" style="background:rgba(34,197,94,0.15);border-color:rgba(34,197,94,0.4);color:#4ade80">3</div>
+          <div class="flow-line" style="background:rgba(34,197,94,0.15)"></div>
+        </div>
+        <div class="flow-body">
+          <h3>Write the Flyway migration</h3>
+          <p>Create <code style="font-family:monospace;background:rgba(255,255,255,0.06);padding:0.1rem 0.4rem;border-radius:4px">V4__add_bank_linking.sql</code> with the three SQL statements from the Architecture section above (bank_connections, bank_accounts, and the ALTER TABLE on transactions).</p>
+        </div>
+      </div>
+
+      <div class="flow-item">
+        <div class="flow-left">
+          <div class="flow-num" style="background:rgba(34,197,94,0.15);border-color:rgba(34,197,94,0.4);color:#4ade80">4</div>
+          <div class="flow-line" style="background:rgba(34,197,94,0.15)"></div>
+        </div>
+        <div class="flow-body">
+          <h3>Implement EncryptionService</h3>
+          <p>AES-256-GCM utility class. Key sourced from an environment variable (base64-encoded 32-byte key). This service is used by PlaidService before any token is written to DB.</p>
+        </div>
+      </div>
+
+      <div class="flow-item">
+        <div class="flow-left">
+          <div class="flow-num" style="background:rgba(34,197,94,0.15);border-color:rgba(34,197,94,0.4);color:#4ade80">5</div>
+          <div class="flow-line" style="background:rgba(34,197,94,0.15)"></div>
+        </div>
+        <div class="flow-body">
+          <h3>Build PlaidService + BankSyncService</h3>
+          <p>Start with <code style="font-family:monospace;background:rgba(255,255,255,0.06);padding:0.1rem 0.4rem;border-radius:4px">createLinkToken</code>, <code style="font-family:monospace;background:rgba(255,255,255,0.06);padding:0.1rem 0.4rem;border-radius:4px">exchangePublicToken</code>, and <code style="font-family:monospace;background:rgba(255,255,255,0.06);padding:0.1rem 0.4rem;border-radius:4px">syncTransactions</code>. Test each in Sandbox before wiring into the controller. Use Plaid's sandbox credentials (<code style="font-family:monospace;background:rgba(255,255,255,0.06);padding:0.1rem 0.4rem;border-radius:4px">user_good</code> / <code style="font-family:monospace;background:rgba(255,255,255,0.06);padding:0.1rem 0.4rem;border-radius:4px">pass_good</code>).</p>
+        </div>
+      </div>
+
+      <div class="flow-item">
+        <div class="flow-left">
+          <div class="flow-num" style="background:rgba(34,197,94,0.15);border-color:rgba(34,197,94,0.4);color:#4ade80">6</div>
+          <div class="flow-line" style="background:rgba(34,197,94,0.15)"></div>
+        </div>
+        <div class="flow-body">
+          <h3>Expose BankLinkController endpoints</h3>
+          <p>Wire the 5 endpoints from the Backend section. Protect all of them with the existing JWT <code style="font-family:monospace;background:rgba(255,255,255,0.06);padding:0.1rem 0.4rem;border-radius:4px">AuthGuard</code>. All queries must filter by the authenticated user's ID — never accept a userId from the request body.</p>
+        </div>
+      </div>
+
+      <div class="flow-item">
+        <div class="flow-left">
+          <div class="flow-num" style="background:rgba(34,197,94,0.15);border-color:rgba(34,197,94,0.4);color:#4ade80">7</div>
+          <div class="flow-line" style="background:rgba(34,197,94,0.15)"></div>
+        </div>
+        <div class="flow-body">
+          <h3>Build the Angular BankLinkComponent</h3>
+          <p>Add a "Connect Bank" button to the Accounts screen. On click: call <code style="font-family:monospace;background:rgba(255,255,255,0.06);padding:0.1rem 0.4rem;border-radius:4px">POST /bank/link/token</code>, initialise Plaid Link, handle onSuccess by calling <code style="font-family:monospace;background:rgba(255,255,255,0.06);padding:0.1rem 0.4rem;border-radius:4px">POST /bank/link/exchange</code>, then refresh the account list.</p>
+        </div>
+      </div>
+
+      <div class="flow-item">
+        <div class="flow-left">
+          <div class="flow-num" style="background:rgba(34,197,94,0.15);border-color:rgba(34,197,94,0.4);color:#4ade80">8</div>
+          <div class="flow-line" style="background:rgba(34,197,94,0.15)"></div>
+        </div>
+        <div class="flow-body">
+          <h3>Add the nightly scheduler</h3>
+          <p>BankSyncScheduler annotated with <code style="font-family:monospace;background:rgba(255,255,255,0.06);padding:0.1rem 0.4rem;border-radius:4px">@Scheduled(cron = "0 0 3 * * *")</code> (3 AM daily). Iterates over all active BankConnections and calls <code style="font-family:monospace;background:rgba(255,255,255,0.06);padding:0.1rem 0.4rem;border-radius:4px">BankSyncService.sync()</code>. Sends a NotificationService event on completion with count of new transactions.</p>
+        </div>
+      </div>
+
+      <div class="flow-item">
+        <div class="flow-left">
+          <div class="flow-num" style="background:rgba(34,197,94,0.15);border-color:rgba(34,197,94,0.4);color:#4ade80">9</div>
+          <div class="flow-line" style="background:rgba(34,197,94,0.15)"></div>
+        </div>
+        <div class="flow-body">
+          <h3>Handle webhook events</h3>
+          <p>Add <code style="font-family:monospace;background:rgba(255,255,255,0.06);padding:0.1rem 0.4rem;border-radius:4px">POST /bank/webhook</code> (public, no auth) — Plaid calls this. Validate the signature header. Handle at minimum: <code style="font-family:monospace;background:rgba(255,255,255,0.06);padding:0.1rem 0.4rem;border-radius:4px">TRANSACTIONS_SYNC_UPDATES_AVAILABLE</code> (trigger sync), <code style="font-family:monospace;background:rgba(255,255,255,0.06);padding:0.1rem 0.4rem;border-radius:4px">ITEM_LOGIN_REQUIRED</code> (notify user to re-link), <code style="font-family:monospace;background:rgba(255,255,255,0.06);padding:0.1rem 0.4rem;border-radius:4px">ITEM_ERROR</code> (mark connection inactive).</p>
+        </div>
+      </div>
+
+      <div class="flow-item">
+        <div class="flow-left">
+          <div class="flow-num" style="background:rgba(34,197,94,0.15);border-color:rgba(34,197,94,0.4);color:#4ade80">10</div>
+        </div>
+        <div class="flow-body">
+          <h3>Update Privacy Policy + add consent screen</h3>
+          <p>Add the Privacy Policy items listed in the Compliance section. Add a consent modal shown before the bank link overlay opens — "By connecting your bank, you authorise Budgetix to read your transaction history via Plaid. You can disconnect at any time in Settings."</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════ -->
+  <!-- 12. ROADMAP -->
+  <!-- ══════════════════════════════════════════════ -->
+  <section id="roadmap">
+    <div class="section-header">
+      <div class="section-label sl-cyan">12 — Roadmap</div>
+      <h2>Effort &amp; Cost Breakdown</h2>
+    </div>
+
+    <h4 style="margin-bottom:1rem">Development effort</h4>
+    <div class="card" style="margin-bottom:1.5rem">
+      <div class="effort-row">
+        <span class="effort-label">Sandbox setup + credentials + pom.xml</span>
+        <div class="effort-bar-wrap"><div class="effort-bar" style="width:10%"></div></div>
+        <span class="effort-days">0.5 day</span>
+      </div>
+      <div class="effort-row">
+        <span class="effort-label">EncryptionService (AES-256-GCM)</span>
+        <div class="effort-bar-wrap"><div class="effort-bar" style="width:10%"></div></div>
+        <span class="effort-days">0.5 day</span>
+      </div>
+      <div class="effort-row">
+        <span class="effort-label">Flyway migration (V4)</span>
+        <div class="effort-bar-wrap"><div class="effort-bar" style="width:5%"></div></div>
+        <span class="effort-days">0.5 day</span>
+      </div>
+      <div class="effort-row">
+        <span class="effort-label">PlaidService + BankSyncService (backend core)</span>
+        <div class="effort-bar-wrap"><div class="effort-bar" style="width:35%"></div></div>
+        <span class="effort-days">3 days</span>
+      </div>
+      <div class="effort-row">
+        <span class="effort-label">BankLinkController (5 endpoints)</span>
+        <div class="effort-bar-wrap"><div class="effort-bar" style="width:15%"></div></div>
+        <span class="effort-days">1 day</span>
+      </div>
+      <div class="effort-row">
+        <span class="effort-label">Deduplication logic</span>
+        <div class="effort-bar-wrap"><div class="effort-bar" style="width:20%"></div></div>
+        <span class="effort-days">1.5 days</span>
+      </div>
+      <div class="effort-row">
+        <span class="effort-label">Angular BankLinkComponent + UI</span>
+        <div class="effort-bar-wrap"><div class="effort-bar" style="width:15%"></div></div>
+        <span class="effort-days">1 day</span>
+      </div>
+      <div class="effort-row">
+        <span class="effort-label">Nightly scheduler</span>
+        <div class="effort-bar-wrap"><div class="effort-bar" style="width:8%"></div></div>
+        <span class="effort-days">0.5 day</span>
+      </div>
+      <div class="effort-row">
+        <span class="effort-label">Webhook handler</span>
+        <div class="effort-bar-wrap"><div class="effort-bar" style="width:15%"></div></div>
+        <span class="effort-days">1 day</span>
+      </div>
+      <div class="effort-row" style="border-top:1px solid rgba(255,255,255,0.08);padding-top:0.8rem;margin-top:0.3rem">
+        <span class="effort-label" style="font-weight:700;color:#e2e8f0">Total</span>
+        <div class="effort-bar-wrap"><div class="effort-bar" style="width:100%;background:linear-gradient(90deg,#16a34a,#0ea5e9)"></div></div>
+        <span class="effort-days" style="color:#4ade80">~9–10 days</span>
+      </div>
+    </div>
+
+    <h4 style="margin-bottom:1rem">Monthly running cost (Plaid production)</h4>
+    <div class="card">
+      <table class="data-table">
+        <thead>
+          <tr><th>Connected accounts</th><th>Est. cost / month</th><th>Notes</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>0–100</td>
+            <td style="color:#4ade80;font-weight:700">$0</td>
+            <td style="color:#94a3b8">Sandbox is free; development environment</td>
+          </tr>
+          <tr>
+            <td>100–500</td>
+            <td style="color:#fbbf24;font-weight:700">~$50–$150</td>
+            <td style="color:#94a3b8">~$0.30 / account / mo (estimated)</td>
+          </tr>
+          <tr>
+            <td>500–2,000</td>
+            <td style="color:#fbbf24;font-weight:700">~$150–$600</td>
+            <td style="color:#94a3b8">Volume discounts available</td>
+          </tr>
+          <tr>
+            <td>2,000+</td>
+            <td style="color:#94a3b8">Custom</td>
+            <td style="color:#94a3b8">Enterprise pricing negotiated directly with Plaid</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="alert alert-green" style="margin-top:1rem">
+        <span class="alert-icon">💡</span>
+        <div class="alert-content">
+          <p><strong>Nordigen / GoCardless (EU only)</strong> offers a generous free tier — up to 50 API requests per day at no cost. For small user bases in Europe, this can be $0/month indefinitely.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ── -->
+  <div class="divider" style="margin-top:4rem"></div>
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:1.5rem 0;flex-wrap:wrap;gap:1rem">
+    <div style="display:flex;align-items:center;gap:0.6rem">
+      <div style="width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#2563eb,#0ea5e9);display:flex;align-items:center;justify-content:center;font-size:0.85rem">💰</div>
+      <span style="font-weight:900;font-size:0.95rem;letter-spacing:-0.03em">Budgetix</span>
+      <span style="color:var(--muted);font-size:0.8rem">— Bank Linking Guide</span>
+    </div>
+    <div style="font-size:0.78rem;color:var(--muted)">Last updated: May 2026 &nbsp;·&nbsp; Spring Boot 3 / Angular 21</div>
+  </div>
+
+</div>
+
+<a class="back-top" href="#top" title="Back to top">↑</a>
+
+</body>
+</html>

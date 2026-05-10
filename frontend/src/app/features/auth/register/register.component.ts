@@ -37,7 +37,10 @@ export class RegisterComponent {
     this.error.set(null);
     const { name, email, password } = this.form.value;
     this.auth.register({ name: name!, email: email!, password: password! }).subscribe({
-      next: () => { this.success.set(true); this.loading.set(false); },
+      next: () => {
+          this.loading.set(false);
+          this.router.navigate(['/auth/verify-email'], { queryParams: { email: email! } });
+        },
       error: (err) => {
         const msg: string = err?.error?.message ?? '';
         this.error.set(msg.includes('already') ? 'AUTH.REGISTER.EMAIL_EXISTS' : 'AUTH.REGISTER.FAILED');

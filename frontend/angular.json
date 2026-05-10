@@ -32,6 +32,8 @@
             ],
             "styles": [
               "node_modules/primeicons/primeicons.css",
+              "node_modules/primeng/resources/primeng.min.css",
+              "node_modules/primeng/resources/themes/lara-light-blue/theme.css",
               "node_modules/primeflex/primeflex.css",
               "src/styles.scss"
             ]
@@ -62,6 +64,9 @@
         },
         "serve": {
           "builder": "@angular/build:dev-server",
+          "options": {
+            "port": 4300
+          },
           "configurations": {
             "production": {
               "buildTarget": "frontend:build:production"

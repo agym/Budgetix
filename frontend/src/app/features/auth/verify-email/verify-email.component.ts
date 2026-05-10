@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, signal } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { RouterLink, Router, ActivatedRoute } from '@angular/router';
 import { InputTextModule } from 'primeng/inputtext';
@@ -13,14 +13,18 @@ import { TranslatePipe } from '@ngx-translate/core';
   templateUrl: './verify-email.component.html',
   styleUrl: './verify-email.component.scss'
 })
-export class VerifyEmailComponent implements OnInit {
-  loading = signal(false);
-  error   = signal(false);
-  success = signal(false);
-  email   = signal('');
+export class VerifyEmailComponent implements OnInit, OnDestroy {
+  loading       = signal(false);
+  error         = signal(false);
+  success       = signal(false);
+  email         = signal('');
+  resendSuccess = signal(false);
+  resendError   = signal<string | null>(null);
+  cooldown      = signal(0);
 
   private fb   = inject(FormBuilder);
   private auth = inject(AuthService);
+  private cooldownTimer: ReturnType<typeof setInterval> | null = null;
 
   form = this.fb.group({
     code: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(6)]]
@@ -31,6 +35,10 @@ export class VerifyEmailComponent implements OnInit {
   ngOnInit(): void {
     const emailParam = this.route.snapshot.queryParamMap.get('email');
     if (emailParam) this.email.set(emailParam);
+  }
+
+  ngOnDestroy(): void {
+    if (this.cooldownTimer) clearInterval(this.cooldownTimer);
   }
 
   submit(): void {
@@ -45,7 +53,37 @@ export class VerifyEmailComponent implements OnInit {
 
   resend(event: Event): void {
     event.preventDefault();
-    if (!this.email()) return;
-    this.auth.forgotPassword(this.email()).subscribe({ error: () => {} });
+    if (!this.email() || this.cooldown() > 0) return;
+    this.resendError.set(null);
+    this.resendSuccess.set(false);
+
+    this.auth.resendVerification(this.email()).subscribe({
+      next: () => {
+        this.resendSuccess.set(true);
+        this.startCooldown(60);
+      },
+      error: (err) => {
+        if (err?.status === 429) {
+          this.resendError.set('AUTH.VERIFY.RESEND_LIMIT');
+        } else if (err?.status === 400) {
+          this.resendError.set('AUTH.VERIFY.ALREADY_VERIFIED');
+        } else {
+          this.resendError.set('AUTH.VERIFY.RESEND_ERROR');
+        }
+      }
+    });
+  }
+
+  private startCooldown(seconds: number): void {
+    this.cooldown.set(seconds);
+    if (this.cooldownTimer) clearInterval(this.cooldownTimer);
+    this.cooldownTimer = setInterval(() => {
+      const next = this.cooldown() - 1;
+      this.cooldown.set(next);
+      if (next <= 0 && this.cooldownTimer) {
+        clearInterval(this.cooldownTimer);
+        this.cooldownTimer = null;
+      }
+    }, 1000);
   }
 }

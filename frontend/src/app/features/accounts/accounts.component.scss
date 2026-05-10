@@ -1,13 +1,102 @@
-.accounts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px,1fr)); gap:1rem; }
-.account-card { cursor: default; transition: box-shadow 0.15s; }
-.account-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-.account-icon {
-  width:44px; height:44px; border-radius:12px;
-  display:flex; align-items:center; justify-content:center; color:white;
-  i { font-size:1.2rem; }
+/* ── Page header ── */
+.page-header {
+  margin-bottom: 1.5rem;
+  h1 { font-size: 1.4rem; font-weight: 700; color: var(--text-color); letter-spacing: -0.02em; }
+  p  { color: var(--text-color-secondary); font-size: 0.875rem; margin-top: 0.2rem; }
 }
-.account-name { font-weight:600; font-size:1rem; }
-.account-type { font-size:0.8rem; }
-.account-balance { font-size:1.25rem; font-weight:700; }
-.field { display:flex; flex-direction:column; gap:0.25rem; }
-label { font-weight:500; font-size:0.875rem; }
+
+/* ── Net worth banner ── */
+.net-worth-banner {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  border-radius: 16px;
+  padding: 1.5rem 2rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  color: white;
+}
+.nw-label  { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: #94a3b8; font-weight: 700; margin-bottom: 0.3rem; }
+.nw-value  { font-size: 2rem; font-weight: 900; letter-spacing: -0.03em; }
+.nw-count  { font-size: 0.8rem; color: #64748b; margin-top: 0.2rem; }
+
+/* ── Grid ── */
+.accounts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+/* ── Account card ── */
+.account-card {
+  padding: 1.4rem;
+  cursor: default;
+  transition: box-shadow 0.15s, transform 0.15s;
+  border-left-width: 4px !important;
+  border-left-style: solid;
+  &:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08) !important; transform: translateY(-1px); }
+}
+
+.account-header {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  margin-bottom: 1.1rem;
+}
+.account-icon {
+  width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  color: white;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  i { font-size: 1.1rem; }
+}
+.account-name { font-weight: 700; font-size: 0.95rem; color: var(--text-color); }
+.account-type {
+  font-size: 0.75rem; color: var(--text-color-secondary); margin-top: 0.1rem;
+  text-transform: capitalize; font-weight: 500;
+}
+
+.account-balance-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--border);
+}
+.account-balance {
+  font-size: 1.4rem; font-weight: 800; letter-spacing: -0.025em;
+  &.positive { color: var(--text-color); }
+  &.negative { color: #dc2626; }
+}
+
+.account-actions {
+  display: flex; gap: 0.35rem;
+}
+
+/* ── Dialog form ── */
+.dialog-form { display: flex; flex-direction: column; gap: 0.9rem; padding-top: 0.25rem; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; }
+.field { display: flex; flex-direction: column; gap: 0.4rem; }
+label { font-size: 0.8rem; font-weight: 600; color: var(--text-color); }
+.req  { color: #ef4444; }
+
+.icon-picker {
+  display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.15rem;
+}
+.icon-opt {
+  width: 36px; height: 36px; border-radius: 8px; cursor: pointer;
+  border: 1.5px solid var(--border); background: var(--bg-elevated);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.95rem; color: var(--text-color-secondary);
+  transition: border-color 0.12s, background 0.12s, color 0.12s;
+  &:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-50); }
+  &.selected { border-color: var(--primary); background: var(--primary); color: white; }
+}
+
+@media (max-width: 640px) {
+  .form-row { grid-template-columns: 1fr; }
+  .accounts-grid { grid-template-columns: 1fr; }
+  .net-worth-banner { padding: 1.25rem; }
+}

@@ -11,6 +11,8 @@ public enum ErrorCode {
     EMAIL_ALREADY_EXISTS(HttpStatus.CONFLICT, "Email already registered"),
     EMAIL_NOT_VERIFIED(HttpStatus.FORBIDDEN, "Email not verified"),
     INVALID_OTP(HttpStatus.BAD_REQUEST, "Invalid or expired OTP code"),
+    EMAIL_ALREADY_VERIFIED(HttpStatus.BAD_REQUEST, "Email is already verified"),
+    RESEND_LIMIT_EXCEEDED(HttpStatus.TOO_MANY_REQUESTS, "Resend limit exceeded. Try again in 24 hours"),
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "Invalid or expired token"),
     REFRESH_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "Refresh token expired"),
     TWO_FACTOR_REQUIRED(HttpStatus.UNAUTHORIZED, "Two-factor authentication required"),

@@ -213,7 +213,12 @@
       "ERROR": "Code invalide ou expiré. Veuillez réessayer.",
       "SIGN_IN": "Continuer vers la connexion",
       "RESEND": "Vous ne l'avez pas reçu ?",
-      "RESEND_LINK": "Renvoyer le code"
+      "RESEND_LINK": "Renvoyer le code",
+      "RESEND_SENT": "Un nouveau code de vérification a été envoyé à votre adresse e-mail.",
+      "RESEND_COOLDOWN": "Renvoi disponible dans {{seconds}}s",
+      "RESEND_LIMIT": "Nombre maximum de tentatives atteint. Réessayez dans 24 heures.",
+      "RESEND_ERROR": "Échec de l'envoi du code. Veuillez réessayer.",
+      "ALREADY_VERIFIED": "Cet e-mail est déjà vérifié. Veuillez vous connecter."
     }
   }
 }

@@ -1,56 +1,165 @@
 .topbar {
-  height: var(--topbar-height); background: #ffffff;
-  border-bottom: 1px solid #e2e8f0;
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 0 1.5rem; position: sticky; top: 0; z-index: 50;
-  box-shadow: 0 1px 0 rgba(0,0,0,0.04);
+  height: var(--topbar-height);
+  background: var(--topbar-bg);
+  border-bottom: 1px solid var(--topbar-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  box-shadow: var(--topbar-shadow);
+  flex-shrink: 0;
+  transition: background 0.2s, border-color 0.2s;
 }
-.topbar-left, .topbar-right { display: flex; align-items: center; gap: 0.5rem; }
+.topbar-left, .topbar-right {
+  display: flex; align-items: center; gap: 0.5rem;
+}
 
+/* Language switcher */
 .topbar-lang ::ng-deep .lang-btn {
-  background: #f1f5f9; border-color: #e2e8f0; color: #334155;
+  background: var(--bg-elevated); border-color: var(--border); color: var(--text-color);
+  &:hover { background: var(--bg-hover); color: var(--text-color); }
 }
-.topbar-lang ::ng-deep .lang-btn:hover { background: #e2e8f0; color: #0f172a; }
-.topbar-lang ::ng-deep .lang-dropdown { top: calc(100% + 8px); }
 
+/* Icon buttons */
 .icon-btn {
-  background: none; border: none; cursor: pointer; padding: 0.5rem; border-radius: 8px;
-  color: #64748b; font-size: 1rem; transition: background 0.15s, color 0.15s;
-  display: flex; align-items: center; justify-content: center; width: 36px; height: 36px;
+  background: none; border: none; cursor: pointer;
+  padding: 0; border-radius: 9px; color: var(--icon-btn-color);
+  transition: background 0.14s, color 0.14s;
+  display: flex; align-items: center; justify-content: center;
+  width: 36px; height: 36px;
+  i { font-size: 1rem; }
+  &:hover { background: var(--icon-btn-hover); color: var(--text-color); }
 }
-.icon-btn:hover { background: #f1f5f9; color: #0f172a; }
 
+/* Notification bell */
 .notif-btn { position: relative; }
 .notif-badge {
   position: absolute; top: 4px; right: 4px;
-  min-width: 16px; height: 16px; background: #ef4444; color: white;
-  border-radius: 9999px; font-size: 0.6rem; font-weight: 700;
-  display: flex; align-items: center; justify-content: center; padding: 0 3px;
-}
-
-.divider { width: 1px; height: 24px; background: #e2e8f0; margin: 0 0.25rem; }
-
-.user-chip {
-  display: flex; align-items: center; gap: 0.6rem;
-  padding: 0.35rem 0.6rem 0.35rem 0.4rem; border-radius: 10px; cursor: pointer;
-  border: 1px solid #e2e8f0; background: #f8fafc;
-  transition: background 0.15s, border-color 0.15s; max-width: 200px;
-}
-.user-chip:hover { background: #f1f5f9; border-color: #cbd5e1; }
-.user-avatar {
-  width: 30px; height: 30px; border-radius: 8px; flex-shrink: 0;
-  background: linear-gradient(135deg, #2563eb, #0ea5e9); color: white;
+  min-width: 15px; height: 15px;
+  background: #ef4444; color: white;
+  border-radius: 9999px;
+  font-size: 0.56rem; font-weight: 700;
   display: flex; align-items: center; justify-content: center;
-  font-size: 0.7rem; font-weight: 700; letter-spacing: 0.02em;
+  padding: 0 3px;
+  border: 1.5px solid var(--topbar-bg);
+}
+
+.divider { width: 1px; height: 22px; background: var(--border); margin: 0 0.15rem; }
+
+/* User chip */
+.user-chip {
+  display: flex; align-items: center; gap: 0.55rem;
+  padding: 0.3rem 0.55rem 0.3rem 0.35rem;
+  border-radius: 10px; cursor: pointer;
+  border: 1px solid var(--chip-border); background: var(--chip-bg);
+  transition: background 0.14s, border-color 0.14s;
+  max-width: 200px;
+  &:hover { background: var(--bg-hover); border-color: var(--border-hover); }
+}
+.user-avatar {
+  width: 28px; height: 28px; border-radius: 8px; flex-shrink: 0;
+  background: linear-gradient(135deg, #2563eb 0%, #0ea5e9 100%);
+  color: white; display: flex; align-items: center; justify-content: center;
+  font-size: 0.67rem; font-weight: 700; letter-spacing: 0.03em;
 }
 .user-info { display: flex; flex-direction: column; overflow: hidden; }
-.user-name { font-size: 0.82rem; font-weight: 600; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.user-role { font-size: 0.7rem; color: #94a3b8; white-space: nowrap; }
-.chevron { font-size: 0.65rem; color: #94a3b8; flex-shrink: 0; }
+.user-name { font-size: 0.8rem; font-weight: 600; color: var(--text-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.user-role { font-size: 0.68rem; color: var(--text-color-secondary); white-space: nowrap; }
+.chevron   { font-size: 0.6rem; color: var(--text-color-secondary); flex-shrink: 0; }
 
-.logout-btn:hover { background: #fef2f2; color: #ef4444; }
+.logout-btn:hover { background: rgba(239,68,68,0.12) !important; color: #ef4444 !important; }
+
+/* ── Notification overlay panel ───────────── */
+::ng-deep .notif-panel-overlay {
+  border-radius: 16px !important;
+  overflow: hidden;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.2), 0 2px 8px rgba(0,0,0,0.1) !important;
+  border: 1px solid var(--border) !important;
+  &::before, &::after { display: none !important; }
+  .p-overlaypanel-content { padding: 0 !important; }
+}
+
+.notif-panel { width: 376px; }
+
+.notif-panel-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1rem 1.25rem 0.85rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-elevated);
+}
+.notif-panel-title {
+  display: flex; align-items: center; gap: 0.5rem;
+  font-weight: 700; font-size: 0.88rem; color: var(--text-color);
+  .pi-bell { color: var(--primary); }
+}
+.notif-count-chip {
+  background: var(--primary-50); color: var(--primary);
+  border: 1px solid var(--primary-200); border-radius: 9999px;
+  font-size: 0.7rem; font-weight: 700; padding: 0.1rem 0.5rem;
+}
+.mark-all-btn {
+  background: none; border: none; font-size: 0.775rem; color: var(--primary);
+  cursor: pointer; font-weight: 500; padding: 0;
+  &:hover { text-decoration: underline; }
+}
+
+.notif-loading, .notif-empty {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 2.5rem 1rem; color: var(--text-color-secondary); gap: 0.6rem;
+  i { font-size: 1.7rem; }
+  p { font-size: 0.84rem; margin: 0; font-weight: 500; }
+}
+.notif-empty i { color: #22c55e; }
+
+.notif-list { max-height: 390px; overflow-y: auto; }
+.notif-item {
+  display: flex; align-items: flex-start; gap: 0.75rem;
+  padding: 0.85rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer; transition: background 0.1s; position: relative;
+  &:last-child { border-bottom: none; }
+  &:hover   { background: var(--bg-hover); }
+  &.unread  { background: var(--primary-50); }
+  &.unread:hover { background: var(--primary-100); }
+}
+.notif-icon-wrap {
+  width: 36px; height: 36px; border-radius: 9px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  i { font-size: 0.85rem; }
+}
+.notif-type-danger  { background: rgba(220,38,38,0.1);  color: #dc2626; }
+.notif-type-success { background: rgba(22,163,74,0.1);  color: #16a34a; }
+.notif-type-warning { background: rgba(217,119,6,0.1);  color: #d97706; }
+.notif-type-info    { background: var(--primary-50);    color: var(--primary); }
+.notif-type-purple  { background: rgba(124,58,237,0.1); color: #7c3aed; }
+.notif-type-default { background: var(--bg-elevated);   color: var(--text-color-secondary); }
+
+.notif-body { flex: 1; min-width: 0; }
+.notif-title { font-size: 0.82rem; font-weight: 600; color: var(--text-color); margin-bottom: 0.15rem; }
+.notif-msg   { font-size: 0.775rem; color: var(--text-color-secondary); line-height: 1.45; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.notif-time  { font-size: 0.68rem; color: var(--surface-400); margin-top: 0.25rem; }
+
+.unread-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--primary); flex-shrink: 0; margin-top: 5px;
+}
+
+.notif-footer {
+  padding: 0.7rem 1.25rem; text-align: center;
+  border-top: 1px solid var(--border); background: var(--bg-elevated);
+  a {
+    font-size: 0.8rem; color: var(--primary); text-decoration: none; font-weight: 600;
+    display: inline-flex; align-items: center; gap: 0.35rem;
+    &:hover { text-decoration: underline; }
+    i { font-size: 0.62rem; }
+  }
+}
 
 @media (max-width: 640px) {
   .user-info, .chevron { display: none; }
-  .user-chip { padding: 0.35rem; }
+  .user-chip { padding: 0.3rem; }
+  .notif-panel { width: calc(100vw - 2rem); }
 }

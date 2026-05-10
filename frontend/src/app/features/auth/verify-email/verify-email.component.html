@@ -44,9 +44,25 @@
         {{ 'AUTH.VERIFY.SUBMIT' | translate }}
       </button>
     </form>
+    @if (resendSuccess()) {
+      <div class="ac-alert ac-alert-success" style="margin-top:1rem">
+        <i class="pi pi-check-circle"></i>
+        <span>{{ 'AUTH.VERIFY.RESEND_SENT' | translate }}</span>
+      </div>
+    }
+    @if (resendError()) {
+      <div class="ac-alert ac-alert-error" style="margin-top:1rem">
+        <i class="pi pi-exclamation-circle"></i>
+        <span>{{ resendError()! | translate }}</span>
+      </div>
+    }
     <p class="ac-footer" style="margin-top: 1.5rem">
-      {{ 'AUTH.VERIFY.RESEND' | translate }}
-      <a href="#" (click)="resend($event)">{{ 'AUTH.VERIFY.RESEND_LINK' | translate }}</a>
+      @if (cooldown() > 0) {
+        {{ 'AUTH.VERIFY.RESEND_COOLDOWN' | translate : { seconds: cooldown() } }}
+      } @else {
+        {{ 'AUTH.VERIFY.RESEND' | translate }}
+        <a href="#" (click)="resend($event)">{{ 'AUTH.VERIFY.RESEND_LINK' | translate }}</a>
+      }
     </p>
   }
   </div>

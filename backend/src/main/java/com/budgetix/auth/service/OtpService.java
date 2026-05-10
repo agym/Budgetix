@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +36,10 @@ public class OtpService {
 
         otpCodeRepository.save(otp);
         return code;
+    }
+
+    public long countRecentAttempts(User user, OtpType type, LocalDateTime since) {
+        return otpCodeRepository.countRecentAttempts(user.getId(), type, since);
     }
 
     @Transactional

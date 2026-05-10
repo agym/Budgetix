@@ -1,27 +1,25 @@
 import { Component, OnInit, signal, inject } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { TabViewModule } from 'primeng/tabview';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { ToastModule } from 'primeng/toast';
-import { DividerModule } from 'primeng/divider';
-import { AvatarModule } from 'primeng/avatar';
-import { MessageService } from 'primeng/api';
-import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
+import { MessageService } from 'primeng/api';
 import { NotificationService, Notification } from '../../core/services/notification.service';
 import { UserService, UserProfile } from '../../core/services/user.service';
 import { AuthService } from '../../core/services/auth.service';
+
+export type SettingsTab = 'profile' | 'security' | 'notifications';
 
 @Component({
   selector: 'app-settings',
   standalone: true,
   imports: [
     DatePipe, FormsModule, ReactiveFormsModule,
-    TabViewModule, InputTextModule, ButtonModule, ToggleButtonModule,
-    ToastModule, DividerModule, AvatarModule, TableModule, TagModule
+    InputTextModule, ButtonModule, ToggleButtonModule,
+    ToastModule, TagModule
   ],
   providers: [MessageService],
   templateUrl: './settings.component.html',
@@ -30,27 +28,39 @@ import { AuthService } from '../../core/services/auth.service';
 export class SettingsComponent implements OnInit {
   private auth = inject(AuthService);
   user = this.auth.currentUser;
+
+  activeTab        = signal<SettingsTab>('profile');
   twoFactorEnabled = signal(false);
-  savingProfile = signal(false);
-  savingPassword = signal(false);
-  toggling2FA = signal(false);
-  savingNotif = signal(false);
-  notifications = signal<Notification[]>([]);
+  savingProfile    = signal(false);
+  savingPassword   = signal(false);
+  toggling2FA      = signal(false);
+  savingNotif      = signal(false);
+  notifications    = signal<Notification[]>([]);
+  loadingNotifs    = signal(true);
 
   profileForm: FormGroup;
   passwordForm: FormGroup;
+  showCurrentPw = false;
+  showNewPw     = false;
+  showConfirmPw = false;
 
   notifPrefs = [
-    { key: 'notifyBudgetAlerts', label: 'Budget Alerts', description: 'Get notified when you approach or exceed a budget limit', value: true },
-    { key: 'notifyGoalMilestones', label: 'Goal Milestones', description: 'Notifications when you reach savings goal milestones', value: true },
-    { key: 'notifyWeeklySummary', label: 'Weekly Summary', description: 'Receive a weekly financial summary email', value: false },
-    { key: 'notifyLargeTransactions', label: 'Large Transactions', description: 'Alert when a transaction exceeds your set threshold', value: true },
+    { key: 'notifyBudgetAlerts',      label: 'Budget alerts',       description: 'Notify when you approach or exceed a budget limit', value: true },
+    { key: 'notifyGoalMilestones',    label: 'Goal milestones',     description: 'Notify when you reach savings goal milestones',      value: true },
+    { key: 'notifyWeeklySummary',     label: 'Weekly summary',      description: 'Receive a weekly financial summary',                  value: false },
+    { key: 'notifyLargeTransactions', label: 'Large transactions',  description: 'Alert when a transaction exceeds your threshold',    value: true },
   ];
 
   initials = () => {
     const name = this.user()?.name ?? 'U';
     return name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
   };
+
+  tabs: { id: SettingsTab; label: string; icon: string }[] = [
+    { id: 'profile',       label: 'Profile',        icon: 'pi-user' },
+    { id: 'security',      label: 'Security',        icon: 'pi-lock' },
+    { id: 'notifications', label: 'Notifications',   icon: 'pi-bell' },
+  ];
 
   constructor(
     private fb: FormBuilder,
@@ -59,15 +69,15 @@ export class SettingsComponent implements OnInit {
     private toast: MessageService
   ) {
     this.profileForm = this.fb.group({
-      name: ['', Validators.required],
-      currency: ['USD', [Validators.required, Validators.maxLength(3)]],
+      name:          ['', Validators.required],
+      currency:      ['USD', [Validators.required, Validators.maxLength(3)]],
       monthlyIncome: [0],
-      timezone: ['UTC']
+      timezone:      ['UTC']
     });
 
     this.passwordForm = this.fb.group({
       currentPassword: ['', Validators.required],
-      newPassword: ['', [Validators.required, Validators.minLength(8)]],
+      newPassword:     ['', [Validators.required, Validators.minLength(8)]],
       confirmPassword: ['', Validators.required]
     }, { validators: this.passwordMatchValidator });
   }
@@ -87,9 +97,9 @@ export class SettingsComponent implements OnInit {
       });
       this.twoFactorEnabled.set(data.twoFactorEnabled ?? false);
       const notifMap: Record<string, boolean> = {
-        notifyBudgetAlerts: data.profile?.notifyBudgetAlerts ?? true,
-        notifyGoalMilestones: data.profile?.notifyGoalMilestones ?? true,
-        notifyWeeklySummary: data.profile?.notifyWeeklySummary ?? false,
+        notifyBudgetAlerts:      data.profile?.notifyBudgetAlerts      ?? true,
+        notifyGoalMilestones:    data.profile?.notifyGoalMilestones    ?? true,
+        notifyWeeklySummary:     data.profile?.notifyWeeklySummary     ?? false,
         notifyLargeTransactions: data.profile?.notifyLargeTransactions ?? true,
       };
       this.notifPrefs.forEach(p => p.value = notifMap[p.key] ?? p.value);
@@ -97,7 +107,11 @@ export class SettingsComponent implements OnInit {
   }
 
   private loadNotifications(): void {
-    this.notifService.getAll(false, 0, 20).subscribe(page => this.notifications.set(page.content));
+    this.loadingNotifs.set(true);
+    this.notifService.getAll(false, 0, 30).subscribe({
+      next: page => { this.notifications.set(page.content); this.loadingNotifs.set(false); },
+      error: ()   => this.loadingNotifs.set(false)
+    });
   }
 
   saveProfile(): void {
@@ -107,10 +121,7 @@ export class SettingsComponent implements OnInit {
     this.userService.updateProfile({ name }).subscribe({
       next: () => {
         this.userService.updateSettings(settings).subscribe({
-          next: () => {
-            this.toast.add({ severity: 'success', summary: 'Profile saved' });
-            this.savingProfile.set(false);
-          },
+          next: () => { this.toast.add({ severity: 'success', summary: 'Profile saved successfully' }); this.savingProfile.set(false); },
           error: () => { this.toast.add({ severity: 'error', summary: 'Failed to save settings' }); this.savingProfile.set(false); }
         });
       },
@@ -125,8 +136,7 @@ export class SettingsComponent implements OnInit {
     this.userService.changePassword({ currentPassword, newPassword }).subscribe({
       next: () => {
         this.toast.add({ severity: 'success', summary: 'Password changed successfully' });
-        this.passwordForm.reset();
-        this.savingPassword.set(false);
+        this.passwordForm.reset(); this.savingPassword.set(false);
       },
       error: () => { this.toast.add({ severity: 'error', summary: 'Failed to change password' }); this.savingPassword.set(false); }
     });
@@ -150,11 +160,12 @@ export class SettingsComponent implements OnInit {
     this.notifPrefs.forEach(p => prefs[p.key] = p.value);
     this.userService.updateSettings(prefs).subscribe({
       next: () => { this.toast.add({ severity: 'success', summary: 'Preferences saved' }); this.savingNotif.set(false); },
-      error: () => { this.toast.add({ severity: 'error', summary: 'Failed to save preferences' }); this.savingNotif.set(false); }
+      error: () => { this.toast.add({ severity: 'error', summary: 'Failed to save' }); this.savingNotif.set(false); }
     });
   }
 
   markRead(n: Notification): void {
+    if (n.read) return;
     this.notifService.markRead(n.id).subscribe(() => {
       this.notifications.update(list => list.map(x => x.id === n.id ? { ...x, read: true } : x));
     });
@@ -174,12 +185,29 @@ export class SettingsComponent implements OnInit {
 
   getNotifIcon(type: string): string {
     const map: Record<string, string> = {
-      BUDGET_ALERT: 'pi-exclamation-triangle',
-      GOAL_COMPLETED: 'pi-flag',
-      RECURRING_TRANSACTION: 'pi-sync',
-      WEEKLY_SUMMARY: 'pi-chart-bar'
+      BUDGET_ALERT:   'pi-exclamation-triangle',
+      GOAL_COMPLETED: 'pi-check-circle',
+      GOAL_REMINDER:  'pi-flag',
+      RECURRING_TX:   'pi-sync',
+      WEEKLY_SUMMARY: 'pi-chart-bar',
+      SYSTEM:         'pi-info-circle'
     };
     return map[type] ?? 'pi-bell';
+  }
+
+  getNotifColor(type: string): string {
+    const map: Record<string, string> = {
+      BUDGET_ALERT:   'icon-danger',
+      GOAL_COMPLETED: 'icon-success',
+      GOAL_REMINDER:  'icon-warning',
+      RECURRING_TX:   'icon-info',
+      WEEKLY_SUMMARY: 'icon-purple',
+    };
+    return map[type] ?? 'icon-default';
+  }
+
+  get unreadCount(): number {
+    return this.notifications().filter(n => !n.read).length;
   }
 
   private passwordMatchValidator(form: FormGroup) {

@@ -18,9 +18,11 @@
 10. [Settings](#10-settings)
 11. [Navigation & Shell](#11-navigation--shell)
 12. [Internationalisation](#12-internationalisation)
-13. [Backend API](#13-backend-api)
-14. [Data Models](#14-data-models)
-15. [Scheduled Jobs](#15-scheduled-jobs)
+13. [Categories & Auto-Categorization](#13-categories--auto-categorization)
+14. [Recurring Transactions](#14-recurring-transactions)
+15. [Backend API](#15-backend-api)
+16. [Data Models](#16-data-models)
+17. [Scheduled Jobs](#17-scheduled-jobs)
 
 ---
 
@@ -30,8 +32,8 @@
 
 | Flow | Route | Description |
 |------|-------|-------------|
-| Register | `/auth/register` | Name, email, password, confirm password. Sends a 6-digit OTP to email. |
-| Email Verification | `/auth/verify-email?email=` | Enter 6-digit OTP. Resend link available. |
+| Register | `/auth/register` | Name, email, password, confirm password. Sends a 6-digit OTP to email; redirects directly to the verify-email page. |
+| Email Verification | `/auth/verify-email?email=` | Enter 6-digit OTP. Resend link available with a 60-second cooldown; rate-limited to 3 resends per 24 hours on the backend. Displays inline success/error feedback and "already verified" detection. |
 | Login | `/auth/login` | Email + password. If 2FA enabled, a second step asks for a 6-digit code. |
 | Forgot Password | `/auth/forgot-password` | Enter email → OTP sent. |
 | Reset Password | `/auth/reset-password?email=` | Enter OTP + new password + confirm. |
@@ -409,9 +411,112 @@ Save button calls `PUT /users/profile` + `PUT /users/settings`.
 
 ---
 
-## 13. Backend API
+## 13. Categories & Auto-Categorization
 
-### Base URL: `/api/v1` (assumed)
+> **Status:** Backend complete. Frontend UI not yet built — categories are consumed by Transactions and Budgets but are not directly managed through a dedicated screen.
+
+### Category Fields
+
+| Field | Required | Notes |
+|-------|----------|-------|
+| Name | Yes | Free text |
+| Icon | No | PrimeNG `pi-*` icon name |
+| Color | No | Hex color code |
+| Type | Yes | `INCOME` / `EXPENSE` / `TRANSFER` |
+| Parent | No | Reference to a parent category (enables hierarchy) |
+
+### Hierarchy
+
+- Categories support one level of nesting (parent → children).
+- System categories ship pre-seeded and are shared across all users (`system = true`).
+- User-created categories belong to a single user (`system = false`).
+
+### Auto-Categorization Rules
+
+Each category can have one or more keyword rules. When a new transaction is created without an explicit category, the backend's `AutoCategorizationService` scans the transaction's description against all active rules for that user and assigns the first matching category.
+
+| Rule Field | Description |
+|------------|-------------|
+| Keyword | Text to match in transaction description (case-insensitive contains) |
+| Category | The category to assign on match |
+
+**API for rules:** `POST /categories/{id}/rules` — adds a rule to a category.
+
+### Category API
+
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `/categories` | List all (system + user-created) |
+| POST | `/categories` | Create a user category |
+| PUT | `/categories/{id}` | Update a user category |
+| DELETE | `/categories/{id}` | Delete (backend prevents deletion if transactions are linked) |
+| POST | `/categories/{id}/rules` | Add an auto-categorization keyword rule |
+
+---
+
+## 14. Recurring Transactions
+
+> **Status:** Backend complete with hourly scheduler. Frontend UI not yet built.
+
+Recurring transactions automate the creation of predictable income or expense entries (e.g. salary, rent, subscriptions) so they appear in the transaction list and update account balances without manual entry.
+
+### Fields
+
+| Field | Required | Notes |
+|-------|----------|-------|
+| Amount | Yes | min 0.01 |
+| Type | Yes | `INCOME` / `EXPENSE` / `TRANSFER` |
+| Description | Yes | Free text |
+| Account | Yes | Account to debit/credit |
+| Category | No | Optional category assignment |
+| Frequency | Yes | See table below |
+| Start Date | Yes | Date of first occurrence |
+| End Date | No | If omitted the recurrence runs indefinitely |
+
+### Frequencies
+
+| Value | Interval |
+|-------|----------|
+| `DAILY` | Every day |
+| `WEEKLY` | Every 7 days |
+| `BIWEEKLY` | Every 14 days |
+| `MONTHLY` | Same day each month |
+| `QUARTERLY` | Every 3 months |
+| `YEARLY` | Once per year |
+
+### Scheduler Behaviour
+
+The `RecurringScheduler` runs **every hour**. For each active recurring transaction where `nextRun ≤ now`:
+
+1. Creates a `Transaction` record.
+2. Updates `Account.balance`.
+3. Checks for matching budgets and updates `Budget.spent`.
+4. Advances `nextRun` to the next occurrence date.
+5. Marks `lastRun = now`.
+6. Sends a `RECURRING_TX` in-app notification to the user.
+
+If an `endDate` is set and the next occurrence would fall after it, the record is deactivated (`isActive = false`).
+
+### Toggle
+
+A single endpoint enables/disables a recurring transaction without deleting it:
+
+`POST /recurring/{id}/toggle` — flips `isActive`.
+
+### Recurring API
+
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `/recurring` | List all recurring transactions |
+| POST | `/recurring` | Create a new recurring transaction |
+| POST | `/recurring/{id}/toggle` | Enable / disable |
+| DELETE | `/recurring/{id}` | Permanently delete |
+
+---
+
+## 15. Backend API
+
+### Base URL: `/api`
 
 #### Auth — `POST /auth/*`
 | Endpoint | Body |
@@ -476,7 +581,7 @@ Save button calls `PUT /users/profile` + `PUT /users/settings`.
 
 ---
 
-## 14. Data Models
+## 16. Data Models
 
 ### User
 ```
@@ -567,7 +672,7 @@ id · token · expiresAt
 
 ---
 
-## 15. Scheduled Jobs
+## 17. Scheduled Jobs
 
 ### 1. Recurring Transactions Processor
 - **Trigger:** Every hour (fixed delay).
@@ -617,14 +722,14 @@ id · token · expiresAt
 | PDF Export | ✅ | ✅ | |
 | Insights View | ✅ | ✅ | |
 | Insights Generate | ✅ | ✅ | |
-| Auto-categorisation | — | ✅ | Rule-based, UI not wired |
-| Recurring Transactions | — | ✅ | UI not yet built |
+| Auto-categorisation | — | ✅ | Rule-based, UI not wired — see §13 |
+| Recurring Transactions | — | ✅ | UI not yet built — see §14 |
 | Notifications | ✅ (Settings) | ✅ | |
 | Notification Bell | ✅ | ✅ | Unread count badge |
 | Profile Settings | ✅ | ✅ | |
 | Security Settings | ✅ | ✅ | |
 | Notification Prefs | ✅ | ✅ | |
 | Multi-language | ✅ | — | EN / FR / AR + RTL |
-| Categories CRUD | — | ✅ | UI not yet built |
+| Categories CRUD | — | ✅ | UI not yet built — see §13 |
 | Dark Mode | ❌ | — | Not implemented |
 | Mobile Responsive | Partial | — | Topbar adapts; sidebar collapses |

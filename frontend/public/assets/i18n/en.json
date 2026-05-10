@@ -213,7 +213,12 @@
       "ERROR": "Invalid or expired code. Please try again.",
       "SIGN_IN": "Continue to Sign In",
       "RESEND": "Didn't receive it?",
-      "RESEND_LINK": "Resend code"
+      "RESEND_LINK": "Resend code",
+      "RESEND_SENT": "A new verification code has been sent to your email.",
+      "RESEND_COOLDOWN": "Resend available in {{seconds}}s",
+      "RESEND_LIMIT": "Maximum resend attempts reached. Try again in 24 hours.",
+      "RESEND_ERROR": "Failed to resend code. Please try again.",
+      "ALREADY_VERIFIED": "This email is already verified. Please sign in."
     }
   }
 }

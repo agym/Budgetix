@@ -1,141 +1,254 @@
 <p-toast />
-<div class="page-header">
-  <h1>Settings</h1>
-  <p>Manage your account, preferences and notifications</p>
+
+<!-- Profile hero banner -->
+<div class="profile-hero card">
+  <div class="hero-avatar">{{ initials() }}</div>
+  <div class="hero-info">
+    <h2 class="hero-name">{{ user()?.name }}</h2>
+    <p class="hero-email">{{ user()?.email }}</p>
+    <div class="hero-badges">
+      <span class="hero-badge role-badge">
+        <i class="pi pi-user"></i> Personal account
+      </span>
+      <span class="hero-badge" [class.badge-green]="twoFactorEnabled()" [class.badge-gray]="!twoFactorEnabled()">
+        <i class="pi" [class.pi-shield]="twoFactorEnabled()" [class.pi-shield-slash]="!twoFactorEnabled()"></i>
+        {{ twoFactorEnabled() ? '2FA on' : '2FA off' }}
+      </span>
+    </div>
+  </div>
 </div>
 
-<p-tabView>
-  <p-tabPanel header="Profile">
-    <div class="settings-section">
-      <div class="avatar-row">
-        <p-avatar [label]="initials()" size="xlarge" shape="circle" styleClass="user-avatar" />
-        <div>
-          <div class="user-name-display">{{ user()?.name }}</div>
-          <small class="text-muted">{{ user()?.email }}</small>
-        </div>
-      </div>
-      <p-divider />
-      <form [formGroup]="profileForm" (ngSubmit)="saveProfile()">
-        <div class="form-grid">
-          <div class="field">
-            <label>Full Name</label>
-            <input pInputText formControlName="name" placeholder="Your name" />
-          </div>
-          <div class="field">
-            <label>Currency</label>
-            <input pInputText formControlName="currency" placeholder="USD" maxlength="3" />
-          </div>
-          <div class="field">
-            <label>Monthly Income</label>
-            <input pInputText formControlName="monthlyIncome" type="number" placeholder="0.00" />
-          </div>
-          <div class="field">
-            <label>Timezone</label>
-            <input pInputText formControlName="timezone" placeholder="UTC" />
-          </div>
-        </div>
-        <p-button type="submit" label="Save Profile" icon="pi pi-check"
-                  [loading]="savingProfile()" [disabled]="profileForm.invalid" />
-      </form>
-    </div>
-  </p-tabPanel>
+<!-- Layout: side nav + content -->
+<div class="settings-layout">
 
-  <p-tabPanel header="Security">
-    <div class="settings-section">
-      <h3>Change Password</h3>
-      <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">
-        <div class="form-col">
-          <div class="field">
-            <label>Current Password</label>
-            <input pInputText type="password" formControlName="currentPassword" placeholder="Current password" />
+  <!-- Sidebar nav -->
+  <div class="settings-nav card">
+    @for (tab of tabs; track tab.id) {
+      <button class="nav-tab" [class.active]="activeTab() === tab.id" (click)="activeTab.set(tab.id)">
+        <i class="pi" [class]="tab.icon"></i>
+        <span>{{ tab.label }}</span>
+        @if (tab.id === 'notifications' && unreadCount > 0) {
+          <span class="nav-badge">{{ unreadCount }}</span>
+        }
+        <i class="pi pi-chevron-right chevron"></i>
+      </button>
+    }
+  </div>
+
+  <!-- Content area -->
+  <div class="settings-content">
+
+    <!-- ── Profile tab ── -->
+    @if (activeTab() === 'profile') {
+      <div class="content-card card">
+        <div class="section-head">
+          <i class="pi pi-user section-icon icon-blue"></i>
+          <div>
+            <h3>Profile Information</h3>
+            <p>Update your name, currency and account preferences</p>
           </div>
-          <div class="field">
-            <label>New Password</label>
-            <input pInputText type="password" formControlName="newPassword" placeholder="New password (min 8 chars)" />
-          </div>
-          <div class="field">
-            <label>Confirm New Password</label>
-            <input pInputText type="password" formControlName="confirmPassword" placeholder="Confirm new password" />
-            @if (passwordForm.errors?.['mismatch'] && passwordForm.touched) {
-              <small class="text-danger">Passwords do not match</small>
-            }
-          </div>
-          <p-button type="submit" label="Change Password" icon="pi pi-lock"
-                    [loading]="savingPassword()"
-                    [disabled]="passwordForm.invalid || !!passwordForm.errors?.['mismatch']" />
         </div>
-      </form>
 
-      <p-divider />
-
-      <h3>Two-Factor Authentication</h3>
-      <div class="two-factor-row">
-        <div>
-          <p class="mb-1">Protect your account with an extra layer of security.</p>
-          <p-tag [value]="twoFactorEnabled() ? 'Enabled' : 'Disabled'"
-                 [severity]="twoFactorEnabled() ? 'success' : 'secondary'" />
-        </div>
-        <p-button [label]="twoFactorEnabled() ? 'Disable 2FA' : 'Enable 2FA'"
-                  [severity]="twoFactorEnabled() ? 'danger' : 'success'"
-                  [outlined]="true"
-                  (onClick)="toggleTwoFactor()"
-                  [loading]="toggling2FA()" />
-      </div>
-    </div>
-  </p-tabPanel>
-
-  <p-tabPanel header="Notifications">
-    <div class="settings-section">
-      <h3>Notification Preferences</h3>
-      <div class="notif-toggles">
-        @for (pref of notifPrefs; track pref.key) {
-          <div class="notif-row">
-            <div>
-              <div class="notif-label">{{ pref.label }}</div>
-              <small class="text-muted">{{ pref.description }}</small>
+        <form [formGroup]="profileForm" (ngSubmit)="saveProfile()">
+          <div class="form-grid">
+            <div class="field">
+              <label>Full name <span class="req">*</span></label>
+              <input pInputText formControlName="name" placeholder="Your name" />
             </div>
-            <p-toggleButton [(ngModel)]="pref.value" onLabel="On" offLabel="Off" onIcon="pi pi-check" offIcon="pi pi-times" />
+            <div class="field">
+              <label>Currency <span class="req">*</span></label>
+              <input pInputText formControlName="currency" placeholder="USD" maxlength="3" />
+              <small class="field-hint">3-letter ISO code (USD, EUR, GBP…)</small>
+            </div>
+            <div class="field">
+              <label>Monthly income</label>
+              <input pInputText formControlName="monthlyIncome" type="number" placeholder="0.00" />
+              <small class="field-hint">Used for savings rate calculations</small>
+            </div>
+            <div class="field">
+              <label>Timezone</label>
+              <input pInputText formControlName="timezone" placeholder="UTC" />
+              <small class="field-hint">e.g. America/New_York, Europe/Paris</small>
+            </div>
+          </div>
+          <div class="form-actions">
+            <p-button type="submit" label="Save profile" icon="pi pi-check"
+                      [loading]="savingProfile()" [disabled]="profileForm.invalid" />
+          </div>
+        </form>
+      </div>
+    }
+
+    <!-- ── Security tab ── -->
+    @if (activeTab() === 'security') {
+
+      <div class="content-card card">
+        <div class="section-head">
+          <i class="pi pi-key section-icon icon-orange"></i>
+          <div>
+            <h3>Change password</h3>
+            <p>Use a strong password of at least 8 characters</p>
+          </div>
+        </div>
+
+        <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">
+          <div class="form-col">
+            <div class="field">
+              <label>Current password</label>
+              <div class="pw-wrap">
+                <input pInputText [type]="showCurrentPw ? 'text' : 'password'"
+                       formControlName="currentPassword" placeholder="Your current password" />
+                <button type="button" class="pw-eye" (click)="showCurrentPw=!showCurrentPw">
+                  <i class="pi" [class.pi-eye]="!showCurrentPw" [class.pi-eye-slash]="showCurrentPw"></i>
+                </button>
+              </div>
+            </div>
+            <div class="field">
+              <label>New password</label>
+              <div class="pw-wrap">
+                <input pInputText [type]="showNewPw ? 'text' : 'password'"
+                       formControlName="newPassword" placeholder="Minimum 8 characters" />
+                <button type="button" class="pw-eye" (click)="showNewPw=!showNewPw">
+                  <i class="pi" [class.pi-eye]="!showNewPw" [class.pi-eye-slash]="showNewPw"></i>
+                </button>
+              </div>
+            </div>
+            <div class="field">
+              <label>Confirm new password</label>
+              <div class="pw-wrap">
+                <input pInputText [type]="showConfirmPw ? 'text' : 'password'"
+                       formControlName="confirmPassword" placeholder="Repeat new password"
+                       [class.p-invalid]="passwordForm.errors?.['mismatch'] && passwordForm.touched" />
+                <button type="button" class="pw-eye" (click)="showConfirmPw=!showConfirmPw">
+                  <i class="pi" [class.pi-eye]="!showConfirmPw" [class.pi-eye-slash]="showConfirmPw"></i>
+                </button>
+              </div>
+              @if (passwordForm.errors?.['mismatch'] && passwordForm.touched) {
+                <small class="field-error">Passwords do not match</small>
+              }
+            </div>
+            <div class="form-actions">
+              <p-button type="submit" label="Change password" icon="pi pi-lock"
+                        [loading]="savingPassword()"
+                        [disabled]="passwordForm.invalid || !!passwordForm.errors?.['mismatch']" />
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="content-card card" style="margin-top:1rem">
+        <div class="section-head">
+          <i class="pi pi-shield section-icon" [class.icon-green]="twoFactorEnabled()" [class.icon-gray]="!twoFactorEnabled()"></i>
+          <div>
+            <h3>Two-factor authentication</h3>
+            <p>Add an extra layer of security with email-based 2FA</p>
+          </div>
+        </div>
+
+        <div class="tfa-row">
+          <div class="tfa-status">
+            <span class="status-pill" [class.pill-green]="twoFactorEnabled()" [class.pill-gray]="!twoFactorEnabled()">
+              <span class="pill-dot"></span>
+              {{ twoFactorEnabled() ? 'Enabled' : 'Disabled' }}
+            </span>
+            <p class="tfa-desc">
+              {{ twoFactorEnabled()
+                ? 'A verification code is required on every login.'
+                : 'Enable to require a code on every login for added security.' }}
+            </p>
+          </div>
+          <p-button
+            [label]="twoFactorEnabled() ? 'Disable 2FA' : 'Enable 2FA'"
+            [severity]="twoFactorEnabled() ? 'danger' : 'success'"
+            [outlined]="true"
+            (onClick)="toggleTwoFactor()"
+            [loading]="toggling2FA()" />
+        </div>
+      </div>
+    }
+
+    <!-- ── Notifications tab ── -->
+    @if (activeTab() === 'notifications') {
+
+      <div class="content-card card">
+        <div class="section-head">
+          <i class="pi pi-sliders-h section-icon icon-blue"></i>
+          <div>
+            <h3>Notification preferences</h3>
+            <p>Choose which events trigger a notification</p>
+          </div>
+        </div>
+
+        <div class="notif-prefs">
+          @for (pref of notifPrefs; track pref.key) {
+            <div class="pref-row">
+              <div class="pref-info">
+                <div class="pref-label">{{ pref.label }}</div>
+                <div class="pref-desc">{{ pref.description }}</div>
+              </div>
+              <button class="toggle-btn" [class.on]="pref.value" (click)="pref.value = !pref.value">
+                <span class="toggle-thumb"></span>
+              </button>
+            </div>
+          }
+        </div>
+        <div class="form-actions" style="margin-top:1.5rem">
+          <p-button label="Save preferences" icon="pi pi-check"
+                    (onClick)="saveNotifPrefs()" [loading]="savingNotif()" />
+        </div>
+      </div>
+
+      <div class="content-card card" style="margin-top:1rem">
+        <div class="section-head-row">
+          <div class="section-head">
+            <i class="pi pi-bell section-icon icon-purple"></i>
+            <div>
+              <h3>Recent notifications</h3>
+              <p>{{ notifications().length }} total · {{ unreadCount }} unread</p>
+            </div>
+          </div>
+          @if (unreadCount > 0) {
+            <p-button label="Mark all read" size="small" [text]="true" (onClick)="markAllRead()" />
+          }
+        </div>
+
+        @if (loadingNotifs()) {
+          <div class="notif-loading-state">
+            <i class="pi pi-spin pi-spinner"></i> Loading…
+          </div>
+        } @else if (notifications().length === 0) {
+          <div class="empty-state" style="padding:2.5rem 1rem">
+            <i class="pi pi-check-circle" style="color:#22c55e"></i>
+            <p>No notifications yet</p>
+          </div>
+        } @else {
+          <div class="notif-list">
+            @for (n of notifications(); track n.id) {
+              <div class="notif-item" [class.unread]="!n.read">
+                <div class="notif-icon" [class]="getNotifColor(n.type)">
+                  <i class="pi" [class]="getNotifIcon(n.type)"></i>
+                </div>
+                <div class="notif-body">
+                  <div class="notif-title">{{ n.title }}</div>
+                  <div class="notif-msg">{{ n.message }}</div>
+                  <div class="notif-time">{{ n.createdAt | date:'MMM d, y · h:mm a' }}</div>
+                </div>
+                <div class="notif-actions">
+                  @if (!n.read) {
+                    <button class="notif-action-btn read-btn" (click)="markRead(n)" title="Mark read">
+                      <i class="pi pi-check"></i>
+                    </button>
+                  }
+                  <button class="notif-action-btn delete-btn" (click)="deleteNotif(n)" title="Delete">
+                    <i class="pi pi-trash"></i>
+                  </button>
+                </div>
+              </div>
+            }
           </div>
         }
       </div>
-      <p-button label="Save Preferences" icon="pi pi-check" (onClick)="saveNotifPrefs()" [loading]="savingNotif()" [style]="{'margin-top': '1rem'}" />
+    }
 
-      <p-divider />
-
-      <div class="flex align-items-center justify-content-between mb-3">
-        <h3 style="margin:0">Recent Notifications</h3>
-        <p-button label="Mark all read" size="small" [text]="true" (onClick)="markAllRead()" />
-      </div>
-
-      <p-table [value]="notifications()" styleClass="p-datatable-sm" [rows]="10" [paginator]="notifications().length > 10">
-        <ng-template pTemplate="body" let-n>
-          <tr [class.unread-row]="!n.read">
-            <td>
-              <div class="flex align-items-start gap-2">
-                <i class="pi" [class]="getNotifIcon(n.type)" style="margin-top:3px"></i>
-                <div>
-                  <div style="font-weight:500">{{ n.title }}</div>
-                  <small class="text-muted">{{ n.message }}</small>
-                </div>
-              </div>
-            </td>
-            <td style="white-space:nowrap;text-align:right">
-              <small class="text-muted">{{ n.createdAt | date:'mediumDate' }}</small>
-            </td>
-            <td style="text-align:right;width:80px">
-              @if (!n.read) {
-                <p-button icon="pi pi-check" [rounded]="true" [text]="true" size="small"
-                          severity="success" title="Mark read" (onClick)="markRead(n)" />
-              }
-              <p-button icon="pi pi-trash" [rounded]="true" [text]="true" size="small"
-                        severity="danger" title="Delete" (onClick)="deleteNotif(n)" />
-            </td>
-          </tr>
-        </ng-template>
-        <ng-template pTemplate="emptymessage">
-          <tr><td colspan="3" style="text-align:center;padding:2rem;color:var(--surface-500)">No notifications</td></tr>
-        </ng-template>
-      </p-table>
-    </div>
-  </p-tabPanel>
-</p-tabView>
+  </div>
+</div>

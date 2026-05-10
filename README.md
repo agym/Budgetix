@@ -88,7 +88,7 @@ npm install        # first time only
 ng serve
 ```
 
-Opens on **http://localhost:4200**.
+Opens on **http://localhost:4300**.
 
 ---
 
@@ -110,7 +110,7 @@ Use **DBeaver**, **pgAdmin**, or any PostgreSQL client with these credentials:
 
 ## 6. Default app credentials
 
-Register a new account at http://localhost:4200, or use the seeded demo user if migrations include one.
+Register a new account at http://localhost:4300, or use the seeded demo user if migrations include one.
 
 ---
 

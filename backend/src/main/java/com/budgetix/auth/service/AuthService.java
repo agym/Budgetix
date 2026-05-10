@@ -12,6 +12,7 @@ import com.budgetix.user.repository.RefreshTokenRepository;
 import com.budgetix.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +30,12 @@ public class AuthService {
     private final JwtUtil jwtUtil;
     private final OtpService otpService;
     private final EmailService emailService;
+
+    @Value("${app.verification.max-resend-attempts:3}")
+    private int maxResendAttempts;
+
+    @Value("${app.verification.resend-window-hours:24}")
+    private int resendWindowHours;
 
     @Transactional
     public void register(RegisterRequest req) {
@@ -111,6 +118,28 @@ public class AuthService {
         otpService.validate(user, OtpType.EMAIL_VERIFICATION, req.code());
         user.setEmailVerified(true);
         userRepository.save(user);
+    }
+
+    @Transactional
+    public void resendVerification(ForgotPasswordRequest req) {
+        User user = userRepository.findByEmail(req.email().toLowerCase())
+            .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+
+        if (user.isEmailVerified()) {
+            throw new AppException(ErrorCode.EMAIL_ALREADY_VERIFIED);
+        }
+
+        long attempts = otpService.countRecentAttempts(
+            user, OtpType.EMAIL_VERIFICATION,
+            LocalDateTime.now().minusHours(resendWindowHours)
+        );
+
+        if (attempts >= maxResendAttempts) {
+            throw new AppException(ErrorCode.RESEND_LIMIT_EXCEEDED);
+        }
+
+        String code = otpService.generateAndSave(user, OtpType.EMAIL_VERIFICATION, 15);
+        emailService.sendVerificationEmail(user.getEmail(), user.getName(), code);
     }
 
     @Transactional

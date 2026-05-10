@@ -1,137 +1,253 @@
 <p-toast />
 <p-confirmDialog />
 
+<!-- Page header -->
 <div class="page-header">
-  <h1>Transactions</h1>
-  <p>Manage your income and expenses</p>
-</div>
-
-<div class="card" style="margin-bottom:1rem">
-  <div class="flex align-items-center gap-3 flex-wrap">
-    <input pInputText placeholder="Search..." [(ngModel)]="search" (input)="onSearch()" [style]="{'width': '220px'}"/>
-
-    <p-dropdown [options]="typeOptions" [(ngModel)]="filterType" placeholder="All Types"
-                (onChange)="loadTransactions()" optionLabel="label" optionValue="value"
-                [showClear]="true" [style]="{'width': '150px'}"/>
-
-    <p-dropdown [options]="accountOptions()" [(ngModel)]="filterAccount" placeholder="All Accounts"
-                (onChange)="loadTransactions()" optionLabel="name" optionValue="id"
-                [showClear]="true" [style]="{'width': '180px'}"/>
-
-    <div class="ml-auto flex gap-2">
-      <p-button label="Import CSV" icon="pi pi-upload" severity="secondary" (onClick)="showImport=true" />
-      <p-button label="Add Transaction" icon="pi pi-plus" (onClick)="openCreate()" />
-    </div>
+  <div>
+    <h1>Transactions</h1>
+    <p>Track and manage all your income and expenses</p>
+  </div>
+  <div class="header-actions">
+    <p-button label="Import CSV" icon="pi pi-upload" severity="secondary" [outlined]="true" (onClick)="showImport=true" />
+    <p-button label="New Transaction" icon="pi pi-plus" (onClick)="openCreate()" />
   </div>
 </div>
 
-<div class="card">
-  <p-table [value]="transactions()" [loading]="loading()" dataKey="id"
-           [(selection)]="selectedTxs" [paginator]="true" [rows]="20"
-           [totalRecords]="totalRecords()" [lazy]="true" (onLazyLoad)="onLazyLoad($event)"
-           styleClass="p-datatable-sm">
-    <ng-template pTemplate="header">
-      <tr>
-        <th style="width:3rem"><p-tableHeaderCheckbox /></th>
-        <th pSortableColumn="date">Date <p-sortIcon field="date"/></th>
-        <th>Description</th>
-        <th>Category</th>
-        <th>Account</th>
-        <th pSortableColumn="amount">Amount <p-sortIcon field="amount"/></th>
-        <th>Type</th>
-        <th style="width:100px">Actions</th>
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-tx>
-      <tr>
-        <td><p-tableCheckbox [value]="tx" /></td>
-        <td>{{ tx.date | date:'mediumDate' }}</td>
-        <td>{{ tx.description || '—' }}</td>
-        <td>
-          @if (tx.category) {
-            <span class="flex align-items-center gap-1">
-              <i [class]="'pi ' + (tx.category.icon || 'pi-tag')" [style.color]="tx.category.color"></i>
-              {{ tx.category.name }}
-            </span>
-          } @else {
-            <span class="text-muted">Uncategorized</span>
-          }
-        </td>
-        <td>{{ tx.account?.name }}</td>
-        <td [class.text-income]="tx.type==='INCOME'" [class.text-expense]="tx.type==='EXPENSE'">
-          <strong>{{ tx.type === 'INCOME' ? '+' : '-' }}{{ tx.amount | currency }}</strong>
-        </td>
-        <td>
-          <span [class]="'badge-' + tx.type.toLowerCase()">{{ tx.type }}</span>
-        </td>
-        <td>
-          <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="secondary"
-                    (onClick)="openEdit(tx)" />
-          <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger"
-                    (onClick)="confirmDelete(tx)" />
-        </td>
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="emptymessage">
-      <tr><td colspan="8">
-        <div class="empty-state"><i class="pi pi-credit-card"></i><p>No transactions found</p></div>
-      </td></tr>
-    </ng-template>
-  </p-table>
+<!-- KPI summary row -->
+<div class="kpi-row">
+  @if (statsLoading()) {
+    @for (i of [1,2,3]; track i) {
+      <p-skeleton height="88px" borderRadius="12px" />
+    }
+  } @else {
+    <div class="tx-kpi-card income">
+      <div class="tx-kpi-icon"><i class="pi pi-arrow-down-left"></i></div>
+      <div class="tx-kpi-content">
+        <div class="tx-kpi-label">Monthly Income</div>
+        <div class="tx-kpi-value">{{ overview()?.totalIncome | currency }}</div>
+        <div class="tx-kpi-sub"
+             [class.positive]="(overview()?.incomeChangePercent ?? 0) > 0"
+             [class.negative]="(overview()?.incomeChangePercent ?? 0) < 0">
+          <i class="pi" [class.pi-arrow-up]="(overview()?.incomeChangePercent ?? 0) > 0"
+                        [class.pi-arrow-down]="(overview()?.incomeChangePercent ?? 0) < 0"
+                        [class.pi-minus]="(overview()?.incomeChangePercent ?? 0) === 0"></i>
+          {{ (overview()?.incomeChangePercent ?? 0) | number:'1.1-1' }}% vs last month
+        </div>
+      </div>
+    </div>
+
+    <div class="tx-kpi-card expense">
+      <div class="tx-kpi-icon"><i class="pi pi-arrow-up-right"></i></div>
+      <div class="tx-kpi-content">
+        <div class="tx-kpi-label">Monthly Expenses</div>
+        <div class="tx-kpi-value">{{ overview()?.totalExpenses | currency }}</div>
+        <div class="tx-kpi-sub"
+             [class.negative]="(overview()?.expenseChangePercent ?? 0) > 0"
+             [class.positive]="(overview()?.expenseChangePercent ?? 0) < 0">
+          <i class="pi" [class.pi-arrow-up]="(overview()?.expenseChangePercent ?? 0) > 0"
+                        [class.pi-arrow-down]="(overview()?.expenseChangePercent ?? 0) < 0"
+                        [class.pi-minus]="(overview()?.expenseChangePercent ?? 0) === 0"></i>
+          {{ (overview()?.expenseChangePercent ?? 0) | number:'1.1-1' }}% vs last month
+        </div>
+      </div>
+    </div>
+
+    <div class="tx-kpi-card net" [class.positive-net]="(overview()?.netSavings ?? 0) >= 0"
+                                  [class.negative-net]="(overview()?.netSavings ?? 0) < 0">
+      <div class="tx-kpi-icon"><i class="pi pi-wallet"></i></div>
+      <div class="tx-kpi-content">
+        <div class="tx-kpi-label">Net Savings</div>
+        <div class="tx-kpi-value">{{ overview()?.netSavings | currency }}</div>
+        <div class="tx-kpi-sub">
+          Savings rate: <strong>{{ overview()?.savingsRate | number:'1.1-1' }}%</strong>
+        </div>
+      </div>
+    </div>
+  }
+</div>
+
+<!-- Filter toolbar -->
+<div class="card filter-bar">
+  <div class="filter-inputs">
+    <div class="search-wrap">
+      <i class="pi pi-search search-icon"></i>
+      <input pInputText placeholder="Search transactions…" [(ngModel)]="search"
+             (input)="onSearch()" class="search-input" />
+      @if (search) {
+        <button class="clear-btn" (click)="search=''; onSearch()"><i class="pi pi-times"></i></button>
+      }
+    </div>
+
+    <p-dropdown [options]="typeOptions" [(ngModel)]="filterType" placeholder="All types"
+                (onChange)="loadTransactions()" optionLabel="label" optionValue="value"
+                [showClear]="true" styleClass="filter-drop" />
+
+    <p-dropdown [options]="accountOptions()" [(ngModel)]="filterAccount" placeholder="All accounts"
+                (onChange)="loadTransactions()" optionLabel="name" optionValue="id"
+                [showClear]="true" styleClass="filter-drop" />
+
+    @if (hasFilters) {
+      <button class="clear-filters-btn" (click)="clearFilters()">
+        <i class="pi pi-filter-slash"></i> Clear filters
+      </button>
+    }
+  </div>
 
   @if (selectedTxs.length > 0) {
-    <div class="flex align-items-center gap-2 mt-2">
-      <span class="text-muted">{{ selectedTxs.length }} selected</span>
-      <p-button label="Delete Selected" icon="pi pi-trash" severity="danger" [outlined]="true"
+    <div class="bulk-bar">
+      <span class="bulk-label"><i class="pi pi-check-square"></i> {{ selectedTxs.length }} selected</span>
+      <p-button label="Delete selected" icon="pi pi-trash" severity="danger" [outlined]="true"
                 size="small" (onClick)="bulkDelete()" />
     </div>
   }
 </div>
 
+<!-- Transactions table -->
+<div class="card table-card">
+  <p-table [value]="transactions()" [loading]="loading()" dataKey="id"
+           [(selection)]="selectedTxs" [paginator]="true" [rows]="20"
+           [totalRecords]="totalRecords()" [lazy]="true" (onLazyLoad)="onLazyLoad($event)"
+           styleClass="p-datatable-sm p-datatable-gridlines" [rowHover]="true">
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width:3rem"><p-tableHeaderCheckbox /></th>
+        <th pSortableColumn="date" style="width:120px">Date <p-sortIcon field="date"/></th>
+        <th>Description</th>
+        <th style="width:160px">Category</th>
+        <th style="width:140px">Account</th>
+        <th pSortableColumn="amount" style="width:130px;text-align:right">Amount <p-sortIcon field="amount"/></th>
+        <th style="width:100px;text-align:center">Type</th>
+        <th style="width:90px;text-align:center">Actions</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-tx>
+      <tr>
+        <td><p-tableCheckbox [value]="tx" /></td>
+        <td class="date-cell">{{ tx.date | date:'MMM d, y' }}</td>
+        <td class="desc-cell">
+          <span class="desc-text">{{ tx.description || '—' }}</span>
+        </td>
+        <td>
+          @if (tx.category) {
+            <span class="cat-chip">
+              <i [class]="'pi ' + (tx.category.icon || 'pi-tag')" [style.color]="tx.category.color"></i>
+              {{ tx.category.name }}
+            </span>
+          } @else {
+            <span class="text-muted" style="font-size:0.8rem">Uncategorized</span>
+          }
+        </td>
+        <td class="account-cell">
+          <span class="account-name">{{ tx.account?.name }}</span>
+        </td>
+        <td style="text-align:right">
+          <span class="amount-cell" [class.amount-income]="tx.type==='INCOME'" [class.amount-expense]="tx.type==='EXPENSE'">
+            {{ tx.type === 'INCOME' ? '+' : tx.type === 'EXPENSE' ? '-' : '' }}{{ tx.amount | currency }}
+          </span>
+        </td>
+        <td style="text-align:center">
+          <span [class]="'type-badge type-' + tx.type.toLowerCase()">{{ tx.type }}</span>
+        </td>
+        <td style="text-align:center">
+          <div class="action-btns">
+            <button class="action-btn edit-btn" (click)="openEdit(tx)" title="Edit">
+              <i class="pi pi-pencil"></i>
+            </button>
+            <button class="action-btn delete-btn" (click)="confirmDelete(tx)" title="Delete">
+              <i class="pi pi-trash"></i>
+            </button>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr><td colspan="8">
+        <div class="empty-state">
+          <i class="pi pi-credit-card"></i>
+          <p>No transactions found</p>
+          @if (hasFilters) {
+            <button class="clear-filters-btn" style="margin-top:0.5rem" (click)="clearFilters()">
+              <i class="pi pi-filter-slash"></i> Clear filters
+            </button>
+          } @else {
+            <p-button label="Add your first transaction" icon="pi pi-plus" size="small"
+                      [style]="{'margin-top':'0.75rem'}" (onClick)="openCreate()" />
+          }
+        </div>
+      </td></tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<!-- Create / Edit dialog -->
 <p-dialog [(visible)]="showForm" [header]="editId ? 'Edit Transaction' : 'New Transaction'"
-          [modal]="true" [style]="{width:'480px'}" [draggable]="false">
-  <form [formGroup]="form" class="flex flex-column gap-3 pt-2">
-    <div class="field">
-      <label>Type *</label>
-      <p-dropdown formControlName="type" [options]="typeOptions" optionLabel="label" optionValue="value"
-                  placeholder="Select type" [style]="{width:'100%'}"/>
+          [modal]="true" [style]="{width:'500px'}" [draggable]="false" [resizable]="false">
+  <form [formGroup]="form" class="dialog-form">
+    <div class="form-row">
+      <div class="field">
+        <label>Type <span class="req">*</span></label>
+        <p-dropdown formControlName="type" [options]="typeOptions" optionLabel="label" optionValue="value"
+                    placeholder="Select type" [style]="{width:'100%'}"/>
+      </div>
+      <div class="field">
+        <label>Amount <span class="req">*</span></label>
+        <input pInputText formControlName="amount" type="number" placeholder="0.00" [style]="{width:'100%'}"/>
+      </div>
     </div>
-    <div class="field">
-      <label>Amount *</label>
-      <input pInputText formControlName="amount" type="number" placeholder="0.00" [style]="{width:'100%'}"/>
-    </div>
-    <div class="field">
-      <label>Account *</label>
-      <p-dropdown formControlName="accountId" [options]="accountOptions()" optionLabel="name" optionValue="id"
-                  placeholder="Select account" [style]="{width:'100%'}"/>
-    </div>
-    <div class="field">
-      <label>Category</label>
-      <p-dropdown formControlName="categoryId" [options]="flatCategories()" optionLabel="name" optionValue="id"
-                  placeholder="Select category" [showClear]="true" [style]="{width:'100%'}"/>
+    <div class="form-row">
+      <div class="field">
+        <label>Account <span class="req">*</span></label>
+        <p-dropdown formControlName="accountId" [options]="accountOptions()" optionLabel="name" optionValue="id"
+                    placeholder="Select account" [style]="{width:'100%'}"/>
+      </div>
+      <div class="field">
+        <label>Category</label>
+        <p-dropdown formControlName="categoryId" [options]="flatCategories()" optionLabel="name" optionValue="id"
+                    placeholder="Select category" [showClear]="true" [style]="{width:'100%'}"/>
+      </div>
     </div>
     <div class="field">
       <label>Description</label>
       <input pInputText formControlName="description" placeholder="What was this for?" [style]="{width:'100%'}"/>
     </div>
     <div class="field">
-      <label>Date *</label>
+      <label>Date <span class="req">*</span></label>
       <p-calendar formControlName="date" [showTime]="false" dateFormat="yy-mm-dd" [style]="{width:'100%'}"/>
     </div>
   </form>
   <ng-template pTemplate="footer">
-    <p-button label="Cancel" [text]="true" (onClick)="showForm=false"/>
-    <p-button [label]="editId ? 'Save' : 'Create'" (onClick)="submit()" [loading]="submitting()"/>
+    <p-button label="Cancel" [text]="true" severity="secondary" (onClick)="showForm=false"/>
+    <p-button [label]="editId ? 'Save changes' : 'Create transaction'"
+              [icon]="editId ? 'pi pi-check' : 'pi pi-plus'"
+              (onClick)="submit()" [loading]="submitting()"/>
   </ng-template>
 </p-dialog>
 
-<p-dialog [(visible)]="showImport" header="Import CSV" [modal]="true" [style]="{width:'400px'}">
-  <div class="flex flex-column gap-3">
-    <p class="text-muted">CSV format: <code>date,description,amount,type</code></p>
-    <p-dropdown [options]="accountOptions()" [(ngModel)]="importAccountId"
-                optionLabel="name" optionValue="id" placeholder="Select account" [style]="{width:'100%'}"/>
-    <p-fileUpload mode="basic" accept=".csv" chooseLabel="Choose CSV File"
-                  (onSelect)="onCsvSelected($event)" [auto]="false" />
-    <p-button label="Import" icon="pi pi-upload" (onClick)="importCsv()" [disabled]="!csvFile || !importAccountId" />
+<!-- Import CSV dialog -->
+<p-dialog [(visible)]="showImport" header="Import CSV" [modal]="true"
+          [style]="{width:'420px'}" [draggable]="false">
+  <div class="import-body">
+    <div class="import-format-hint">
+      <i class="pi pi-info-circle"></i>
+      <div>
+        <strong>Expected CSV format</strong>
+        <code>date, description, amount, type</code>
+        <small>2026-04-01, Salary, 3000, INCOME</small>
+      </div>
+    </div>
+    <div class="field">
+      <label>Target Account <span class="req">*</span></label>
+      <p-dropdown [options]="accountOptions()" [(ngModel)]="importAccountId"
+                  optionLabel="name" optionValue="id" placeholder="Select account" [style]="{width:'100%'}"/>
+    </div>
+    <div class="field">
+      <label>CSV File <span class="req">*</span></label>
+      <p-fileUpload mode="basic" accept=".csv" chooseLabel="Choose CSV file"
+                    (onSelect)="onCsvSelected($event)" [auto]="false" [style]="{width:'100%'}" />
+    </div>
+    <p-button label="Import transactions" icon="pi pi-upload" [style]="{width:'100%'}"
+              (onClick)="importCsv()" [disabled]="!csvFile || !importAccountId" />
   </div>
 </p-dialog>

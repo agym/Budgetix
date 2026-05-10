@@ -41,7 +41,7 @@ The product targets financially aware individuals who want a self-hosted or priv
 ### 4.1 In Scope
 
 - User registration, email verification, login, password reset
-- Multi-account financial tracking (checking, savings, credit, investment, cash)
+- Multi-account financial tracking (cash, bank, credit card, savings, investment)
 - Full transaction lifecycle: create, edit, delete, bulk delete, filter, search
 - Receipt attachment per transaction (image / PDF upload)
 - Monthly budget management with automated spend tracking and threshold alerts
@@ -76,13 +76,13 @@ The product targets financially aware individuals who want a self-hosted or priv
 | AUTH-04 | Refresh token rotation must invalidate the previous token on use |
 | AUTH-05 | Forgotten passwords must be reset via an email OTP code |
 | AUTH-06 | Sessions must expire after 15 minutes of inactivity with a 2-minute warning |
-| AUTH-07 | The system must support two-factor authentication (schema ready, UI in roadmap) |
+| AUTH-07 | The system must support two-factor authentication via email OTP (enabled/disabled per user in Settings → Security) |
 
 ### 5.2 Account Management
 
 | ID | Requirement |
 |---|---|
-| ACC-01 | A user may create unlimited accounts of types: CHECKING, SAVINGS, CREDIT, INVESTMENT, CASH |
+| ACC-01 | A user may create unlimited accounts of types: CASH, BANK, CREDIT_CARD, SAVINGS, INVESTMENT |
 | ACC-02 | Each account has a name, balance, currency, icon, and colour |
 | ACC-03 | One account may be designated as default |
 | ACC-04 | Deleting an account with linked transactions must be prevented (RESTRICT) |

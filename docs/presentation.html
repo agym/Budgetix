@@ -27,7 +27,6 @@
 
   html, body { width: 100%; height: 100%; overflow: hidden; font-family: 'Inter', sans-serif; background: var(--navy); color: var(--text); }
 
-  /* ── DECK ── */
   .deck { width: 100vw; height: 100vh; position: relative; }
 
   .slide {
@@ -38,50 +37,36 @@
     transform: translateX(60px);
     transition: opacity 0.45s ease, transform 0.45s cubic-bezier(0.22,1,0.36,1);
   }
-  .slide.active {
-    opacity: 1; pointer-events: all; transform: none;
-  }
-  .slide.exit {
-    opacity: 0; transform: translateX(-60px);
-  }
+  .slide.active { opacity: 1; pointer-events: all; transform: none; }
+  .slide.exit   { opacity: 0; transform: translateX(-60px); }
 
-  /* ── BACKGROUNDS ── */
   .slide { background: var(--navy); }
+  .bg-hero   { background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(37,99,235,0.25) 0%, transparent 70%), radial-gradient(ellipse 50% 40% at 80% 80%, rgba(139,92,246,0.12) 0%, transparent 60%), var(--navy); }
+  .bg-blue   { background: radial-gradient(ellipse 70% 50% at 30% 20%, rgba(37,99,235,0.2) 0%, transparent 60%), var(--navy); }
+  .bg-green  { background: radial-gradient(ellipse 70% 50% at 70% 20%, rgba(34,197,94,0.15) 0%, transparent 60%), var(--navy); }
+  .bg-purple { background: radial-gradient(ellipse 70% 50% at 20% 70%, rgba(139,92,246,0.2) 0%, transparent 60%), var(--navy); }
+  .bg-cyan   { background: radial-gradient(ellipse 70% 50% at 80% 30%, rgba(6,182,212,0.18) 0%, transparent 60%), var(--navy); }
+  .bg-orange { background: radial-gradient(ellipse 70% 50% at 50% 20%, rgba(245,158,11,0.15) 0%, transparent 60%), var(--navy); }
+  .bg-red    { background: radial-gradient(ellipse 70% 50% at 60% 70%, rgba(239,68,68,0.15) 0%, transparent 60%), var(--navy); }
+  .bg-dark   { background: radial-gradient(ellipse 60% 40% at 50% 50%, rgba(15,31,61,0.8) 0%, transparent 70%), var(--navy); }
+  .bg-teal   { background: radial-gradient(ellipse 70% 50% at 40% 30%, rgba(20,184,166,0.18) 0%, transparent 60%), var(--navy); }
 
-  .bg-hero {
-    background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(37,99,235,0.25) 0%, transparent 70%),
-                radial-gradient(ellipse 50% 40% at 80% 80%, rgba(139,92,246,0.12) 0%, transparent 60%),
-                var(--navy);
-  }
-  .bg-blue  { background: radial-gradient(ellipse 70% 50% at 30% 20%, rgba(37,99,235,0.2) 0%, transparent 60%), var(--navy); }
-  .bg-green { background: radial-gradient(ellipse 70% 50% at 70% 20%, rgba(34,197,94,0.15) 0%, transparent 60%), var(--navy); }
-  .bg-purple{ background: radial-gradient(ellipse 70% 50% at 20% 70%, rgba(139,92,246,0.2) 0%, transparent 60%), var(--navy); }
-  .bg-cyan  { background: radial-gradient(ellipse 70% 50% at 80% 30%, rgba(6,182,212,0.18) 0%, transparent 60%), var(--navy); }
-  .bg-orange{ background: radial-gradient(ellipse 70% 50% at 50% 20%, rgba(245,158,11,0.15) 0%, transparent 60%), var(--navy); }
-  .bg-red   { background: radial-gradient(ellipse 70% 50% at 60% 70%, rgba(239,68,68,0.15) 0%, transparent 60%), var(--navy); }
-  .bg-dark  { background: radial-gradient(ellipse 60% 40% at 50% 50%, rgba(15,31,61,0.8) 0%, transparent 70%), var(--navy); }
-
-  /* ── GRID BG ── */
   .slide::before {
     content: '';
     position: absolute; inset: 0;
-    background-image: linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
-                      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-image: linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
     background-size: 48px 48px;
     pointer-events: none;
   }
 
-  /* ── TYPOGRAPHY ── */
-  .label {
-    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.18em;
-    text-transform: uppercase; color: var(--blue); margin-bottom: 0.75rem;
-  }
+  .label { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--blue); margin-bottom: 0.75rem; }
   .label.green  { color: var(--green); }
   .label.purple { color: var(--purple); }
   .label.cyan   { color: var(--cyan); }
   .label.orange { color: var(--orange); }
   .label.red    { color: var(--red); }
   .label.pink   { color: var(--pink); }
+  .label.teal   { color: #14b8a6; }
 
   h1 { font-size: clamp(2.8rem, 5vw, 4.5rem); font-weight: 900; line-height: 1.05; letter-spacing: -0.03em; }
   h2 { font-size: clamp(1.8rem, 3vw, 2.8rem); font-weight: 800; line-height: 1.1; letter-spacing: -0.025em; }
@@ -89,10 +74,7 @@
   p  { font-size: 1rem; line-height: 1.7; color: #94a3b8; max-width: 640px; }
   .lead { font-size: 1.2rem; color: #cbd5e1; line-height: 1.6; max-width: 600px; }
 
-  .gradient-text {
-    background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 50%, #34d399 100%);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-  }
+  .gradient-text { background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 50%, #34d399 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
   .blue-text   { color: #60a5fa; }
   .green-text  { color: var(--green); }
   .purple-text { color: #a78bfa; }
@@ -101,34 +83,21 @@
   .red-text    { color: var(--red); }
   .muted       { color: var(--muted); }
 
-  /* ── CARDS ── */
-  .card {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 1.5rem;
-    backdrop-filter: blur(8px);
-  }
+  .card { background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem; backdrop-filter: blur(8px); }
   .card-sm { padding: 1rem 1.25rem; border-radius: 12px; }
 
-  /* ── LAYOUT HELPERS ── */
   .center { text-align: center; align-items: center; }
   .row    { display: flex; gap: 1.5rem; width: 100%; align-items: flex-start; }
   .col    { display: flex; flex-direction: column; gap: 1rem; }
   .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; width: 100%; }
   .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.25rem; width: 100%; }
   .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; width: 100%; }
+  .grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; width: 100%; }
   .w-full { width: 100%; }
   .flex-1 { flex: 1; }
   .gap-sm { gap: 0.75rem; }
 
-  /* ── ICON BADGE ── */
-  .icon-badge {
-    width: 48px; height: 48px; border-radius: 14px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.4rem; flex-shrink: 0;
-    margin-bottom: 0.75rem;
-  }
+  .icon-badge { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0; margin-bottom: 0.75rem; }
   .ib-blue   { background: rgba(37,99,235,0.2);  color: #60a5fa; }
   .ib-green  { background: rgba(34,197,94,0.2);  color: #4ade80; }
   .ib-purple { background: rgba(139,92,246,0.2); color: #c4b5fd; }
@@ -136,157 +105,95 @@
   .ib-cyan   { background: rgba(6,182,212,0.2);  color: #22d3ee; }
   .ib-red    { background: rgba(239,68,68,0.2);  color: #f87171; }
   .ib-pink   { background: rgba(236,72,153,0.2); color: #f472b6; }
+  .ib-teal   { background: rgba(20,184,166,0.2); color: #2dd4bf; }
 
-  /* ── TAG / BADGE ── */
-  .tag {
-    display: inline-flex; align-items: center; gap: 0.3rem;
-    padding: 0.25rem 0.75rem; border-radius: 9999px;
-    font-size: 0.75rem; font-weight: 600;
-  }
+  .tag { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; }
   .tag-blue   { background: rgba(37,99,235,0.15);  color: #93c5fd; border: 1px solid rgba(37,99,235,0.3); }
   .tag-green  { background: rgba(34,197,94,0.15);  color: #86efac; border: 1px solid rgba(34,197,94,0.3); }
   .tag-orange { background: rgba(245,158,11,0.15); color: #fcd34d; border: 1px solid rgba(245,158,11,0.3); }
   .tag-red    { background: rgba(239,68,68,0.15);  color: #fca5a5; border: 1px solid rgba(239,68,68,0.3); }
   .tag-purple { background: rgba(139,92,246,0.15); color: #c4b5fd; border: 1px solid rgba(139,92,246,0.3); }
   .tag-cyan   { background: rgba(6,182,212,0.15);  color: #67e8f9; border: 1px solid rgba(6,182,212,0.3); }
+  .tag-teal   { background: rgba(20,184,166,0.15); color: #5eead4; border: 1px solid rgba(20,184,166,0.3); }
 
-  /* ── PROGRESS BAR ── */
   .pbar { height: 6px; background: rgba(255,255,255,0.08); border-radius: 9999px; overflow: hidden; margin-top: 0.5rem; }
   .pbar-fill { height: 100%; border-radius: 9999px; }
 
-  /* ── STEP ── */
-  .step {
-    display: flex; align-items: flex-start; gap: 1rem;
-  }
-  .step-num {
-    width: 32px; height: 32px; border-radius: 9999px;
-    background: rgba(37,99,235,0.2); border: 1px solid rgba(37,99,235,0.4);
-    color: #60a5fa; font-weight: 800; font-size: 0.85rem;
-    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-  }
+  .step { display: flex; align-items: flex-start; gap: 1rem; }
+  .step-num { width: 32px; height: 32px; border-radius: 9999px; background: rgba(37,99,235,0.2); border: 1px solid rgba(37,99,235,0.4); color: #60a5fa; font-weight: 800; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
   .step-body h3 { margin-bottom: 0.2rem; }
   .step-body p  { font-size: 0.88rem; }
 
-  /* ── TABLE ── */
   .feat-table { width: 100%; border-collapse: collapse; }
-  .feat-table th {
-    text-align: left; font-size: 0.7rem; font-weight: 700;
-    letter-spacing: 0.1em; text-transform: uppercase;
-    color: var(--muted); padding: 0.5rem 0.75rem;
-    border-bottom: 1px solid var(--border);
-  }
-  .feat-table td {
-    padding: 0.6rem 0.75rem; font-size: 0.88rem;
-    border-bottom: 1px solid rgba(255,255,255,0.04);
-    vertical-align: middle;
-  }
+  .feat-table th { text-align: left; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border); }
+  .feat-table td { padding: 0.6rem 0.75rem; font-size: 0.88rem; border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: middle; }
   .feat-table tr:last-child td { border-bottom: none; }
   .feat-table td:first-child { color: #cbd5e1; font-weight: 500; }
 
-  /* ── DIVIDER ── */
   .divider { width: 100%; height: 1px; background: var(--border); }
 
-  /* ── KPI MOCK ── */
-  .kpi-mock {
-    background: rgba(255,255,255,0.04); border: 1px solid var(--border);
-    border-radius: 14px; padding: 1.1rem 1.25rem;
-  }
+  .kpi-mock { background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 14px; padding: 1.1rem 1.25rem; }
   .kpi-mock .kpi-label { font-size: 0.75rem; color: var(--muted); margin-bottom: 0.3rem; }
   .kpi-mock .kpi-value { font-size: 1.5rem; font-weight: 800; }
   .kpi-mock .kpi-change { font-size: 0.75rem; margin-top: 0.25rem; display: flex; align-items: center; gap: 0.3rem; }
 
-  /* ── CHART MOCK ── */
   .chart-mock { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 14px; padding: 1.25rem; }
   .bars { display: flex; align-items: flex-end; gap: 6px; height: 80px; margin-top: 0.75rem; }
   .bar  { flex: 1; border-radius: 4px 4px 0 0; min-width: 8px; }
 
-  /* ── DONUT MOCK ── */
   .donut-wrap { display: flex; align-items: center; gap: 1.5rem; }
   .donut { width: 80px; height: 80px; flex-shrink: 0; }
   .donut-legend { display: flex; flex-direction: column; gap: 0.4rem; }
   .donut-legend-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.78rem; color: #94a3b8; }
   .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
 
-  /* ── CONTROLS ── */
-  .controls {
-    position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%);
-    display: flex; align-items: center; gap: 1.25rem;
-    background: rgba(10,22,40,0.85); border: 1px solid rgba(255,255,255,0.1);
-    backdrop-filter: blur(20px); border-radius: 9999px;
-    padding: 0.6rem 1.25rem;
-    z-index: 100;
-  }
-  .ctrl-btn {
-    width: 36px; height: 36px; border-radius: 50%;
-    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
-    color: white; cursor: pointer; font-size: 1rem;
-    display: flex; align-items: center; justify-content: center;
-    transition: background 0.15s;
-  }
+  /* form mock */
+  .form-field { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; padding: 0.6rem 0.9rem; font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem; }
+  .form-field .flabel { font-size: 0.7rem; color: #64748b; display: block; margin-bottom: 0.15rem; }
+  .form-field-group { display: flex; flex-direction: column; gap: 0.5rem; }
+  .form-btn { border-radius: 10px; padding: 0.65rem 1.25rem; font-size: 0.85rem; font-weight: 700; border: none; cursor: pointer; width: 100%; }
+  .form-btn-primary { background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; }
+
+  .otp-boxes { display: flex; gap: 0.4rem; }
+  .otp-box { width: 36px; height: 44px; background: rgba(255,255,255,0.05); border: 1px solid rgba(37,99,235,0.4); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; font-weight: 700; color: #60a5fa; }
+
+  .flow-arrow { color: #334155; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; align-self: center; padding-top: 0.5rem; }
+
+  .controls { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 1.25rem; background: rgba(10,22,40,0.85); border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(20px); border-radius: 9999px; padding: 0.6rem 1.25rem; z-index: 100; }
+  .ctrl-btn { width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: white; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; transition: background 0.15s; }
   .ctrl-btn:hover { background: rgba(37,99,235,0.3); }
   .ctrl-btn:disabled { opacity: 0.3; cursor: default; }
-  .slide-counter { font-size: 0.8rem; color: #64748b; font-weight: 600; min-width: 60px; text-align: center; }
+  .slide-counter { font-size: 0.8rem; color: #64748b; font-weight: 600; min-width: 70px; text-align: center; }
 
-  /* ── PROGRESS DOT ── */
-  .progress-dots {
-    position: fixed; right: 1.75rem; top: 50%; transform: translateY(-50%);
-    display: flex; flex-direction: column; gap: 8px; z-index: 100;
-  }
-  .pdot {
-    width: 6px; height: 6px; border-radius: 50%;
-    background: rgba(255,255,255,0.15); cursor: pointer;
-    transition: background 0.2s, transform 0.2s;
-  }
+  .progress-dots { position: fixed; right: 1.75rem; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 8px; z-index: 100; }
+  .pdot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.15); cursor: pointer; transition: background 0.2s, transform 0.2s; }
   .pdot.active { background: #2563eb; transform: scale(1.4); }
 
-  /* ── LOGO ── */
   .logo { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 2.5rem; }
-  .logo-icon {
-    width: 52px; height: 52px; border-radius: 14px;
-    background: linear-gradient(135deg, #2563eb, #0ea5e9);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.5rem;
-  }
+  .logo-icon { width: 52px; height: 52px; border-radius: 14px; background: linear-gradient(135deg, #2563eb, #0ea5e9); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
   .logo-name { font-size: 1.4rem; font-weight: 900; color: white; letter-spacing: -0.03em; }
 
-  /* ── SLIDE-SPECIFIC ── */
-  .hero-tagline {
-    font-size: 0.9rem; color: #64748b; margin-top: 1.5rem;
-    display: flex; align-items: center; gap: 0.75rem;
-  }
-  .hero-tagline span { color: #475569; }
+  .hero-tagline { font-size: 0.9rem; color: #64748b; margin-top: 1.5rem; display: flex; align-items: center; gap: 0.75rem; }
 
-  /* ── FEATURE CARD ── */
-  .feat-card {
-    background: rgba(255,255,255,0.03); border: 1px solid var(--border);
-    border-radius: 16px; padding: 1.5rem;
-    transition: border-color 0.2s;
-  }
+  .feat-card { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem; transition: border-color 0.2s; }
   .feat-card:hover { border-color: rgba(37,99,235,0.3); }
   .feat-card h3 { margin: 0.5rem 0 0.4rem; font-size: 1rem; }
   .feat-card p  { font-size: 0.83rem; color: #64748b; line-height: 1.5; margin: 0; max-width: none; }
 
-  /* ── INSIGHT CARD MOCK ── */
-  .insight-mock {
-    border-left: 3px solid;
-    background: rgba(255,255,255,0.03); border-radius: 0 12px 12px 0;
-    padding: 0.85rem 1rem;
-  }
+  .insight-mock { border-left: 3px solid; background: rgba(255,255,255,0.03); border-radius: 0 12px 12px 0; padding: 0.85rem 1rem; }
+  .account-mock { border-left: 4px solid; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.25rem; }
 
-  /* ── ACCOUNT CARD MOCK ── */
-  .account-mock {
-    border-left: 4px solid;
-    background: rgba(255,255,255,0.04); border: 1px solid var(--border);
-    border-radius: 12px; padding: 1rem 1.25rem;
-  }
-
-  /* ── FINAL SLIDE ── */
   .final-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem; width: 100%; margin-top: 2.5rem; }
   .final-stat { text-align: center; }
   .final-stat .num { font-size: 2.2rem; font-weight: 900; }
   .final-stat .lbl { font-size: 0.78rem; color: var(--muted); margin-top: 0.2rem; }
 
-  /* scrollbar hide */
+  .how-to { display: flex; flex-direction: column; gap: 0.5rem; }
+  .how-to-step { display: flex; align-items: flex-start; gap: 0.6rem; font-size: 0.83rem; }
+  .how-to-step .n { width: 20px; height: 20px; border-radius: 50%; background: rgba(37,99,235,0.2); border: 1px solid rgba(37,99,235,0.4); color: #60a5fa; font-weight: 800; font-size: 0.7rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .how-to-step span { color: #94a3b8; line-height: 1.4; }
+  .how-to-step strong { color: #e2e8f0; }
+
   ::-webkit-scrollbar { display: none; }
 </style>
 </head>
@@ -294,9 +201,7 @@
 
 <div class="deck" id="deck">
 
-  <!-- ─────────────────────────────────────── -->
-  <!-- SLIDE 0 — HERO -->
-  <!-- ─────────────────────────────────────── -->
+  <!-- ─────────────────────────────────── SLIDE 0 — HERO -->
   <div class="slide bg-hero center active" id="s0">
     <div class="logo">
       <div class="logo-icon">💼</div>
@@ -312,138 +217,201 @@
     </div>
   </div>
 
-  <!-- ─────────────────────────────────────── -->
-  <!-- SLIDE 1 — OVERVIEW -->
-  <!-- ─────────────────────────────────────── -->
+  <!-- ─────────────────────────────────── SLIDE 1 — OVERVIEW -->
   <div class="slide bg-blue" id="s1">
     <div class="label">Overview</div>
-    <h2 style="margin-bottom:0.5rem">Everything in one place</h2>
-    <p style="margin-bottom:2.5rem">8 core features, fully connected. Every transaction affects your accounts, budgets, and reports in real time.</p>
-    <div class="grid-4" style="gap:0.9rem">
+    <h2 style="margin-bottom:0.4rem">10 features, fully connected</h2>
+    <p style="margin-bottom:2rem">Every transaction automatically updates accounts, budgets, reports, and insights in real time.</p>
+    <div class="grid-5" style="gap:0.8rem;max-width:1050px;width:100%">
       <div class="feat-card">
         <div class="icon-badge ib-blue">📊</div>
         <h3>Dashboard</h3>
-        <p>Live KPIs, 3 chart types, monthly projections</p>
+        <p>Live KPIs, 3 chart types, projections</p>
       </div>
       <div class="feat-card">
         <div class="icon-badge ib-cyan">💳</div>
         <h3>Transactions</h3>
-        <p>Full CRUD, CSV import, bulk delete, filters</p>
+        <p>Full CRUD, CSV import, bulk delete</p>
       </div>
       <div class="feat-card">
         <div class="icon-badge ib-green">🏦</div>
         <h3>Accounts</h3>
-        <p>5 account types, auto balance tracking</p>
+        <p>5 types, auto balance tracking</p>
       </div>
       <div class="feat-card">
         <div class="icon-badge ib-orange">📋</div>
         <h3>Budgets</h3>
-        <p>Category limits, rollover, visual progress</p>
+        <p>Category limits, rollover, alerts</p>
       </div>
       <div class="feat-card">
         <div class="icon-badge ib-purple">🎯</div>
         <h3>Goals</h3>
-        <p>Savings targets, contributions, milestones</p>
+        <p>Savings targets, contributions</p>
+      </div>
+      <div class="feat-card">
+        <div class="icon-badge ib-teal">🔁</div>
+        <h3>Recurring</h3>
+        <p>Auto-posted on schedule (6 frequencies)</p>
       </div>
       <div class="feat-card">
         <div class="icon-badge ib-red">📄</div>
         <h3>Reports</h3>
-        <p>Monthly analysis, CSV & PDF export</p>
+        <p>Monthly analysis, CSV &amp; PDF export</p>
       </div>
       <div class="feat-card">
         <div class="icon-badge ib-cyan">💡</div>
         <h3>Insights</h3>
-        <p>AI-style observations, auto-generated monthly</p>
+        <p>11 types, auto-generated monthly</p>
+      </div>
+      <div class="feat-card">
+        <div class="icon-badge ib-green">🏷️</div>
+        <h3>Categories</h3>
+        <p>Hierarchy + auto-categorization rules</p>
       </div>
       <div class="feat-card">
         <div class="icon-badge ib-pink">⚙️</div>
         <h3>Settings</h3>
-        <p>Profile, 2FA security, notification prefs</p>
+        <p>Profile, 2FA, notification prefs</p>
       </div>
     </div>
   </div>
 
-  <!-- ─────────────────────────────────────── -->
-  <!-- SLIDE 2 — AUTH -->
-  <!-- ─────────────────────────────────────── -->
+  <!-- ─────────────────────────────────── SLIDE 2 — AUTH OVERVIEW -->
   <div class="slide bg-dark" id="s2">
     <div class="label">Authentication</div>
-    <h2 style="margin-bottom:2rem">Secure from the start</h2>
-    <div class="row" style="gap:2rem;width:100%;max-width:900px">
+    <h2 style="margin-bottom:1.5rem">Secure from the start</h2>
+    <div class="row" style="gap:2rem;width:100%;max-width:950px">
       <div class="col flex-1" style="gap:1rem">
         <div class="step">
           <div class="step-num">1</div>
           <div class="step-body">
             <h3>Register</h3>
-            <p class="muted">Name, email, password (min 8 chars) — sends a 6-digit OTP to your inbox.</p>
+            <p class="muted">Name, email, password (min 8 chars). Triggers a 6-digit OTP email.</p>
           </div>
         </div>
         <div class="step">
           <div class="step-num">2</div>
           <div class="step-body">
             <h3>Verify Email</h3>
-            <p class="muted">Enter the OTP to activate your account. Resend available.</p>
+            <p class="muted">Enter the OTP to activate your account. Resend available if needed.</p>
           </div>
         </div>
         <div class="step">
           <div class="step-num">3</div>
           <div class="step-body">
             <h3>Sign In</h3>
-            <p class="muted">Email + password. Optional 2FA step if enabled.</p>
+            <p class="muted">Email + password. Optional 2FA step if enabled — sends a second code.</p>
           </div>
         </div>
         <div class="step">
           <div class="step-num">4</div>
           <div class="step-body">
             <h3>Password Reset</h3>
-            <p class="muted">Forgot password → OTP code → new password. Fully OTP-based, no magic links.</p>
+            <p class="muted">Forgot password → OTP code to inbox → set new password. No magic links.</p>
           </div>
         </div>
       </div>
       <div class="col flex-1" style="gap:1rem">
         <div class="card" style="border-color:rgba(37,99,235,0.3)">
           <div class="label" style="margin-bottom:0.5rem">Security Features</div>
-          <div class="col gap-sm" style="gap:0.65rem">
-            <div style="display:flex;align-items:center;gap:0.75rem;font-size:0.9rem">
-              <span style="color:var(--green)">✓</span> <span>JWT access + refresh tokens</span>
-            </div>
-            <div style="display:flex;align-items:center;gap:0.75rem;font-size:0.9rem">
-              <span style="color:var(--green)">✓</span> <span>Two-Factor Authentication (email OTP)</span>
-            </div>
-            <div style="display:flex;align-items:center;gap:0.75rem;font-size:0.9rem">
-              <span style="color:var(--green)">✓</span> <span>BCrypt password hashing</span>
-            </div>
-            <div style="display:flex;align-items:center;gap:0.75rem;font-size:0.9rem">
-              <span style="color:var(--green)">✓</span> <span>Route guards (auth + guest)</span>
-            </div>
-            <div style="display:flex;align-items:center;gap:0.75rem;font-size:0.9rem">
-              <span style="color:var(--green)">✓</span> <span>Session timeout with countdown</span>
-            </div>
-            <div style="display:flex;align-items:center;gap:0.75rem;font-size:0.9rem">
-              <span style="color:var(--green)">✓</span> <span>User data isolation (no cross-access)</span>
-            </div>
+          <div class="col" style="gap:0.6rem">
+            <div style="display:flex;align-items:center;gap:0.75rem;font-size:0.88rem"><span style="color:var(--green)">✓</span> JWT access token + refresh token rotation</div>
+            <div style="display:flex;align-items:center;gap:0.75rem;font-size:0.88rem"><span style="color:var(--green)">✓</span> Two-Factor Authentication (email OTP)</div>
+            <div style="display:flex;align-items:center;gap:0.75rem;font-size:0.88rem"><span style="color:var(--green)">✓</span> BCrypt password hashing (cost 12)</div>
+            <div style="display:flex;align-items:center;gap:0.75rem;font-size:0.88rem"><span style="color:var(--green)">✓</span> Route guards (auth + guest)</div>
+            <div style="display:flex;align-items:center;gap:0.75rem;font-size:0.88rem"><span style="color:var(--green)">✓</span> Session timeout with countdown (120 s)</div>
+            <div style="display:flex;align-items:center;gap:0.75rem;font-size:0.88rem"><span style="color:var(--green)">✓</span> Full user data isolation</div>
           </div>
         </div>
         <div class="card card-sm" style="background:rgba(239,68,68,0.06);border-color:rgba(239,68,68,0.2)">
           <div style="font-size:0.85rem;color:#fca5a5;font-weight:600;margin-bottom:0.4rem">⏱ Session Timeout</div>
-          <div style="font-size:0.82rem;color:#94a3b8">After 120 seconds of inactivity a warning dialog appears. Continue or sign out — auto logout if no response.</div>
+          <div style="font-size:0.82rem;color:#94a3b8">After 120 s of inactivity a warning dialog counts down. Click <strong style="color:#e2e8f0">Continue</strong> to stay, or <strong style="color:#e2e8f0">Sign Out</strong>. Auto-logout if no response.</div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ─────────────────────────────────────── -->
-  <!-- SLIDE 3 — DASHBOARD -->
-  <!-- ─────────────────────────────────────── -->
-  <div class="slide bg-blue" id="s3">
+  <!-- ─────────────────────────────────── SLIDE 3 — SIGN-IN PROCESS -->
+  <div class="slide bg-dark" id="s3">
+    <div class="label">Sign-In Process</div>
+    <h2 style="margin-bottom:1.5rem">The complete login journey</h2>
+    <div class="row" style="max-width:1000px;width:100%;gap:1.5rem;align-items:flex-start">
+
+      <!-- Step 1: Login form -->
+      <div class="col" style="flex:1;gap:0.6rem">
+        <div style="font-size:0.7rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#60a5fa;margin-bottom:0.25rem">Step 1 — Enter credentials</div>
+        <div class="card" style="border-color:rgba(37,99,235,0.3);padding:1.25rem;gap:0.75rem;display:flex;flex-direction:column">
+          <div style="font-weight:700;font-size:0.95rem;margin-bottom:0.25rem">Sign in to Budgetix</div>
+          <div class="form-field-group">
+            <div class="form-field" style="flex-direction:column;align-items:flex-start">
+              <span class="flabel">Email address</span>
+              <span style="color:#94a3b8">ali@example.com</span>
+            </div>
+            <div class="form-field" style="flex-direction:column;align-items:flex-start">
+              <span class="flabel">Password</span>
+              <span style="color:#94a3b8;letter-spacing:0.15em">••••••••</span>
+            </div>
+          </div>
+          <button class="form-btn form-btn-primary">Sign In →</button>
+          <div style="font-size:0.75rem;color:#64748b;text-align:center">Forgot password? <span style="color:#60a5fa">Reset it</span></div>
+        </div>
+      </div>
+
+      <div class="flow-arrow">→</div>
+
+      <!-- Step 2: 2FA (if enabled) -->
+      <div class="col" style="flex:1;gap:0.6rem">
+        <div style="font-size:0.7rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#a78bfa;margin-bottom:0.25rem">Step 2 — 2FA (if enabled)</div>
+        <div class="card" style="border-color:rgba(139,92,246,0.35);padding:1.25rem;gap:0.75rem;display:flex;flex-direction:column">
+          <div style="font-weight:700;font-size:0.95rem;margin-bottom:0.25rem">Two-Factor Verification</div>
+          <div style="font-size:0.82rem;color:#94a3b8">A 6-digit code was sent to your email. Enter it below:</div>
+          <div class="otp-boxes">
+            <div class="otp-box">8</div>
+            <div class="otp-box">4</div>
+            <div class="otp-box">7</div>
+            <div class="otp-box">2</div>
+            <div class="otp-box">9</div>
+            <div class="otp-box">1</div>
+          </div>
+          <button class="form-btn form-btn-primary">Verify &amp; Continue →</button>
+          <div style="font-size:0.75rem;color:#64748b;text-align:center">Didn't receive it? <span style="color:#a78bfa">Resend code</span></div>
+        </div>
+      </div>
+
+      <div class="flow-arrow">→</div>
+
+      <!-- Step 3: Dashboard -->
+      <div class="col" style="flex:1;gap:0.6rem">
+        <div style="font-size:0.7rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--green);margin-bottom:0.25rem">Step 3 — Access granted</div>
+        <div class="card" style="border-color:rgba(34,197,94,0.3);padding:1.25rem;gap:0.75rem;display:flex;flex-direction:column">
+          <div style="display:flex;align-items:center;gap:0.5rem;font-weight:700;font-size:0.95rem;color:#4ade80">✓ Signed in successfully</div>
+          <div style="font-size:0.82rem;color:#94a3b8;line-height:1.5">Tokens stored in <code style="background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:4px">localStorage</code>. JWT interceptor automatically attaches <code style="background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:4px">Authorization: Bearer</code> to every API request.</div>
+          <div class="kpi-mock" style="padding:0.75rem">
+            <div class="kpi-label">Redirected to</div>
+            <div style="font-size:0.95rem;font-weight:700;color:#60a5fa">📊 Dashboard</div>
+          </div>
+          <div style="font-size:0.75rem;color:#64748b">AuthGuard protects all app routes — unverified users are redirected to login.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Refresh token note -->
+    <div class="card card-sm" style="max-width:1000px;width:100%;margin-top:1rem;background:rgba(37,99,235,0.06);border-color:rgba(37,99,235,0.2);display:flex;align-items:center;gap:1rem">
+      <span style="font-size:1.2rem">🔄</span>
+      <span style="font-size:0.82rem;color:#94a3b8">Access token expires shortly — the app automatically calls <code style="background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:4px">POST /auth/refresh</code> using the long-lived refresh token to get a new pair without logging you out.</span>
+    </div>
+  </div>
+
+  <!-- ─────────────────────────────────── SLIDE 4 — DASHBOARD -->
+  <div class="slide bg-blue" id="s4">
     <div class="label">Dashboard</div>
     <h2 style="margin-bottom:0.4rem">Your financial command centre</h2>
-    <p style="margin-bottom:2rem">Everything you need to know about your money, at a glance.</p>
+    <p style="margin-bottom:1.5rem">Everything you need to know about your money, at a glance.</p>
 
     <div class="row" style="max-width:1000px;width:100%;gap:1.5rem;align-items:flex-start">
-      <!-- KPIs mock -->
       <div class="col flex-1" style="gap:0.75rem">
-        <div class="label" style="margin:0;font-size:0.65rem">KPI Cards</div>
+        <div class="label" style="margin:0;font-size:0.65rem">KPI Cards (current month)</div>
         <div class="grid-2" style="gap:0.65rem">
           <div class="kpi-mock">
             <div class="kpi-label">Total Income</div>
@@ -466,13 +434,16 @@
             <div class="kpi-change muted">All accounts combined</div>
           </div>
         </div>
+        <div class="card card-sm" style="background:rgba(37,99,235,0.06)">
+          <div style="font-size:0.78rem;font-weight:700;color:#60a5fa;margin-bottom:0.4rem">📈 Projection Strip</div>
+          <div style="font-size:0.82rem;color:#94a3b8">Avg daily spend · Projected month expense · Projected end balance · Burn rate warning (days until $0)</div>
+        </div>
       </div>
 
-      <!-- Charts mock -->
       <div class="col flex-1" style="gap:0.75rem">
-        <div class="label" style="margin:0;font-size:0.65rem">Charts</div>
+        <div class="label" style="margin:0;font-size:0.65rem">3 Chart Types</div>
         <div class="chart-mock">
-          <div style="font-size:0.8rem;color:#94a3b8;font-weight:600">Income vs Expenses — 6 months</div>
+          <div style="font-size:0.8rem;color:#94a3b8;font-weight:600">Income vs Expenses — last 6 months</div>
           <div class="bars">
             <div class="bar" style="background:#22c55e;height:55%"></div><div class="bar" style="background:#ef4444;height:38%"></div>
             <div class="bar" style="background:#22c55e;height:62%"></div><div class="bar" style="background:#ef4444;height:44%"></div>
@@ -483,7 +454,7 @@
           </div>
         </div>
         <div class="chart-mock">
-          <div style="font-size:0.8rem;color:#94a3b8;font-weight:600;margin-bottom:0.75rem">Spending by Category</div>
+          <div style="font-size:0.8rem;color:#94a3b8;font-weight:600;margin-bottom:0.75rem">Spending by Category (donut) · Daily Trend (bar + line)</div>
           <div class="donut-wrap">
             <svg class="donut" viewBox="0 0 36 36">
               <circle cx="18" cy="18" r="15.9" fill="none" stroke="#1e3a5f" stroke-width="3.5"/>
@@ -493,10 +464,10 @@
               <circle cx="18" cy="18" r="15.9" fill="none" stroke="#8b5cf6" stroke-width="3.5" stroke-dasharray="15 85" stroke-dashoffset="-60"/>
             </svg>
             <div class="donut-legend">
-              <div class="donut-legend-item"><div class="dot" style="background:#2563eb"></div>Food — 40%</div>
-              <div class="donut-legend-item"><div class="dot" style="background:#22c55e"></div>Housing — 25%</div>
-              <div class="donut-legend-item"><div class="dot" style="background:#f59e0b"></div>Transport — 20%</div>
-              <div class="donut-legend-item"><div class="dot" style="background:#8b5cf6"></div>Other — 15%</div>
+              <div class="donut-legend-item"><div class="dot" style="background:#2563eb"></div>Food 40%</div>
+              <div class="donut-legend-item"><div class="dot" style="background:#22c55e"></div>Housing 25%</div>
+              <div class="donut-legend-item"><div class="dot" style="background:#f59e0b"></div>Transport 20%</div>
+              <div class="donut-legend-item"><div class="dot" style="background:#8b5cf6"></div>Other 15%</div>
             </div>
           </div>
         </div>
@@ -504,86 +475,131 @@
     </div>
   </div>
 
-  <!-- ─────────────────────────────────────── -->
-  <!-- SLIDE 4 — TRANSACTIONS -->
-  <!-- ─────────────────────────────────────── -->
-  <div class="slide bg-cyan" id="s4">
+  <!-- ─────────────────────────────────── SLIDE 5 — TRANSACTIONS -->
+  <div class="slide bg-cyan" id="s5">
     <div class="label cyan">Transactions</div>
     <h2 style="margin-bottom:0.4rem">Every movement, tracked</h2>
-    <p style="margin-bottom:2rem">A full transaction ledger with filters, bulk actions, and CSV import.</p>
+    <p style="margin-bottom:1.5rem">A full ledger with filters, bulk actions, and CSV import from your bank.</p>
 
     <div class="row" style="max-width:1000px;width:100%;gap:2rem">
       <div class="col flex-1" style="gap:0.75rem">
-        <div class="card card-sm" style="background:rgba(6,182,212,0.07);border-color:rgba(6,182,212,0.2)">
-          <div style="font-size:0.78rem;font-weight:700;color:#22d3ee;margin-bottom:0.6rem">FILTERS</div>
-          <div style="display:flex;flex-wrap:wrap;gap:0.4rem">
-            <span class="tag tag-cyan">Search description</span>
-            <span class="tag tag-cyan">By type</span>
-            <span class="tag tag-cyan">By account</span>
-            <span class="tag tag-cyan">Sortable columns</span>
-          </div>
-        </div>
-        <!-- mock table -->
         <div class="card" style="padding:0;overflow:hidden">
           <table class="feat-table">
-            <thead><tr>
-              <th>Date</th><th>Description</th><th>Amount</th><th>Type</th>
-            </tr></thead>
+            <thead><tr><th>Date</th><th>Description</th><th>Amount</th><th>Type</th></tr></thead>
             <tbody>
               <tr><td>Apr 28</td><td>Salary</td><td class="green-text" style="font-weight:700">+$3,200</td><td><span class="tag tag-green" style="font-size:0.65rem">INCOME</span></td></tr>
-              <tr><td>Apr 26</td><td>Grocery Store</td><td class="red-text" style="font-weight:700">-$82.40</td><td><span class="tag tag-red" style="font-size:0.65rem">EXPENSE</span></td></tr>
-              <tr><td>Apr 24</td><td>Netflix</td><td class="red-text" style="font-weight:700">-$15.99</td><td><span class="tag tag-red" style="font-size:0.65rem">EXPENSE</span></td></tr>
-              <tr><td>Apr 22</td><td>Freelance Project</td><td class="green-text" style="font-weight:700">+$850</td><td><span class="tag tag-green" style="font-size:0.65rem">INCOME</span></td></tr>
+              <tr><td>Apr 26</td><td>Grocery Store</td><td class="red-text" style="font-weight:700">−$82.40</td><td><span class="tag tag-red" style="font-size:0.65rem">EXPENSE</span></td></tr>
+              <tr><td>Apr 24</td><td>Netflix</td><td class="red-text" style="font-weight:700">−$15.99</td><td><span class="tag tag-red" style="font-size:0.65rem">EXPENSE</span></td></tr>
+              <tr><td>Apr 22</td><td>Freelance</td><td class="green-text" style="font-weight:700">+$850</td><td><span class="tag tag-green" style="font-size:0.65rem">INCOME</span></td></tr>
             </tbody>
           </table>
+        </div>
+        <div class="card card-sm" style="background:rgba(6,182,212,0.07);border-color:rgba(6,182,212,0.2)">
+          <div style="font-size:0.78rem;font-weight:700;color:#22d3ee;margin-bottom:0.5rem">📥 CSV IMPORT — How to use</div>
+          <div class="how-to">
+            <div class="how-to-step"><div class="n">1</div><span>Click <strong>Import CSV</strong> and select the account</span></div>
+            <div class="how-to-step"><div class="n">2</div><span>Upload your bank export — format: <code style="background:rgba(255,255,255,0.08);padding:0 4px;border-radius:3px">date, description, amount, type</code></span></div>
+            <div class="how-to-step"><div class="n">3</div><span>Backend parses and creates all transactions in batch</span></div>
+          </div>
         </div>
       </div>
 
       <div class="col flex-1" style="gap:0.75rem">
         <div class="card card-sm" style="border-color:rgba(6,182,212,0.2)">
-          <div style="font-size:0.78rem;font-weight:700;color:#22d3ee;margin-bottom:0.75rem">TRANSACTION FIELDS</div>
-          <div class="col" style="gap:0.5rem">
-            <div style="display:flex;justify-content:space-between;font-size:0.85rem">
-              <span style="color:#94a3b8">Type</span><span>Income / Expense / Transfer</span>
-            </div>
-            <div class="divider"></div>
-            <div style="display:flex;justify-content:space-between;font-size:0.85rem">
-              <span style="color:#94a3b8">Amount</span><span>Required, min $0.01</span>
-            </div>
-            <div class="divider"></div>
-            <div style="display:flex;justify-content:space-between;font-size:0.85rem">
-              <span style="color:#94a3b8">Account</span><span>Required</span>
-            </div>
-            <div class="divider"></div>
-            <div style="display:flex;justify-content:space-between;font-size:0.85rem">
-              <span style="color:#94a3b8">Category</span><span>Optional</span>
-            </div>
-            <div class="divider"></div>
-            <div style="display:flex;justify-content:space-between;font-size:0.85rem">
-              <span style="color:#94a3b8">Description</span><span>Optional</span>
-            </div>
-            <div class="divider"></div>
-            <div style="display:flex;justify-content:space-between;font-size:0.85rem">
-              <span style="color:#94a3b8">Date</span><span>Defaults to today</span>
-            </div>
+          <div style="font-size:0.78rem;font-weight:700;color:#22d3ee;margin-bottom:0.6rem">HOW TO ADD A TRANSACTION</div>
+          <div class="how-to">
+            <div class="how-to-step"><div class="n">1</div><span>Click <strong>Add Transaction</strong> (top right)</span></div>
+            <div class="how-to-step"><div class="n">2</div><span>Choose <strong>Type</strong>: Income / Expense / Transfer</span></div>
+            <div class="how-to-step"><div class="n">3</div><span>Set <strong>Amount</strong>, <strong>Account</strong>, optional Category &amp; Description</span></div>
+            <div class="how-to-step"><div class="n">4</div><span>Click <strong>Create</strong> — balance updates instantly</span></div>
           </div>
         </div>
-        <div class="card card-sm" style="background:rgba(6,182,212,0.06);border-color:rgba(6,182,212,0.2)">
-          <div style="font-size:0.78rem;font-weight:700;color:#22d3ee;margin-bottom:0.5rem">CSV IMPORT</div>
-          <div style="font-size:0.82rem;color:#94a3b8">Upload a <code style="background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:4px">.csv</code> from your bank. Expected format:</div>
-          <div style="margin-top:0.5rem;background:rgba(0,0,0,0.3);border-radius:8px;padding:0.6rem 0.8rem;font-size:0.78rem;font-family:monospace;color:#67e8f9">date,description,amount,type</div>
+        <div class="card card-sm" style="border-color:rgba(6,182,212,0.2)">
+          <div style="font-size:0.78rem;font-weight:700;color:#22d3ee;margin-bottom:0.5rem">FILTERS &amp; BULK ACTIONS</div>
+          <div style="display:flex;flex-wrap:wrap;gap:0.35rem">
+            <span class="tag tag-cyan">Search description</span>
+            <span class="tag tag-cyan">Filter by type</span>
+            <span class="tag tag-cyan">Filter by account</span>
+            <span class="tag tag-cyan">Sortable columns</span>
+            <span class="tag tag-cyan">Bulk delete selected</span>
+            <span class="tag tag-cyan">20 rows / page</span>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ─────────────────────────────────────── -->
-  <!-- SLIDE 5 — ACCOUNTS -->
-  <!-- ─────────────────────────────────────── -->
-  <div class="slide bg-green" id="s5">
+  <!-- ─────────────────────────────────── SLIDE 6 — CATEGORIES -->
+  <div class="slide bg-teal" id="s6">
+    <div class="label teal">Categories &amp; Auto-Categorization</div>
+    <h2 style="margin-bottom:0.4rem">Smart tagging, zero effort</h2>
+    <p style="margin-bottom:1.75rem">Define keyword rules once — every matching transaction is categorized automatically on import or creation.</p>
+
+    <div class="row" style="max-width:1000px;width:100%;gap:1.75rem">
+      <div class="col flex-1" style="gap:0.85rem">
+        <!-- Category tree mock -->
+        <div class="label" style="margin:0;font-size:0.65rem;color:#2dd4bf">CATEGORY HIERARCHY</div>
+        <div class="card" style="border-color:rgba(20,184,166,0.25);padding:1rem">
+          <div style="font-size:0.83rem;display:flex;flex-direction:column;gap:0.35rem">
+            <div style="display:flex;align-items:center;gap:0.5rem"><span style="color:#2dd4bf">🍽️</span><span style="font-weight:600">Food &amp; Drink</span><span class="tag tag-teal" style="font-size:0.6rem;margin-left:auto">EXPENSE</span></div>
+            <div style="display:flex;align-items:center;gap:0.5rem;padding-left:1.25rem;color:#64748b"><span>└─</span><span>Restaurants</span></div>
+            <div style="display:flex;align-items:center;gap:0.5rem;padding-left:1.25rem;color:#64748b"><span>└─</span><span>Groceries</span></div>
+            <div class="divider" style="margin:0.25rem 0"></div>
+            <div style="display:flex;align-items:center;gap:0.5rem"><span style="color:#2dd4bf">🚗</span><span style="font-weight:600">Transport</span><span class="tag tag-teal" style="font-size:0.6rem;margin-left:auto">EXPENSE</span></div>
+            <div style="display:flex;align-items:center;gap:0.5rem;padding-left:1.25rem;color:#64748b"><span>└─</span><span>Fuel</span></div>
+            <div class="divider" style="margin:0.25rem 0"></div>
+            <div style="display:flex;align-items:center;gap:0.5rem"><span style="color:#4ade80">💼</span><span style="font-weight:600">Salary</span><span class="tag tag-green" style="font-size:0.6rem;margin-left:auto">INCOME</span></div>
+          </div>
+        </div>
+        <div class="card card-sm" style="background:rgba(20,184,166,0.06);border-color:rgba(20,184,166,0.2)">
+          <div style="font-size:0.82rem;color:#94a3b8">System categories are pre-seeded for all users. User-created categories belong only to that account.</div>
+        </div>
+      </div>
+
+      <div class="col flex-1" style="gap:0.85rem">
+        <div class="label" style="margin:0;font-size:0.65rem;color:#2dd4bf">AUTO-CATEGORIZATION RULES</div>
+        <div class="card" style="border-color:rgba(20,184,166,0.25);padding:1rem">
+          <div style="font-size:0.78rem;font-weight:700;color:#2dd4bf;margin-bottom:0.65rem">Keyword → Category mapping</div>
+          <div style="display:flex;flex-direction:column;gap:0.5rem;font-size:0.83rem">
+            <div style="display:flex;align-items:center;gap:0.75rem">
+              <code style="background:rgba(255,255,255,0.07);padding:2px 8px;border-radius:5px;color:#67e8f9">netflix</code>
+              <span style="color:#64748b">→</span>
+              <span>Entertainment</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:0.75rem">
+              <code style="background:rgba(255,255,255,0.07);padding:2px 8px;border-radius:5px;color:#67e8f9">uber</code>
+              <span style="color:#64748b">→</span>
+              <span>Transport</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:0.75rem">
+              <code style="background:rgba(255,255,255,0.07);padding:2px 8px;border-radius:5px;color:#67e8f9">salary</code>
+              <span style="color:#64748b">→</span>
+              <span>Income / Salary</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:0.75rem">
+              <code style="background:rgba(255,255,255,0.07);padding:2px 8px;border-radius:5px;color:#67e8f9">lidl</code>
+              <span style="color:#64748b">→</span>
+              <span>Food / Groceries</span>
+            </div>
+          </div>
+        </div>
+        <div class="card card-sm">
+          <div style="font-size:0.78rem;font-weight:700;color:#2dd4bf;margin-bottom:0.5rem">HOW IT WORKS</div>
+          <div class="how-to">
+            <div class="how-to-step"><div class="n" style="background:rgba(20,184,166,0.2);border-color:rgba(20,184,166,0.4);color:#2dd4bf">1</div><span>Add keyword rules to a category via <code style="background:rgba(255,255,255,0.08);padding:0 4px;border-radius:3px">POST /categories/{id}/rules</code></span></div>
+            <div class="how-to-step"><div class="n" style="background:rgba(20,184,166,0.2);border-color:rgba(20,184,166,0.4);color:#2dd4bf">2</div><span>When a transaction is created without a category, the backend scans its description</span></div>
+            <div class="how-to-step"><div class="n" style="background:rgba(20,184,166,0.2);border-color:rgba(20,184,166,0.4);color:#2dd4bf">3</div><span>First matching keyword rule wins — category is assigned automatically</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─────────────────────────────────── SLIDE 7 — ACCOUNTS -->
+  <div class="slide bg-green" id="s7">
     <div class="label green">Accounts</div>
     <h2 style="margin-bottom:0.4rem">All your money in one view</h2>
-    <p style="margin-bottom:2rem">Connect every place you hold money. Balances update automatically as transactions are added.</p>
+    <p style="margin-bottom:1.75rem">Connect every place you hold money. Balances update automatically with every transaction.</p>
 
     <div class="row" style="max-width:900px;width:100%;gap:1.5rem">
       <div class="col flex-1" style="gap:0.75rem">
@@ -611,7 +627,7 @@
               <div style="width:38px;height:38px;border-radius:10px;background:#f59e0b;display:flex;align-items:center;justify-content:center;font-size:1.1rem">💳</div>
               <div><div style="font-weight:600">Visa Platinum</div><div style="font-size:0.75rem;color:#64748b">CREDIT CARD</div></div>
             </div>
-            <div style="font-size:1.2rem;font-weight:800;color:#f87171">-$340.00</div>
+            <div style="font-size:1.2rem;font-weight:800;color:#f87171">−$340.00</div>
           </div>
         </div>
         <div class="account-mock" style="border-left-color:#22c55e">
@@ -627,42 +643,42 @@
 
       <div class="col flex-1" style="gap:0.85rem">
         <div class="card card-sm">
-          <div style="font-size:0.78rem;font-weight:700;color:#4ade80;margin-bottom:0.6rem">ACCOUNT TYPES</div>
+          <div style="font-size:0.78rem;font-weight:700;color:#4ade80;margin-bottom:0.6rem">5 ACCOUNT TYPES</div>
           <div class="col" style="gap:0.45rem">
-            <div style="font-size:0.88rem;display:flex;align-items:center;gap:0.6rem"><span style="color:#60a5fa">🏦</span> Bank — Checking / current</div>
-            <div style="font-size:0.88rem;display:flex;align-items:center;gap:0.6rem"><span style="color:#fbbf24">💵</span> Cash — Physical wallet</div>
-            <div style="font-size:0.88rem;display:flex;align-items:center;gap:0.6rem"><span style="color:#f59e0b">💳</span> Credit Card — Monthly payoff</div>
-            <div style="font-size:0.88rem;display:flex;align-items:center;gap:0.6rem"><span style="color:#a78bfa">🏛️</span> Savings — Deposit accounts</div>
-            <div style="font-size:0.88rem;display:flex;align-items:center;gap:0.6rem"><span style="color:#34d399">📈</span> Investment — Stocks, crypto</div>
+            <div style="font-size:0.88rem;display:flex;align-items:center;gap:0.6rem"><span style="color:#60a5fa">🏦</span> <strong>Bank</strong> — Checking / current</div>
+            <div style="font-size:0.88rem;display:flex;align-items:center;gap:0.6rem"><span style="color:#fbbf24">💵</span> <strong>Cash</strong> — Physical wallet</div>
+            <div style="font-size:0.88rem;display:flex;align-items:center;gap:0.6rem"><span style="color:#f59e0b">💳</span> <strong>Credit Card</strong> — Monthly payoff</div>
+            <div style="font-size:0.88rem;display:flex;align-items:center;gap:0.6rem"><span style="color:#a78bfa">🏛️</span> <strong>Savings</strong> — Deposit accounts</div>
+            <div style="font-size:0.88rem;display:flex;align-items:center;gap:0.6rem"><span style="color:#34d399">📈</span> <strong>Investment</strong> — Stocks, crypto</div>
           </div>
         </div>
-        <div class="card card-sm" style="background:rgba(34,197,94,0.06);border-color:rgba(34,197,94,0.2)">
-          <div style="font-size:0.82rem;color:#94a3b8">Balance adjusts automatically every time a transaction is added, edited, or deleted — no manual updates needed.</div>
+        <div class="card card-sm">
+          <div style="font-size:0.78rem;font-weight:700;color:#4ade80;margin-bottom:0.5rem">HOW TO ADD AN ACCOUNT</div>
+          <div class="how-to">
+            <div class="how-to-step"><div class="n" style="background:rgba(34,197,94,0.2);border-color:rgba(34,197,94,0.4);color:#4ade80">1</div><span>Click <strong>Add Account</strong></span></div>
+            <div class="how-to-step"><div class="n" style="background:rgba(34,197,94,0.2);border-color:rgba(34,197,94,0.4);color:#4ade80">2</div><span>Set <strong>Name</strong>, <strong>Type</strong>, opening <strong>Balance</strong>, currency &amp; color</span></div>
+            <div class="how-to-step"><div class="n" style="background:rgba(34,197,94,0.2);border-color:rgba(34,197,94,0.4);color:#4ade80">3</div><span>Balance adjusts automatically on every transaction — no manual edits</span></div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ─────────────────────────────────────── -->
-  <!-- SLIDE 6 — BUDGETS -->
-  <!-- ─────────────────────────────────────── -->
-  <div class="slide bg-orange" id="s6">
+  <!-- ─────────────────────────────────── SLIDE 8 — BUDGETS -->
+  <div class="slide bg-orange" id="s8">
     <div class="label orange">Budgets</div>
     <h2 style="margin-bottom:0.4rem">Know before you overspend</h2>
-    <p style="margin-bottom:2rem">Set monthly spending limits per category. Visual progress bars warn you before you go over.</p>
+    <p style="margin-bottom:1.75rem">Set monthly spending limits per category. Visual progress bars warn you at 80% and 100%.</p>
 
     <div class="row" style="max-width:950px;width:100%;gap:1.5rem">
       <div class="col flex-1" style="gap:0.85rem">
-        <!-- Budget cards mock -->
         <div class="card card-sm">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.4rem">
             <div style="display:flex;align-items:center;gap:0.5rem"><span>🍔</span><span style="font-weight:600">Food</span></div>
             <span style="font-size:0.78rem;color:#64748b">$340 / $500</span>
           </div>
           <div class="pbar"><div class="pbar-fill" style="width:68%;background:#2563eb"></div></div>
-          <div style="display:flex;justify-content:space-between;margin-top:0.4rem;font-size:0.75rem">
-            <span class="muted">68% used</span><span class="green-text">$160 left</span>
-          </div>
+          <div style="display:flex;justify-content:space-between;margin-top:0.4rem;font-size:0.75rem"><span class="muted">68% used</span><span class="green-text">$160 left</span></div>
         </div>
         <div class="card card-sm">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.4rem">
@@ -670,19 +686,15 @@
             <span style="font-size:0.78rem;color:#64748b">$176 / $200</span>
           </div>
           <div class="pbar"><div class="pbar-fill" style="width:88%;background:#f59e0b"></div></div>
-          <div style="display:flex;justify-content:space-between;margin-top:0.4rem;font-size:0.75rem">
-            <span class="muted">88% used</span><span style="color:#fbbf24">$24 left</span>
-          </div>
+          <div style="display:flex;justify-content:space-between;margin-top:0.4rem;font-size:0.75rem"><span class="muted">88% used</span><span style="color:#fbbf24">$24 left ⚠</span></div>
         </div>
         <div class="card card-sm">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.4rem">
             <div style="display:flex;align-items:center;gap:0.5rem"><span>🎮</span><span style="font-weight:600">Entertainment</span></div>
             <span style="font-size:0.78rem;color:#64748b">$115 / $100</span>
           </div>
-          <div class="pbar"><div class="pbar-fill" style="width:115%;background:#ef4444"></div></div>
-          <div style="display:flex;justify-content:space-between;margin-top:0.4rem;font-size:0.75rem">
-            <span class="muted">115% used</span><span style="color:#f87171">-$15 over</span>
-          </div>
+          <div class="pbar"><div class="pbar-fill" style="width:100%;background:#ef4444"></div></div>
+          <div style="display:flex;justify-content:space-between;margin-top:0.4rem;font-size:0.75rem"><span class="muted">115% used</span><span style="color:#f87171">−$15 over ✕</span></div>
         </div>
       </div>
 
@@ -690,139 +702,165 @@
         <div class="card card-sm" style="border-color:rgba(245,158,11,0.3)">
           <div style="font-size:0.78rem;font-weight:700;color:#fbbf24;margin-bottom:0.6rem">PROGRESS BAR COLOURS</div>
           <div class="col" style="gap:0.55rem">
-            <div style="display:flex;align-items:center;gap:0.75rem;font-size:0.88rem">
-              <div style="width:32px;height:6px;border-radius:9999px;background:#2563eb;flex-shrink:0"></div>
-              <span>Under 80% — on track</span>
-            </div>
-            <div style="display:flex;align-items:center;gap:0.75rem;font-size:0.88rem">
-              <div style="width:32px;height:6px;border-radius:9999px;background:#f59e0b;flex-shrink:0"></div>
-              <span>80–99% — approaching limit</span>
-            </div>
-            <div style="display:flex;align-items:center;gap:0.75rem;font-size:0.88rem">
-              <div style="width:32px;height:6px;border-radius:9999px;background:#ef4444;flex-shrink:0"></div>
-              <span>100%+ — over budget</span>
-            </div>
+            <div style="display:flex;align-items:center;gap:0.75rem;font-size:0.88rem"><div style="width:32px;height:6px;border-radius:9999px;background:#2563eb;flex-shrink:0"></div> Under 80% — on track</div>
+            <div style="display:flex;align-items:center;gap:0.75rem;font-size:0.88rem"><div style="width:32px;height:6px;border-radius:9999px;background:#f59e0b;flex-shrink:0"></div> 80–99% — approaching limit</div>
+            <div style="display:flex;align-items:center;gap:0.75rem;font-size:0.88rem"><div style="width:32px;height:6px;border-radius:9999px;background:#ef4444;flex-shrink:0"></div> 100%+ — over budget</div>
+          </div>
+        </div>
+        <div class="card card-sm">
+          <div style="font-size:0.78rem;font-weight:700;color:#fbbf24;margin-bottom:0.5rem">HOW TO CREATE A BUDGET</div>
+          <div class="how-to">
+            <div class="how-to-step"><div class="n" style="background:rgba(245,158,11,0.2);border-color:rgba(245,158,11,0.4);color:#fbbf24">1</div><span>Select <strong>Month &amp; Year</strong> at the top</span></div>
+            <div class="how-to-step"><div class="n" style="background:rgba(245,158,11,0.2);border-color:rgba(245,158,11,0.4);color:#fbbf24">2</div><span>Click <strong>Add Budget</strong> → choose a Category (or leave blank for a global budget)</span></div>
+            <div class="how-to-step"><div class="n" style="background:rgba(245,158,11,0.2);border-color:rgba(245,158,11,0.4);color:#fbbf24">3</div><span>Set limit amount, toggle <strong>Rollover</strong> if needed</span></div>
           </div>
         </div>
         <div class="card card-sm" style="background:rgba(245,158,11,0.07);border-color:rgba(245,158,11,0.2)">
           <div style="font-size:0.82rem;font-weight:700;color:#fbbf24;margin-bottom:0.4rem">🔄 Rollover</div>
-          <div style="font-size:0.82rem;color:#94a3b8">Enable rollover and unspent balance carries forward to next month. e.g. Budget $500, spend $420 → next month starts at $580.</div>
-        </div>
-        <div class="card card-sm">
-          <div style="font-size:0.82rem;color:#94a3b8">Period selection — any month from <strong style="color:#e2e8f0">2023 to 2026</strong>. Budgets are independent per period.</div>
+          <div style="font-size:0.82rem;color:#94a3b8">Budget $500, spend $420 → next month starts at <strong style="color:#e2e8f0">$580</strong> ($80 carried forward).</div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ─────────────────────────────────────── -->
-  <!-- SLIDE 7 — GOALS -->
-  <!-- ─────────────────────────────────────── -->
-  <div class="slide bg-purple" id="s7">
+  <!-- ─────────────────────────────────── SLIDE 9 — GOALS -->
+  <div class="slide bg-purple" id="s9">
     <div class="label purple">Savings Goals</div>
     <h2 style="margin-bottom:0.4rem">Save with purpose</h2>
-    <p style="margin-bottom:2rem">Set targets, track contributions, and watch your progress grow towards every goal.</p>
+    <p style="margin-bottom:1.75rem">Set targets, contribute regularly, and watch progress grow — insights fire at every milestone.</p>
 
     <div class="row" style="max-width:950px;width:100%;gap:1.5rem">
       <div class="col flex-1" style="gap:0.85rem">
-        <!-- Goal cards mock -->
         <div class="card" style="border-top:3px solid #8b5cf6">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.6rem">
             <div style="display:flex;align-items:center;gap:0.75rem">
               <div style="width:38px;height:38px;border-radius:10px;background:#8b5cf6;display:flex;align-items:center;justify-content:center;font-size:1.1rem">✈️</div>
-              <div>
-                <div style="font-weight:600">Holiday Japan</div>
-                <div style="font-size:0.75rem;color:#64748b">Due: Dec 2025</div>
-              </div>
+              <div><div style="font-weight:600">Holiday Japan</div><div style="font-size:0.75rem;color:#64748b">Due: Dec 2026</div></div>
             </div>
             <span class="tag tag-green">ACTIVE</span>
           </div>
           <div style="font-size:0.95rem;margin-bottom:0.4rem">$2,400 <span class="muted">of $4,000</span></div>
           <div class="pbar"><div class="pbar-fill" style="width:60%;background:#8b5cf6"></div></div>
-          <div style="display:flex;justify-content:space-between;margin-top:0.4rem;font-size:0.75rem">
-            <span class="muted">60% complete</span><span class="green-text">$1,600 to go</span>
-          </div>
+          <div style="display:flex;justify-content:space-between;margin-top:0.4rem;font-size:0.75rem"><span class="muted">60% complete</span><span class="green-text">$1,600 to go</span></div>
         </div>
-
         <div class="card" style="border-top:3px solid #22c55e">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.6rem">
             <div style="display:flex;align-items:center;gap:0.75rem">
               <div style="width:38px;height:38px;border-radius:10px;background:#22c55e;display:flex;align-items:center;justify-content:center;font-size:1.1rem">🛡️</div>
-              <div>
-                <div style="font-weight:600">Emergency Fund</div>
-                <div style="font-size:0.75rem;color:#64748b">No deadline</div>
-              </div>
+              <div><div style="font-weight:600">Emergency Fund</div><div style="font-size:0.75rem;color:#64748b">No deadline</div></div>
             </div>
             <span class="tag tag-green">ACTIVE</span>
           </div>
           <div style="font-size:0.95rem;margin-bottom:0.4rem">$8,500 <span class="muted">of $10,000</span></div>
           <div class="pbar"><div class="pbar-fill" style="width:85%;background:#22c55e"></div></div>
-          <div style="display:flex;justify-content:space-between;margin-top:0.4rem;font-size:0.75rem">
-            <span class="muted">85% complete</span><span class="green-text">$1,500 to go</span>
-          </div>
+          <div style="display:flex;justify-content:space-between;margin-top:0.4rem;font-size:0.75rem"><span class="muted">85% complete</span><span class="green-text">$1,500 to go</span></div>
         </div>
       </div>
 
       <div class="col flex-1" style="gap:0.85rem">
         <div class="card card-sm">
-          <div style="font-size:0.78rem;font-weight:700;color:#c4b5fd;margin-bottom:0.6rem">GOAL FIELDS</div>
-          <div class="col" style="gap:0.45rem;font-size:0.88rem">
-            <div style="display:flex;gap:0.5rem"><span class="muted">Name</span><span style="margin-left:auto">e.g. "Buy a car"</span></div>
-            <div class="divider"></div>
-            <div style="display:flex;gap:0.5rem"><span class="muted">Target</span><span style="margin-left:auto">Required, min $0.01</span></div>
-            <div class="divider"></div>
-            <div style="display:flex;gap:0.5rem"><span class="muted">Deadline</span><span style="margin-left:auto">Optional</span></div>
-            <div class="divider"></div>
-            <div style="display:flex;gap:0.5rem"><span class="muted">Color</span><span style="margin-left:auto">Color picker</span></div>
-            <div class="divider"></div>
-            <div style="display:flex;gap:0.5rem"><span class="muted">Status</span><span style="margin-left:auto">Active / Completed / Paused</span></div>
+          <div style="font-size:0.78rem;font-weight:700;color:#c4b5fd;margin-bottom:0.6rem">HOW TO USE GOALS</div>
+          <div class="how-to">
+            <div class="how-to-step"><div class="n" style="background:rgba(139,92,246,0.2);border-color:rgba(139,92,246,0.4);color:#c4b5fd">1</div><span>Click <strong>New Goal</strong> → set name, target amount &amp; optional deadline</span></div>
+            <div class="how-to-step"><div class="n" style="background:rgba(139,92,246,0.2);border-color:rgba(139,92,246,0.4);color:#c4b5fd">2</div><span>Click <strong>Contribute</strong> on an Active goal → enter amount &amp; optional note</span></div>
+            <div class="how-to-step"><div class="n" style="background:rgba(139,92,246,0.2);border-color:rgba(139,92,246,0.4);color:#c4b5fd">3</div><span>Progress bar updates instantly — insights fire at key milestones</span></div>
           </div>
         </div>
         <div class="card card-sm" style="background:rgba(139,92,246,0.08);border-color:rgba(139,92,246,0.3)">
-          <div style="font-size:0.82rem;font-weight:700;color:#c4b5fd;margin-bottom:0.4rem">💸 Contribution System</div>
-          <div style="font-size:0.82rem;color:#94a3b8">Each contribution is a separate record with an optional note. The progress bar and remaining amount update instantly. Monthly insights fire when milestones are reached.</div>
+          <div style="font-size:0.82rem;font-weight:700;color:#c4b5fd;margin-bottom:0.4rem">Goal Statuses</div>
+          <div style="display:flex;flex-wrap:wrap;gap:0.4rem;font-size:0.8rem">
+            <span class="tag tag-green">ACTIVE</span>
+            <span class="tag tag-blue">COMPLETED</span>
+            <span class="tag tag-orange">PAUSED</span>
+            <span class="tag tag-red">CANCELLED</span>
+          </div>
+        </div>
+        <div class="card card-sm">
+          <div style="font-size:0.82rem;color:#94a3b8">Each contribution is stored as a separate record with an optional note — full history is preserved.</div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ─────────────────────────────────────── -->
-  <!-- SLIDE 8 — REPORTS -->
-  <!-- ─────────────────────────────────────── -->
-  <div class="slide bg-red" id="s8">
+  <!-- ─────────────────────────────────── SLIDE 10 — RECURRING -->
+  <div class="slide bg-teal" id="s10">
+    <div class="label teal">Recurring Transactions</div>
+    <h2 style="margin-bottom:0.4rem">Set it once, forget it</h2>
+    <p style="margin-bottom:1.75rem">Define a rule — the backend scheduler runs every hour and posts the transaction automatically on due date.</p>
+
+    <div class="row" style="max-width:1000px;width:100%;gap:1.75rem">
+      <div class="col flex-1" style="gap:0.85rem">
+        <div class="card" style="border-color:rgba(20,184,166,0.3);padding:1.1rem">
+          <div style="font-size:0.78rem;font-weight:700;color:#2dd4bf;margin-bottom:0.65rem">EXAMPLE RULE</div>
+          <div style="display:flex;flex-direction:column;gap:0.45rem;font-size:0.83rem">
+            <div style="display:flex;justify-content:space-between"><span class="muted">Description</span><span>Netflix Subscription</span></div>
+            <div class="divider"></div>
+            <div style="display:flex;justify-content:space-between"><span class="muted">Amount</span><span class="red-text">−$15.99</span></div>
+            <div class="divider"></div>
+            <div style="display:flex;justify-content:space-between"><span class="muted">Type</span><span>EXPENSE</span></div>
+            <div class="divider"></div>
+            <div style="display:flex;justify-content:space-between"><span class="muted">Frequency</span><span class="tag tag-teal" style="font-size:0.7rem">MONTHLY</span></div>
+            <div class="divider"></div>
+            <div style="display:flex;justify-content:space-between"><span class="muted">Start Date</span><span>2026-01-01</span></div>
+            <div class="divider"></div>
+            <div style="display:flex;justify-content:space-between"><span class="muted">Account</span><span>Barclays Current</span></div>
+          </div>
+        </div>
+        <div class="card card-sm">
+          <div style="font-size:0.78rem;font-weight:700;color:#2dd4bf;margin-bottom:0.5rem">6 FREQUENCIES</div>
+          <div style="display:flex;flex-wrap:wrap;gap:0.35rem">
+            <span class="tag tag-teal">Daily</span>
+            <span class="tag tag-teal">Weekly</span>
+            <span class="tag tag-teal">Bi-weekly</span>
+            <span class="tag tag-teal">Monthly</span>
+            <span class="tag tag-teal">Quarterly</span>
+            <span class="tag tag-teal">Yearly</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="col flex-1" style="gap:0.85rem">
+        <div class="label" style="margin:0;font-size:0.65rem;color:#2dd4bf">WHAT HAPPENS EACH RUN (hourly scheduler)</div>
+        <div class="card" style="border-color:rgba(20,184,166,0.25);padding:1.1rem">
+          <div class="how-to" style="gap:0.65rem">
+            <div class="how-to-step"><div class="n" style="background:rgba(20,184,166,0.2);border-color:rgba(20,184,166,0.4);color:#2dd4bf">1</div><span>Finds all rules where <code style="background:rgba(255,255,255,0.08);padding:0 4px;border-radius:3px">next_run ≤ now</code> and <code style="background:rgba(255,255,255,0.08);padding:0 4px;border-radius:3px">isActive = true</code></span></div>
+            <div class="how-to-step"><div class="n" style="background:rgba(20,184,166,0.2);border-color:rgba(20,184,166,0.4);color:#2dd4bf">2</div><span>Creates a <strong>Transaction</strong> record automatically</span></div>
+            <div class="how-to-step"><div class="n" style="background:rgba(20,184,166,0.2);border-color:rgba(20,184,166,0.4);color:#2dd4bf">3</div><span>Updates <strong>Account balance</strong></span></div>
+            <div class="how-to-step"><div class="n" style="background:rgba(20,184,166,0.2);border-color:rgba(20,184,166,0.4);color:#2dd4bf">4</div><span>Updates matching <strong>Budget spent</strong></span></div>
+            <div class="how-to-step"><div class="n" style="background:rgba(20,184,166,0.2);border-color:rgba(20,184,166,0.4);color:#2dd4bf">5</div><span>Advances <strong>next_run</strong> to next occurrence date</span></div>
+            <div class="how-to-step"><div class="n" style="background:rgba(20,184,166,0.2);border-color:rgba(20,184,166,0.4);color:#2dd4bf">6</div><span>Sends an in-app <strong>notification</strong> to the user</span></div>
+          </div>
+        </div>
+        <div class="card card-sm" style="background:rgba(20,184,166,0.06);border-color:rgba(20,184,166,0.2)">
+          <div style="font-size:0.82rem;color:#94a3b8">Use <strong style="color:#e2e8f0">Toggle</strong> to pause/resume without deleting. Set an <strong style="color:#e2e8f0">End Date</strong> to auto-deactivate after a specific date.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─────────────────────────────────── SLIDE 11 — REPORTS -->
+  <div class="slide bg-red" id="s11">
     <div class="label red">Reports</div>
     <h2 style="margin-bottom:0.4rem">Your month, in full detail</h2>
-    <p style="margin-bottom:2rem">Deep-dive into any month — with charts, a full category breakdown table, and one-click export.</p>
+    <p style="margin-bottom:1.75rem">Deep-dive into any month — charts, a full category breakdown table, and one-click export.</p>
 
     <div class="row" style="max-width:950px;width:100%;gap:1.5rem">
       <div class="col flex-1" style="gap:0.85rem">
-        <!-- KPI row -->
         <div class="grid-2" style="gap:0.65rem">
-          <div class="kpi-mock">
-            <div class="kpi-label">Total Income</div>
-            <div class="kpi-value green-text">$5,240</div>
-          </div>
-          <div class="kpi-mock">
-            <div class="kpi-label">Total Expenses</div>
-            <div class="kpi-value red-text">$3,180</div>
-          </div>
-          <div class="kpi-mock">
-            <div class="kpi-label">Net Savings</div>
-            <div class="kpi-value blue-text">$2,060</div>
-          </div>
+          <div class="kpi-mock"><div class="kpi-label">Total Income</div><div class="kpi-value green-text">$5,240</div></div>
+          <div class="kpi-mock"><div class="kpi-label">Total Expenses</div><div class="kpi-value red-text">$3,180</div></div>
+          <div class="kpi-mock"><div class="kpi-label">Net Savings</div><div class="kpi-value blue-text">$2,060</div></div>
           <div class="kpi-mock" style="background:rgba(34,197,94,0.07);border-color:rgba(34,197,94,0.2)">
             <div class="kpi-label">Savings Rate</div>
             <div class="kpi-value green-text">39.3%</div>
-            <div class="kpi-change green-text">Great!</div>
+            <div class="kpi-change green-text">Great! ≥ 20%</div>
           </div>
         </div>
-
-        <!-- Export buttons -->
         <div style="display:flex;gap:0.65rem">
           <div class="card card-sm" style="flex:1;text-align:center;background:rgba(34,197,94,0.07);border-color:rgba(34,197,94,0.25)">
             <div style="font-size:1.2rem;margin-bottom:0.3rem">📊</div>
             <div style="font-size:0.85rem;font-weight:600;color:#4ade80">Export CSV</div>
-            <div style="font-size:0.75rem;color:#64748b">For Excel / Sheets</div>
+            <div style="font-size:0.75rem;color:#64748b">Excel / Sheets</div>
           </div>
           <div class="card card-sm" style="flex:1;text-align:center;background:rgba(239,68,68,0.07);border-color:rgba(239,68,68,0.25)">
             <div style="font-size:1.2rem;margin-bottom:0.3rem">📄</div>
@@ -834,76 +872,46 @@
 
       <div class="col flex-1" style="gap:0.65rem">
         <div class="card" style="padding:0;overflow:hidden">
-          <div style="padding:0.75rem 1rem;font-size:0.78rem;font-weight:700;color:#94a3b8;border-bottom:1px solid var(--border)">CATEGORY BREAKDOWN</div>
+          <div style="padding:0.75rem 1rem;font-size:0.78rem;font-weight:700;color:#94a3b8;border-bottom:1px solid var(--border)">CATEGORY BREAKDOWN (sortable)</div>
           <table class="feat-table">
             <thead><tr><th>Category</th><th style="text-align:right">Amount</th><th style="text-align:right">%</th></tr></thead>
             <tbody>
-              <tr>
-                <td>Food & Drink</td>
-                <td style="text-align:right;font-weight:600">$680</td>
-                <td style="text-align:right">
-                  <div style="display:flex;align-items:center;justify-content:flex-end;gap:0.4rem">
-                    <div style="width:40px;height:4px;background:rgba(255,255,255,0.08);border-radius:9999px;overflow:hidden"><div style="width:42%;height:100%;background:#2563eb;border-radius:9999px"></div></div>
-                    <span>42%</span>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>Transport</td>
-                <td style="text-align:right;font-weight:600">$320</td>
-                <td style="text-align:right">
-                  <div style="display:flex;align-items:center;justify-content:flex-end;gap:0.4rem">
-                    <div style="width:40px;height:4px;background:rgba(255,255,255,0.08);border-radius:9999px;overflow:hidden"><div style="width:20%;height:100%;background:#8b5cf6;border-radius:9999px"></div></div>
-                    <span>20%</span>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>Housing</td>
-                <td style="text-align:right;font-weight:600">$950</td>
-                <td style="text-align:right">
-                  <div style="display:flex;align-items:center;justify-content:flex-end;gap:0.4rem">
-                    <div style="width:40px;height:4px;background:rgba(255,255,255,0.08);border-radius:9999px;overflow:hidden"><div style="width:59%;height:100%;background:#f59e0b;border-radius:9999px"></div></div>
-                    <span>59%</span>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>Entertainment</td>
-                <td style="text-align:right;font-weight:600">$230</td>
-                <td style="text-align:right">
-                  <div style="display:flex;align-items:center;justify-content:flex-end;gap:0.4rem">
-                    <div style="width:40px;height:4px;background:rgba(255,255,255,0.08);border-radius:9999px;overflow:hidden"><div style="width:14%;height:100%;background:#22c55e;border-radius:9999px"></div></div>
-                    <span>14%</span>
-                  </div>
-                </td>
-              </tr>
+              <tr><td>Food &amp; Drink</td><td style="text-align:right;font-weight:600">$680</td><td style="text-align:right"><div style="display:flex;align-items:center;justify-content:flex-end;gap:0.4rem"><div style="width:40px;height:4px;background:rgba(255,255,255,0.08);border-radius:9999px;overflow:hidden"><div style="width:42%;height:100%;background:#2563eb;border-radius:9999px"></div></div><span>42%</span></div></td></tr>
+              <tr><td>Transport</td><td style="text-align:right;font-weight:600">$320</td><td style="text-align:right"><div style="display:flex;align-items:center;justify-content:flex-end;gap:0.4rem"><div style="width:40px;height:4px;background:rgba(255,255,255,0.08);border-radius:9999px;overflow:hidden"><div style="width:20%;height:100%;background:#8b5cf6;border-radius:9999px"></div></div><span>20%</span></div></td></tr>
+              <tr><td>Housing</td><td style="text-align:right;font-weight:600">$950</td><td style="text-align:right"><div style="display:flex;align-items:center;justify-content:flex-end;gap:0.4rem"><div style="width:40px;height:4px;background:rgba(255,255,255,0.08);border-radius:9999px;overflow:hidden"><div style="width:59%;height:100%;background:#f59e0b;border-radius:9999px"></div></div><span>59%</span></div></td></tr>
+              <tr><td>Entertainment</td><td style="text-align:right;font-weight:600">$230</td><td style="text-align:right"><div style="display:flex;align-items:center;justify-content:flex-end;gap:0.4rem"><div style="width:40px;height:4px;background:rgba(255,255,255,0.08);border-radius:9999px;overflow:hidden"><div style="width:14%;height:100%;background:#22c55e;border-radius:9999px"></div></div><span>14%</span></div></td></tr>
             </tbody>
           </table>
+        </div>
+        <div class="card card-sm" style="background:rgba(239,68,68,0.06)">
+          <div style="font-size:0.78rem;font-weight:700;color:#f87171;margin-bottom:0.4rem">Savings Rate Scale</div>
+          <div style="font-size:0.82rem;display:flex;flex-direction:column;gap:0.3rem">
+            <div style="display:flex;gap:0.5rem"><span class="green-text">≥ 20%</span><span class="muted">— Great!</span></div>
+            <div style="display:flex;gap:0.5rem"><span class="orange-text">10–19%</span><span class="muted">— Average</span></div>
+            <div style="display:flex;gap:0.5rem"><span class="red-text">&lt; 10%</span><span class="muted">— Low</span></div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ─────────────────────────────────────── -->
-  <!-- SLIDE 9 — INSIGHTS -->
-  <!-- ─────────────────────────────────────── -->
-  <div class="slide bg-purple" id="s9">
+  <!-- ─────────────────────────────────── SLIDE 12 — INSIGHTS -->
+  <div class="slide bg-purple" id="s12">
     <div class="label purple">Insights</div>
     <h2 style="margin-bottom:0.4rem">Smart observations, automatically</h2>
-    <p style="margin-bottom:2rem">Budgetix analyses your transactions and generates personalised insights — every 1st of the month, or on demand.</p>
+    <p style="margin-bottom:1.75rem">Budgetix analyses your transactions, budgets, and goals — every 1st of the month, or on demand.</p>
 
     <div class="row" style="max-width:950px;width:100%;gap:1.5rem">
       <div class="col flex-1" style="gap:0.75rem">
         <div class="insight-mock" style="border-left-color:#22c55e">
           <div style="font-size:0.75rem;color:#22c55e;font-weight:700;margin-bottom:0.2rem">✦ POSITIVE</div>
           <div style="font-weight:600;font-size:0.9rem">Your savings rate of 39% is excellent!</div>
-          <div style="font-size:0.8rem;color:#64748b;margin-top:0.2rem">You're saving more than 3× the recommended 10% benchmark. Keep it up.</div>
+          <div style="font-size:0.8rem;color:#64748b;margin-top:0.2rem">You're saving 3× the recommended 10% benchmark.</div>
         </div>
         <div class="insight-mock" style="border-left-color:#ef4444">
           <div style="font-size:0.75rem;color:#ef4444;font-weight:700;margin-bottom:0.2rem">⚠ NEGATIVE</div>
           <div style="font-weight:600;font-size:0.9rem">Spending increased 24% vs last month</div>
-          <div style="font-size:0.8rem;color:#64748b;margin-top:0.2rem">Food & Entertainment are the main drivers of the increase.</div>
+          <div style="font-size:0.8rem;color:#64748b;margin-top:0.2rem">Food &amp; Entertainment are the main drivers.</div>
         </div>
         <div class="insight-mock" style="border-left-color:#06b6d4">
           <div style="font-size:0.75rem;color:#06b6d4;font-weight:700;margin-bottom:0.2rem">ℹ INFO</div>
@@ -919,39 +927,40 @@
 
       <div class="col flex-1" style="gap:0.85rem">
         <div class="card card-sm">
-          <div style="font-size:0.78rem;font-weight:700;color:#c4b5fd;margin-bottom:0.6rem">INSIGHT TYPES</div>
+          <div style="font-size:0.78rem;font-weight:700;color:#c4b5fd;margin-bottom:0.6rem">11 INSIGHT TYPES</div>
           <div class="col" style="gap:0.4rem;font-size:0.83rem">
-            <div style="display:flex;align-items:center;gap:0.5rem"><span class="tag tag-green" style="font-size:0.65rem">+</span>High savings rate, Spending decrease, Goal milestone</div>
-            <div style="display:flex;align-items:center;gap:0.5rem"><span class="tag tag-red" style="font-size:0.65rem">−</span>Low savings rate, Spending increase, Unusual spending, Budget exceeded</div>
-            <div style="display:flex;align-items:center;gap:0.5rem"><span class="tag tag-cyan" style="font-size:0.65rem">i</span>Subscription summary, Monthly summary</div>
-            <div style="display:flex;align-items:center;gap:0.5rem"><span class="tag tag-orange" style="font-size:0.65rem">!</span>Income change, Budget on track</div>
+            <div style="display:flex;align-items:center;gap:0.5rem"><span class="tag tag-green" style="font-size:0.65rem">+</span>High savings rate · Spending decrease · Goal milestone · Budget on track</div>
+            <div style="display:flex;align-items:center;gap:0.5rem"><span class="tag tag-red" style="font-size:0.65rem">−</span>Low savings rate · Spending increase · Unusual spending · Budget exceeded</div>
+            <div style="display:flex;align-items:center;gap:0.5rem"><span class="tag tag-cyan" style="font-size:0.65rem">i</span>Subscription summary · Monthly summary</div>
+            <div style="display:flex;align-items:center;gap:0.5rem"><span class="tag tag-orange" style="font-size:0.65rem">!</span>Income change</div>
+          </div>
+        </div>
+        <div class="card card-sm">
+          <div style="font-size:0.78rem;font-weight:700;color:#c4b5fd;margin-bottom:0.5rem">HOW TO USE</div>
+          <div class="how-to">
+            <div class="how-to-step"><div class="n" style="background:rgba(139,92,246,0.2);border-color:rgba(139,92,246,0.4);color:#c4b5fd">1</div><span>Navigate to <strong>Insights</strong> in the sidebar</span></div>
+            <div class="how-to-step"><div class="n" style="background:rgba(139,92,246,0.2);border-color:rgba(139,92,246,0.4);color:#c4b5fd">2</div><span>Click <strong>Generate Insights</strong> for an on-demand analysis</span></div>
+            <div class="how-to-step"><div class="n" style="background:rgba(139,92,246,0.2);border-color:rgba(139,92,246,0.4);color:#c4b5fd">3</div><span>Click <strong>✕</strong> to dismiss any insight permanently</span></div>
           </div>
         </div>
         <div class="card card-sm" style="background:rgba(139,92,246,0.08);border-color:rgba(139,92,246,0.3)">
-          <div style="font-size:0.82rem;font-weight:700;color:#c4b5fd;margin-bottom:0.4rem">🗓 Auto-generated</div>
-          <div style="font-size:0.82rem;color:#94a3b8">Every 1st of the month at 08:00 UTC for all verified users. Also triggered manually with the <strong style="color:#e2e8f0">"Generate Insights"</strong> button.</div>
-        </div>
-        <div class="card card-sm">
-          <div style="font-size:0.82rem;color:#94a3b8">Each insight can be <strong style="color:#e2e8f0">dismissed</strong> with the ✕ button. Dismissed insights are permanently removed from the list.</div>
+          <div style="font-size:0.82rem;color:#94a3b8">Auto-generated every <strong style="color:#e2e8f0">1st of the month at 08:00 UTC</strong> for all verified users.</div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ─────────────────────────────────────── -->
-  <!-- SLIDE 10 — SETTINGS -->
-  <!-- ─────────────────────────────────────── -->
-  <div class="slide bg-dark" id="s10">
+  <!-- ─────────────────────────────────── SLIDE 13 — SETTINGS -->
+  <div class="slide bg-dark" id="s13">
     <div class="label pink">Settings</div>
     <h2 style="margin-bottom:0.4rem">Personalise everything</h2>
-    <p style="margin-bottom:2rem">Three tabs covering your profile, account security, and notification preferences.</p>
+    <p style="margin-bottom:1.75rem">Three tabs covering your profile, account security, and notification preferences.</p>
 
     <div class="grid-3" style="max-width:900px;width:100%;gap:1.25rem">
-      <!-- Profile tab -->
       <div class="card" style="border-color:rgba(96,165,250,0.2)">
         <div class="icon-badge ib-blue" style="margin-bottom:0.6rem">👤</div>
         <h3 style="color:#60a5fa;margin-bottom:0.75rem">Profile</h3>
-        <div class="col" style="gap:0.5rem;font-size:0.83rem">
+        <div class="col" style="gap:0.45rem;font-size:0.83rem">
           <div style="display:flex;justify-content:space-between"><span class="muted">Full Name</span><span>Editable</span></div>
           <div class="divider"></div>
           <div style="display:flex;justify-content:space-between"><span class="muted">Currency</span><span>USD / EUR…</span></div>
@@ -960,62 +969,46 @@
           <div class="divider"></div>
           <div style="display:flex;justify-content:space-between"><span class="muted">Timezone</span><span>UTC / Paris…</span></div>
         </div>
+        <div style="margin-top:0.75rem;font-size:0.78rem;color:#64748b">Save → calls <code style="background:rgba(255,255,255,0.07);padding:1px 4px;border-radius:4px">PUT /users/profile</code> + <code style="background:rgba(255,255,255,0.07);padding:1px 4px;border-radius:4px">PUT /users/settings</code></div>
       </div>
 
-      <!-- Security tab -->
       <div class="card" style="border-color:rgba(239,68,68,0.2)">
         <div class="icon-badge ib-red" style="margin-bottom:0.6rem">🔒</div>
         <h3 style="color:#f87171;margin-bottom:0.75rem">Security</h3>
         <div class="col" style="gap:0.6rem;font-size:0.83rem">
           <div>
             <div style="font-weight:600;margin-bottom:0.2rem">Change Password</div>
-            <div class="muted">Current → New (min 8) → Confirm</div>
+            <div class="muted">Current → New (min 8 chars) → Confirm. Real-time mismatch error.</div>
           </div>
           <div class="divider"></div>
           <div>
-            <div style="font-weight:600;margin-bottom:0.2rem">Two-Factor Auth</div>
-            <div class="muted">Email OTP on every login. Toggle on/off. Status badge shows current state.</div>
+            <div style="font-weight:600;margin-bottom:0.2rem">Two-Factor Auth (2FA)</div>
+            <div class="muted">Email OTP on every login. Toggle on/off — status badge shows current state.</div>
           </div>
         </div>
       </div>
 
-      <!-- Notifications tab -->
       <div class="card" style="border-color:rgba(245,158,11,0.2)">
         <div class="icon-badge ib-orange" style="margin-bottom:0.6rem">🔔</div>
         <h3 style="color:#fbbf24;margin-bottom:0.75rem">Notifications</h3>
-        <div class="col" style="gap:0.5rem;font-size:0.83rem">
-          <div style="display:flex;justify-content:space-between;align-items:center">
-            <span>Budget Alerts</span>
-            <div style="width:32px;height:18px;border-radius:9999px;background:#2563eb;position:relative"><div style="width:14px;height:14px;border-radius:50%;background:white;position:absolute;right:2px;top:2px"></div></div>
-          </div>
-          <div style="display:flex;justify-content:space-between;align-items:center">
-            <span>Goal Milestones</span>
-            <div style="width:32px;height:18px;border-radius:9999px;background:#2563eb;position:relative"><div style="width:14px;height:14px;border-radius:50%;background:white;position:absolute;right:2px;top:2px"></div></div>
-          </div>
-          <div style="display:flex;justify-content:space-between;align-items:center">
-            <span>Weekly Summary</span>
-            <div style="width:32px;height:18px;border-radius:9999px;background:rgba(255,255,255,0.1);position:relative;border:1px solid rgba(255,255,255,0.15)"><div style="width:14px;height:14px;border-radius:50%;background:#475569;position:absolute;left:2px;top:1px"></div></div>
-          </div>
-          <div style="display:flex;justify-content:space-between;align-items:center">
-            <span>Large Transactions</span>
-            <div style="width:32px;height:18px;border-radius:9999px;background:#2563eb;position:relative"><div style="width:14px;height:14px;border-radius:50%;background:white;position:absolute;right:2px;top:2px"></div></div>
-          </div>
+        <div class="col" style="gap:0.45rem;font-size:0.83rem">
+          <div style="display:flex;justify-content:space-between;align-items:center"><span>Budget Alerts</span><div style="width:32px;height:18px;border-radius:9999px;background:#2563eb;position:relative"><div style="width:14px;height:14px;border-radius:50%;background:white;position:absolute;right:2px;top:2px"></div></div></div>
+          <div style="display:flex;justify-content:space-between;align-items:center"><span>Goal Milestones</span><div style="width:32px;height:18px;border-radius:9999px;background:#2563eb;position:relative"><div style="width:14px;height:14px;border-radius:50%;background:white;position:absolute;right:2px;top:2px"></div></div></div>
+          <div style="display:flex;justify-content:space-between;align-items:center"><span>Weekly Summary</span><div style="width:32px;height:18px;border-radius:9999px;background:rgba(255,255,255,0.1);position:relative;border:1px solid rgba(255,255,255,0.15)"><div style="width:14px;height:14px;border-radius:50%;background:#475569;position:absolute;left:2px;top:1px"></div></div></div>
+          <div style="display:flex;justify-content:space-between;align-items:center"><span>Large Transactions</span><div style="width:32px;height:18px;border-radius:9999px;background:#2563eb;position:relative"><div style="width:14px;height:14px;border-radius:50%;background:white;position:absolute;right:2px;top:2px"></div></div></div>
           <div class="divider"></div>
-          <div class="muted" style="font-size:0.78rem">History table: mark read, delete, mark all read</div>
+          <div class="muted" style="font-size:0.78rem">History table: mark read · mark all · delete</div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ─────────────────────────────────────── -->
-  <!-- SLIDE 11 — i18n + SHELL -->
-  <!-- ─────────────────────────────────────── -->
-  <div class="slide bg-blue" id="s11">
-    <div class="label">Navigation & Languages</div>
-    <h2 style="margin-bottom:2rem">Built for everyone</h2>
+  <!-- ─────────────────────────────────── SLIDE 14 — NAV + i18n -->
+  <div class="slide bg-blue" id="s14">
+    <div class="label">Navigation &amp; Languages</div>
+    <h2 style="margin-bottom:1.75rem">Built for everyone</h2>
 
     <div class="row" style="max-width:900px;width:100%;gap:2rem">
-      <!-- Sidebar mock -->
       <div class="flex-1">
         <div class="label" style="margin-bottom:0.75rem;font-size:0.65rem">SIDEBAR NAVIGATION</div>
         <div class="card" style="padding:0;overflow:hidden;max-width:200px">
@@ -1023,42 +1016,29 @@
             <div style="width:28px;height:28px;border-radius:7px;background:#2563eb;display:flex;align-items:center;justify-content:center;font-size:0.8rem">💼</div>
             <span style="font-weight:800;font-size:0.9rem">Budgetix</span>
           </div>
-          <div style="padding:0.5rem 0.4rem;font-size:0.75rem;color:#334155;font-weight:700;padding-left:0.75rem;padding-top:0.75rem">OVERVIEW</div>
+          <div style="padding:0.5rem 0.75rem;font-size:0.7rem;color:#334155;font-weight:700;padding-top:0.75rem">OVERVIEW</div>
           <div style="padding:0.45rem 0.75rem;display:flex;align-items:center;gap:0.6rem;background:rgba(37,99,235,0.15);border-left:2px solid #2563eb;color:#60a5fa;font-size:0.83rem;font-weight:600">📊 Dashboard</div>
           <div style="padding:0.45rem 0.75rem;display:flex;align-items:center;gap:0.6rem;color:#64748b;font-size:0.83rem">💳 Transactions</div>
-          <div style="padding:0.5rem 0.4rem;font-size:0.75rem;color:#334155;font-weight:700;padding-left:0.75rem;padding-top:0.75rem">FINANCE</div>
+          <div style="padding:0.5rem 0.75rem;font-size:0.7rem;color:#334155;font-weight:700;padding-top:0.75rem">FINANCE</div>
           <div style="padding:0.45rem 0.75rem;display:flex;align-items:center;gap:0.6rem;color:#64748b;font-size:0.83rem">🏦 Accounts</div>
           <div style="padding:0.45rem 0.75rem;display:flex;align-items:center;gap:0.6rem;color:#64748b;font-size:0.83rem">📋 Budgets</div>
           <div style="padding:0.45rem 0.75rem;display:flex;align-items:center;gap:0.6rem;color:#64748b;font-size:0.83rem">🎯 Goals</div>
-          <div style="padding:0.5rem 0.4rem;font-size:0.75rem;color:#334155;font-weight:700;padding-left:0.75rem;padding-top:0.75rem">INSIGHTS</div>
+          <div style="padding:0.5rem 0.75rem;font-size:0.7rem;color:#334155;font-weight:700;padding-top:0.75rem">INSIGHTS</div>
           <div style="padding:0.45rem 0.75rem;display:flex;align-items:center;gap:0.6rem;color:#64748b;font-size:0.83rem">💡 Insights</div>
           <div style="padding:0.45rem 0.75rem;display:flex;align-items:center;gap:0.6rem;color:#64748b;font-size:0.83rem">📄 Reports</div>
-          <div style="padding:0.5rem 0.4rem;font-size:0.75rem;color:#334155;font-weight:700;padding-left:0.75rem;padding-top:0.75rem">ACCOUNT</div>
+          <div style="padding:0.5rem 0.75rem;font-size:0.7rem;color:#334155;font-weight:700;padding-top:0.75rem">ACCOUNT</div>
           <div style="padding:0.45rem 0.75rem;display:flex;align-items:center;gap:0.6rem;color:#64748b;font-size:0.83rem;margin-bottom:0.3rem">⚙️ Settings</div>
         </div>
       </div>
 
-      <!-- Lang + topbar -->
       <div class="col flex-1" style="gap:1.25rem">
         <div>
           <div class="label" style="margin-bottom:0.75rem;font-size:0.65rem">LANGUAGE SWITCHER</div>
           <div class="card card-sm">
             <div class="col" style="gap:0.5rem">
-              <div style="display:flex;align-items:center;gap:0.75rem;font-size:0.9rem">
-                <span style="font-size:1.1rem">🇬🇧</span>
-                <span style="font-weight:600">English</span>
-                <span class="tag tag-blue" style="margin-left:auto;font-size:0.65rem">LTR</span>
-              </div>
-              <div style="display:flex;align-items:center;gap:0.75rem;font-size:0.9rem">
-                <span style="font-size:1.1rem">🇫🇷</span>
-                <span style="font-weight:600">Français</span>
-                <span class="tag tag-blue" style="margin-left:auto;font-size:0.65rem">LTR</span>
-              </div>
-              <div style="display:flex;align-items:center;gap:0.75rem;font-size:0.9rem">
-                <span style="font-size:1.1rem">🇸🇦</span>
-                <span style="font-weight:600">العربية</span>
-                <span class="tag tag-purple" style="margin-left:auto;font-size:0.65rem">RTL</span>
-              </div>
+              <div style="display:flex;align-items:center;gap:0.75rem;font-size:0.9rem"><span style="font-size:1.1rem">🇬🇧</span><span style="font-weight:600">English</span><span class="tag tag-blue" style="margin-left:auto;font-size:0.65rem">LTR</span></div>
+              <div style="display:flex;align-items:center;gap:0.75rem;font-size:0.9rem"><span style="font-size:1.1rem">🇫🇷</span><span style="font-weight:600">Français</span><span class="tag tag-blue" style="margin-left:auto;font-size:0.65rem">LTR</span></div>
+              <div style="display:flex;align-items:center;gap:0.75rem;font-size:0.9rem"><span style="font-size:1.1rem">🇸🇦</span><span style="font-weight:600">العربية</span><span class="tag tag-purple" style="margin-left:auto;font-size:0.65rem">RTL</span></div>
             </div>
           </div>
         </div>
@@ -1070,23 +1050,21 @@
             <span style="font-size:0.8rem;background:rgba(255,255,255,0.07);padding:0.3rem 0.6rem;border-radius:7px">🇬🇧 EN</span>
             <span style="position:relative;font-size:1rem">🔔<span style="position:absolute;top:-4px;right:-6px;width:14px;height:14px;background:#ef4444;border-radius:50%;font-size:0.55rem;display:flex;align-items:center;justify-content:center;font-weight:700">3</span></span>
             <div style="display:flex;align-items:center;gap:0.4rem;background:rgba(255,255,255,0.06);border-radius:8px;padding:0.3rem 0.5rem">
-              <div style="width:24px;height:24px;border-radius:6px;background:linear-gradient(135deg,#2563eb,#0ea5e9);display:flex;align-items:center;justify-content:center;font-size:0.6rem;font-weight:700">JD</div>
-              <span style="font-size:0.78rem;font-weight:600">John Doe</span>
+              <div style="width:24px;height:24px;border-radius:6px;background:linear-gradient(135deg,#2563eb,#0ea5e9);display:flex;align-items:center;justify-content:center;font-size:0.6rem;font-weight:700">AG</div>
+              <span style="font-size:0.78rem;font-weight:600">Ali Agyn</span>
             </div>
             <span style="font-size:1rem">🚪</span>
           </div>
         </div>
         <div class="card card-sm" style="background:rgba(37,99,235,0.07)">
-          <div style="font-size:0.82rem;color:#94a3b8">Sidebar is <strong style="color:#e2e8f0">collapsible</strong> (icon-only at 70px). Language persists in localStorage. Arabic switches the entire layout to RTL.</div>
+          <div style="font-size:0.82rem;color:#94a3b8">Sidebar is <strong style="color:#e2e8f0">collapsible</strong> (icon-only at 70px width). Language persists in <code style="background:rgba(255,255,255,0.07);padding:1px 4px;border-radius:4px">localStorage</code>. Arabic switches the full layout to RTL instantly.</div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ─────────────────────────────────────── -->
-  <!-- SLIDE 12 — TECH STACK -->
-  <!-- ─────────────────────────────────────── -->
-  <div class="slide bg-dark center" id="s12">
+  <!-- ─────────────────────────────────── SLIDE 15 — TECH STACK -->
+  <div class="slide bg-dark center" id="s15">
     <div class="label">Technology</div>
     <h2 style="margin-bottom:2.5rem">Built on solid foundations</h2>
     <div class="grid-3" style="max-width:800px;gap:1rem">
@@ -1116,20 +1094,18 @@
         <div style="font-size:2.5rem;margin-bottom:0.75rem">🗄️</div>
         <h3 style="color:#c4b5fd">Infrastructure</h3>
         <div class="col" style="gap:0.3rem;margin-top:0.5rem">
-          <span class="tag tag-purple" style="justify-content:center">PostgreSQL</span>
-          <span class="tag tag-purple" style="justify-content:center">BCrypt</span>
-          <span class="tag tag-purple" style="justify-content:center">Email (SMTP)</span>
-          <span class="tag tag-purple" style="justify-content:center">Scheduled Jobs</span>
-          <span class="tag tag-purple" style="justify-content:center">PDF / CSV Export</span>
+          <span class="tag tag-purple" style="justify-content:center">PostgreSQL 16</span>
+          <span class="tag tag-purple" style="justify-content:center">Redis 7</span>
+          <span class="tag tag-purple" style="justify-content:center">Flyway migrations</span>
+          <span class="tag tag-purple" style="justify-content:center">Docker Compose</span>
+          <span class="tag tag-purple" style="justify-content:center">PDF / CSV export</span>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ─────────────────────────────────────── -->
-  <!-- SLIDE 13 — SUMMARY / FINAL -->
-  <!-- ─────────────────────────────────────── -->
-  <div class="slide bg-hero center" id="s13">
+  <!-- ─────────────────────────────────── SLIDE 16 — FINAL -->
+  <div class="slide bg-hero center" id="s16">
     <div class="logo" style="margin-bottom:1.5rem">
       <div class="logo-icon">💼</div>
       <div class="logo-name">Budgetix</div>
@@ -1137,51 +1113,32 @@
     <h2 style="text-align:center">Everything you need to<br><span class="gradient-text">master your finances.</span></h2>
 
     <div class="final-grid" style="max-width:700px">
-      <div class="final-stat">
-        <div class="num gradient-text">8</div>
-        <div class="lbl">Core Features</div>
-      </div>
-      <div class="final-stat">
-        <div class="num gradient-text">40+</div>
-        <div class="lbl">API Endpoints</div>
-      </div>
-      <div class="final-stat">
-        <div class="num gradient-text">3</div>
-        <div class="lbl">Languages (EN / FR / AR)</div>
-      </div>
-      <div class="final-stat">
-        <div class="num gradient-text">12+</div>
-        <div class="lbl">Dashboard KPIs</div>
-      </div>
-      <div class="final-stat">
-        <div class="num gradient-text">11</div>
-        <div class="lbl">Insight Types</div>
-      </div>
-      <div class="final-stat">
-        <div class="num gradient-text">2</div>
-        <div class="lbl">Scheduled Jobs</div>
-      </div>
+      <div class="final-stat"><div class="num gradient-text">10</div><div class="lbl">Core Features</div></div>
+      <div class="final-stat"><div class="num gradient-text">50+</div><div class="lbl">REST API Endpoints</div></div>
+      <div class="final-stat"><div class="num gradient-text">3</div><div class="lbl">Languages (EN / FR / AR)</div></div>
+      <div class="final-stat"><div class="num gradient-text">11</div><div class="lbl">Insight Types</div></div>
+      <div class="final-stat"><div class="num gradient-text">6</div><div class="lbl">Recurring Frequencies</div></div>
+      <div class="final-stat"><div class="num gradient-text">2</div><div class="lbl">Scheduled Jobs</div></div>
     </div>
 
     <div style="display:flex;gap:0.75rem;margin-top:2rem;flex-wrap:wrap;justify-content:center">
       <span class="tag tag-green">✓ JWT + 2FA Security</span>
-      <span class="tag tag-blue">✓ CSV & PDF Export</span>
+      <span class="tag tag-blue">✓ CSV &amp; PDF Export</span>
       <span class="tag tag-purple">✓ Auto Insights</span>
-      <span class="tag tag-cyan">✓ Recurring Transactions</span>
+      <span class="tag tag-teal">✓ Recurring Transactions</span>
       <span class="tag tag-orange">✓ Budget Rollover</span>
+      <span class="tag tag-cyan">✓ Auto-Categorization</span>
     </div>
   </div>
 
 </div><!-- /deck -->
 
-<!-- CONTROLS -->
 <div class="controls">
   <button class="ctrl-btn" id="btnPrev" onclick="navigate(-1)" disabled>&#8592;</button>
-  <div class="slide-counter" id="counter">1 / 14</div>
+  <div class="slide-counter" id="counter">1 / 17</div>
   <button class="ctrl-btn" id="btnNext" onclick="navigate(1)">&#8594;</button>
 </div>
 
-<!-- DOTS -->
 <div class="progress-dots" id="dots"></div>
 
 <script>
@@ -1189,7 +1146,6 @@
   const total  = slides.length;
   let current  = 0;
 
-  // build dots
   const dotsEl = document.getElementById('dots');
   slides.forEach((_, i) => {
     const d = document.createElement('div');
@@ -1202,25 +1158,16 @@
     slides[current].classList.remove('active');
     slides[current].classList.add('exit');
     setTimeout(() => slides[current].classList.remove('exit'), 450);
-
     current = Math.max(0, Math.min(idx, total - 1));
-
     slides[current].classList.add('active');
-
-    // dots
     dotsEl.querySelectorAll('.pdot').forEach((d, i) => d.classList.toggle('active', i === current));
-
-    // counter
     document.getElementById('counter').textContent = (current + 1) + ' / ' + total;
-
-    // buttons
     document.getElementById('btnPrev').disabled = current === 0;
     document.getElementById('btnNext').disabled = current === total - 1;
   }
 
   function navigate(dir) { goTo(current + dir); }
 
-  // keyboard
   document.addEventListener('keydown', e => {
     if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); navigate(1); }
     if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')                    { e.preventDefault(); navigate(-1); }
@@ -1228,7 +1175,6 @@
     if (e.key === 'End')  goTo(total - 1);
   });
 
-  // touch swipe
   let tx = 0;
   document.addEventListener('touchstart', e => { tx = e.touches[0].clientX; });
   document.addEventListener('touchend',   e => {

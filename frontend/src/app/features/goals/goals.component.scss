@@ -1,13 +1,123 @@
-.goals-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:1rem; }
-.goal-icon {
-  width:40px; height:40px; border-radius:10px;
-  display:flex; align-items:center; justify-content:center; color:white;
-  i { font-size:1.1rem; }
+/* ── Page header ── */
+.page-header {
+  margin-bottom: 1.5rem;
+  h1 { font-size: 1.4rem; font-weight: 700; color: var(--text-color); letter-spacing: -0.02em; }
+  p  { color: var(--text-color-secondary); font-size: 0.875rem; margin-top: 0.2rem; }
 }
-.goal-name { font-weight:600; font-size:1rem; }
-.goal-progress-label { font-size:1rem; margin-top:0.5rem; }
-.field { display:flex; flex-direction:column; gap:0.25rem; }
-label { font-weight:500; font-size:0.875rem; }
-.badge-active { background:#dcfce7; color:#15803d; padding:2px 8px; border-radius:9999px; font-size:0.75rem; font-weight:600; }
-.badge-completed { background:#e0f2fe; color:#0369a1; padding:2px 8px; border-radius:9999px; font-size:0.75rem; font-weight:600; }
-.badge-paused { background:#fef9c3; color:#854d0e; padding:2px 8px; border-radius:9999px; font-size:0.75rem; font-weight:600; }
+
+/* ── Grid ── */
+.goals-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 1rem;
+}
+
+/* ── Goal card ── */
+.goal-card {
+  padding: 1.4rem;
+  transition: box-shadow 0.15s, transform 0.15s;
+  &:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08) !important; transform: translateY(-1px); }
+}
+
+.goal-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.goal-icon {
+  width: 42px; height: 42px; border-radius: 12px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  color: white;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  i { font-size: 1rem; }
+}
+
+.goal-title { flex: 1; padding: 0 0.75rem; }
+.goal-name {
+  font-weight: 700;
+  font-size: 0.92rem;
+  color: var(--text-color);
+  margin-bottom: 0.35rem;
+}
+
+/* Status badges */
+.badge-active    { display: inline-flex; align-items: center; gap: 0.3rem; background: rgba(22,163,74,0.12); color: #16a34a; padding: 0.15rem 0.65rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 700; }
+.badge-completed { background: var(--primary-100); color: var(--primary); padding: 0.15rem 0.65rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 700; }
+.badge-paused    { background: rgba(217,119,6,0.12); color: #d97706; padding: 0.15rem 0.65rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 700; }
+
+/* Amount display */
+.goal-amounts {
+  display: flex;
+  align-items: baseline;
+  gap: 0.3rem;
+  margin-bottom: 0.85rem;
+}
+.goal-current {
+  font-size: 1.5rem; font-weight: 800; letter-spacing: -0.025em; color: var(--text-color);
+}
+.goal-target {
+  font-size: 0.85rem; color: var(--surface-400); font-weight: 500;
+}
+
+/* Progress */
+.goal-bar-track {
+  width: 100%; height: 8px;
+  background: var(--bg-hover); border-radius: 9999px; overflow: hidden;
+  margin-bottom: 0.4rem;
+}
+.goal-bar-fill {
+  height: 100%; border-radius: 9999px;
+  transition: width 0.5s ease;
+  background: linear-gradient(90deg, var(--primary), var(--primary-light));
+  &.done { background: linear-gradient(90deg, #16a34a, #22c55e); }
+}
+
+.goal-progress-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.75rem;
+}
+.goal-pct  { font-weight: 700; color: var(--primary); }
+.goal-left { color: var(--surface-400); }
+
+/* Deadline row */
+.goal-deadline {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.75rem;
+  color: var(--text-color-secondary);
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border);
+  i { font-size: 0.7rem; }
+}
+
+/* ── Dialog form ── */
+.dialog-form { display: flex; flex-direction: column; gap: 0.9rem; padding-top: 0.25rem; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; }
+.field { display: flex; flex-direction: column; gap: 0.4rem; }
+label { font-size: 0.8rem; font-weight: 600; color: var(--text-color); }
+.req  { color: #ef4444; }
+
+.color-row {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.25rem;
+}
+.color-swatch {
+  width: 28px; height: 28px; border-radius: 7px; cursor: pointer;
+  border: 2px solid transparent;
+  transition: transform 0.12s, border-color 0.12s;
+  &:hover { transform: scale(1.12); }
+  &.selected { border-color: var(--text-color); }
+}
+
+@media (max-width: 640px) {
+  .form-row { grid-template-columns: 1fr; }
+  .goals-grid { grid-template-columns: 1fr; }
+}

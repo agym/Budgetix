@@ -53,6 +53,13 @@ public class AuthController {
         return ResponseEntity.ok(ApiResponse.ok("Email verified successfully"));
     }
 
+    @Operation(summary = "Resend email verification code")
+    @PostMapping("/resend-verification")
+    public ResponseEntity<ApiResponse<Void>> resendVerification(@Valid @RequestBody ForgotPasswordRequest req) {
+        authService.resendVerification(req);
+        return ResponseEntity.ok(ApiResponse.ok("Verification code resent"));
+    }
+
     @Operation(summary = "Request password reset")
     @PostMapping("/forgot-password")
     public ResponseEntity<ApiResponse<Void>> forgotPassword(@Valid @RequestBody ForgotPasswordRequest req) {

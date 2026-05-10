@@ -96,6 +96,28 @@ Invalidate the refresh token.
 
 ---
 
+### POST `/auth/resend-verification`
+Resend the email-verification OTP. Rate-limited to **3 requests per 24 hours** per account.
+
+**Request**
+```json
+{ "email": "ali@example.com" }
+```
+
+**Response** `200 OK`
+```json
+{ "success": true, "message": "Verification code resent", "data": null }
+```
+
+**Error responses**
+| Status | Code | Meaning |
+|--------|------|---------|
+| 400 | `EMAIL_ALREADY_VERIFIED` | Email is already verified |
+| 404 | `USER_NOT_FOUND` | No account with that email |
+| 429 | `RESEND_LIMIT_EXCEEDED` | 3-attempt limit reached; retry after 24 h |
+
+---
+
 ### POST `/auth/forgot-password`
 Trigger a password-reset OTP email.
 
@@ -217,7 +239,7 @@ Create a new account.
 }
 ```
 
-Account types: `CHECKING`, `SAVINGS`, `CREDIT`, `INVESTMENT`, `CASH`
+Account types: `CASH`, `BANK`, `CREDIT_CARD`, `SAVINGS`, `INVESTMENT`
 
 ---
 
@@ -289,6 +311,23 @@ Update a transaction (same body as POST).
 
 ### DELETE `/transactions/{id}`
 Delete a single transaction and reverse the account balance.
+
+---
+
+### POST `/transactions/import`
+Import transactions from a CSV file. `multipart/form-data` with fields `accountId` (UUID) and `file` (CSV).
+
+Expected CSV format (header row required):
+```
+date,description,amount,type
+2026-04-01,Salary,3000,INCOME
+2026-04-03,Supermarket,45.50,EXPENSE
+```
+
+**Response**
+```json
+{ "data": { "imported": 42 } }
+```
 
 ---
 
@@ -508,6 +547,16 @@ Mark all notifications as read.
 
 ### GET `/insights`
 List active (non-dismissed) insights.
+
+---
+
+### POST `/insights/generate`
+Trigger on-demand insight generation for the authenticated user. Analyses current month's transactions, budgets, and goals and creates new `Insight` records.
+
+**Response** `200 OK`
+```json
+{ "success": true, "message": "Insights generated successfully", "data": null }
+```
 
 ---
 

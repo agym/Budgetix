@@ -57,6 +57,12 @@ export class AuthService {
     );
   }
 
+  resendVerification(email: string): Observable<void> {
+    return this.http.post<ApiResponse<void>>(`${this.api}/auth/resend-verification`, { email }).pipe(
+      map(() => undefined)
+    );
+  }
+
   forgotPassword(email: string): Observable<void> {
     return this.http.post<ApiResponse<void>>(`${this.api}/auth/forgot-password`, { email }).pipe(
       map(() => undefined)

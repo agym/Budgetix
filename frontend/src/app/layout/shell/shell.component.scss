@@ -5,5 +5,5 @@
   transition: margin-left 0.25s ease;
 }
 .shell.sidebar-collapsed .main-area { margin-left: 70px; }
-.content { flex: 1; overflow-y: auto; padding: 1.5rem 2rem; }
+.content { flex: 1; overflow-y: auto; padding: 1.5rem 2rem; background: var(--bg-app); transition: background 0.2s; }
 @media (max-width: 768px) { .main-area { margin-left: 0; } }
