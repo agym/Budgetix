@@ -9,5 +9,7 @@ export interface Account {
   color?: string;
   icon?: string;
   isDefault: boolean;
+  institutionName?: string;
+  lastFour?: string;
   createdAt: string;
 }

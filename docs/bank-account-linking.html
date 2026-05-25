@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Bank Account Linking — Budgetix Explanation</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --surface: #1e293b;
+    --surface2: #273449;
+    --border: #334155;
+    --primary: #6366f1;
+    --primary-light: #818cf8;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --info: #3b82f6;
+    --text: #f1f5f9;
+    --muted: #94a3b8;
+    --radius: 12px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  /* ── Hero ── */
+  .hero {
+    background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 50%, #1e293b 100%);
+    padding: 60px 40px 50px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+  }
+  .hero h1 { font-size: 2.4rem; font-weight: 800; color: var(--primary-light); margin-bottom: 12px; }
+  .hero p { font-size: 1.1rem; color: var(--muted); max-width: 680px; margin: 0 auto; }
+  .badge {
+    display: inline-block;
+    background: rgba(99,102,241,.18);
+    color: var(--primary-light);
+    border: 1px solid rgba(99,102,241,.35);
+    border-radius: 100px;
+    padding: 4px 16px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: .05em;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+  }
+
+  /* ── Layout ── */
+  .container { max-width: 980px; margin: 0 auto; padding: 0 32px; }
+  section { padding: 56px 0; border-bottom: 1px solid var(--border); }
+  section:last-child { border-bottom: none; }
+  h2 { font-size: 1.65rem; font-weight: 700; margin-bottom: 24px; }
+  h2 span { color: var(--primary-light); }
+  h3 { font-size: 1.15rem; font-weight: 600; margin-bottom: 12px; }
+  p { color: var(--muted); margin-bottom: 14px; }
+  p:last-child { margin-bottom: 0; }
+  strong { color: var(--text); }
+
+  /* ── Cards ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+    margin-bottom: 20px;
+  }
+  .card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 640px) { .card-grid { grid-template-columns: 1fr; } }
+
+  /* ── Comparison table ── */
+  .compare { width: 100%; border-collapse: collapse; margin-top: 8px; }
+  .compare th, .compare td { padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--border); }
+  .compare th { background: var(--surface2); color: var(--muted); font-size: .8rem; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; }
+  .compare td { color: var(--muted); }
+  .compare tr:last-child td { border-bottom: none; }
+  .compare .label { color: var(--text); font-weight: 600; width: 190px; }
+  .yes { color: var(--success); font-weight: 600; }
+  .no  { color: var(--danger);  font-weight: 600; }
+  .partial { color: var(--warning); font-weight: 600; }
+
+  /* ── Flow diagram ── */
+  .flow { display: flex; align-items: flex-start; gap: 0; flex-wrap: wrap; margin: 8px 0 24px; }
+  .flow-step {
+    flex: 1; min-width: 130px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 14px;
+    text-align: center;
+    position: relative;
+  }
+  .flow-step .step-num {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--primary); color: #fff;
+    font-size: .78rem; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 10px;
+  }
+  .flow-step .step-title { font-size: .85rem; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+  .flow-step .step-desc  { font-size: .77rem; color: var(--muted); line-height: 1.4; }
+  .flow-arrow {
+    display: flex; align-items: center; padding: 0 8px; margin-top: 36px;
+    color: var(--primary-light); font-size: 1.3rem;
+  }
+  @media (max-width: 680px) {
+    .flow { flex-direction: column; }
+    .flow-arrow { transform: rotate(90deg); margin: 4px auto; }
+  }
+
+  /* ── Code block ── */
+  pre {
+    background: #0d1117;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    overflow-x: auto;
+    font-family: 'Cascadia Code', 'Fira Code', monospace;
+    font-size: .82rem;
+    line-height: 1.6;
+    color: #e2e8f0;
+    margin: 16px 0;
+  }
+  .kw  { color: #c792ea; }
+  .str { color: #a5f3fc; }
+  .cmt { color: #64748b; }
+  .num { color: #fbbf24; }
+  .key { color: #7dd3fc; }
+
+  /* ── Tag pills ── */
+  .tag {
+    display: inline-block;
+    background: rgba(99,102,241,.15);
+    color: var(--primary-light);
+    border: 1px solid rgba(99,102,241,.3);
+    border-radius: 6px;
+    padding: 2px 10px;
+    font-size: .78rem;
+    font-weight: 600;
+    margin: 2px;
+  }
+  .tag.green { background: rgba(16,185,129,.15); color: #34d399; border-color: rgba(16,185,129,.3); }
+  .tag.amber { background: rgba(245,158,11,.15);  color: #fbbf24; border-color: rgba(245,158,11,.3); }
+  .tag.red   { background: rgba(239,68,68,.15);   color: #f87171; border-color: rgba(239,68,68,.3); }
+
+  /* ── Provider grid ── */
+  .provider-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; margin-top: 8px; }
+  .provider-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+  }
+  .provider-card .pname { font-weight: 700; color: var(--text); margin-bottom: 6px; font-size: 1rem; }
+  .provider-card .pcov  { font-size: .78rem; color: var(--muted); margin-bottom: 10px; }
+  .provider-card .ptag  { }
+
+  /* ── Roadmap timeline ── */
+  .timeline { position: relative; padding-left: 28px; margin-top: 8px; }
+  .timeline::before {
+    content: '';
+    position: absolute; left: 8px; top: 4px; bottom: 4px;
+    width: 2px; background: var(--border);
+  }
+  .tl-item { position: relative; margin-bottom: 28px; }
+  .tl-item::before {
+    content: '';
+    position: absolute; left: -24px; top: 6px;
+    width: 12px; height: 12px; border-radius: 50%;
+    background: var(--primary); border: 2px solid var(--bg);
+  }
+  .tl-item.done::before  { background: var(--success); }
+  .tl-item.later::before { background: var(--border); }
+  .tl-phase { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--primary-light); margin-bottom: 4px; }
+  .tl-item.done .tl-phase  { color: var(--success); }
+  .tl-item.later .tl-phase { color: var(--muted); }
+  .tl-title { font-weight: 600; color: var(--text); margin-bottom: 4px; }
+  .tl-desc  { font-size: .85rem; color: var(--muted); }
+
+  /* ── Alert box ── */
+  .alert {
+    background: rgba(245,158,11,.08);
+    border: 1px solid rgba(245,158,11,.3);
+    border-left: 4px solid var(--warning);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin: 20px 0;
+    color: #fde68a;
+    font-size: .9rem;
+  }
+  .alert-info {
+    background: rgba(59,130,246,.08);
+    border: 1px solid rgba(59,130,246,.3);
+    border-left-color: var(--info);
+    color: #bfdbfe;
+  }
+  .alert strong { color: inherit; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="badge">Technical Guide</div>
+  <h1>Bank Account Linking</h1>
+  <p>A complete explanation of what "linking a real bank account" means, how it works in the industry, what Budgetix currently does, and the roadmap to full Open Banking integration.</p>
+</div>
+
+<div class="container">
+
+  <!-- ── Section 1: The two models ── -->
+  <section>
+    <h2>1. Two Ways to Track a Bank Account in a Finance App</h2>
+    <p>Every personal finance application must choose between two fundamental approaches: <strong>manual tracking</strong> and <strong>live bank linking</strong>. They are not mutually exclusive — most mature apps offer both.</p>
+
+    <div class="card-grid">
+      <div class="card" style="border-top: 3px solid var(--warning);">
+        <h3>📝 Manual Tracking</h3>
+        <p>The user tells the app about their accounts and types in (or imports) their own transactions. The app never contacts the bank.</p>
+        <div style="margin-top:12px">
+          <span class="tag green">No bank credentials needed</span>
+          <span class="tag green">Works with any bank worldwide</span>
+          <span class="tag green">Full privacy</span>
+          <span class="tag amber">Requires manual data entry</span>
+          <span class="tag amber">Balance can drift out of sync</span>
+        </div>
+      </div>
+      <div class="card" style="border-top: 3px solid var(--success);">
+        <h3>🔗 Live Bank Linking (Open Banking)</h3>
+        <p>The app connects to the bank through a regulated API (like Plaid or Tink). Transactions and balances sync automatically.</p>
+        <div style="margin-top:12px">
+          <span class="tag green">Auto transaction import</span>
+          <span class="tag green">Real-time balance</span>
+          <span class="tag red">Requires API subscription ($$$)</span>
+          <span class="tag red">Complex OAuth + consent flows</span>
+          <span class="tag red">Region / bank coverage varies</span>
+        </div>
+      </div>
+    </div>
+
+    <table class="compare" style="margin-top:28px">
+      <thead>
+        <tr>
+          <th class="label">Feature</th>
+          <th>Manual (Budgetix today)</th>
+          <th>Live Linked (future)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="label">Transaction sync</td><td class="partial">CSV import or manual</td><td class="yes">Automatic</td></tr>
+        <tr><td class="label">Balance accuracy</td><td class="partial">User-maintained</td><td class="yes">Real-time from bank</td></tr>
+        <tr><td class="label">Setup complexity</td><td class="yes">One form</td><td class="partial">OAuth consent flow</td></tr>
+        <tr><td class="label">Bank coverage</td><td class="yes">Any bank worldwide</td><td class="partial">Depends on provider</td></tr>
+        <tr><td class="label">Privacy</td><td class="yes">Data never leaves app</td><td class="partial">Third-party reads your bank</td></tr>
+        <tr><td class="label">Cost (dev)</td><td class="yes">Free</td><td class="no">Plaid: $0.30–$0.50/link/mo</td></tr>
+        <tr><td class="label">Regulatory req.</td><td class="yes">None</td><td class="partial">PSD2 (EU), Open Banking (UK/AU)</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ── Section 2: What Budgetix does today ── -->
+  <section>
+    <h2>2. What Budgetix Does <span>Today</span></h2>
+    <p>Budgetix uses the <strong>manual tracking model</strong>. When you create an account you give it a name, type, starting balance, currency, and optionally your institution name and last 4 digits of the account number. The app stores everything in its own PostgreSQL database — it never contacts your bank.</p>
+
+    <div class="card">
+      <h3>Account form fields (current)</h3>
+      <table class="compare" style="margin-top:8px">
+        <thead><tr><th>Field</th><th>Purpose</th><th>Required</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Name</strong></td><td>Your display label ("Main Checking")</td><td class="yes">Yes</td></tr>
+          <tr><td><strong>Type</strong></td><td>CASH / BANK / CREDIT_CARD / SAVINGS / INVESTMENT</td><td class="yes">Yes</td></tr>
+          <tr><td><strong>Initial Balance</strong></td><td>The balance at the moment you add the account</td><td class="no">No</td></tr>
+          <tr><td><strong>Currency</strong></td><td>ISO code (USD, EUR, GBP…)</td><td class="no">No</td></tr>
+          <tr><td><strong>Color</strong></td><td>Visual identifier on the card</td><td class="no">No</td></tr>
+          <tr><td><strong>Institution Name</strong></td><td>Human-readable bank name shown on the card ("Chase Bank")</td><td class="no">No</td></tr>
+          <tr><td><strong>Last 4 Digits</strong></td><td>Last 4 of account/card number displayed as ···· 4821</td><td class="no">No</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="alert-info alert">
+      <strong>Note:</strong> "Institution Name" and "Last 4 Digits" are purely informational labels — they help you identify which real-world account a Budgetix account represents. No data is sent to any bank and no bank credentials are stored.
+    </div>
+
+    <p>When you add a real transaction (salary deposited, grocery purchase), you create it manually in Budgetix. The app adjusts the account balance automatically and you can import transactions in bulk via CSV.</p>
+  </section>
+
+  <!-- ── Section 3: How real linking works ── -->
+  <section>
+    <h2>3. How Real Bank Linking <span>Actually Works</span></h2>
+    <p>Real bank linking uses an <strong>Open Banking API provider</strong> (aggregator) that sits between your app and thousands of banks. The most widely used providers are Plaid (US/CA), Tink (EU), Basiq (AU), and TrueLayer (UK/EU).</p>
+
+    <h3 style="margin-top:28px; margin-bottom:16px">The full user flow — step by step</h3>
+
+    <div class="flow">
+      <div class="flow-step">
+        <div class="step-num">1</div>
+        <div class="step-title">User clicks "Link Bank"</div>
+        <div class="step-desc">App requests a short-lived link_token from the provider API (server-side)</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="step-num">2</div>
+        <div class="step-title">Provider Popup / Redirect</div>
+        <div class="step-desc">Plaid Link / Tink widget opens in an iframe or redirect. User picks their bank.</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="step-num">3</div>
+        <div class="step-title">User Authenticates at Bank</div>
+        <div class="step-desc">Enters bank credentials directly in the provider widget — your app never sees them.</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="step-num">4</div>
+        <div class="step-title">OAuth Consent</div>
+        <div class="step-desc">User grants read-only consent: balances, transactions (typically 90 days back).</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="step-num">5</div>
+        <div class="step-title">Access Token Issued</div>
+        <div class="step-desc">Provider sends a permanent access_token to your backend via callback/webhook.</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="step-num">6</div>
+        <div class="step-title">Data Sync</div>
+        <div class="step-desc">App polls or receives webhooks: balances updated, new transactions imported automatically.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>What data the provider gives you (read-only)</h3>
+      <table class="compare" style="margin-top:8px">
+        <thead><tr><th>Data type</th><th>Example</th><th>Refresh rate</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Account list</strong></td><td>Checking ···· 4821, Visa ···· 0032</td><td>On demand</td></tr>
+          <tr><td><strong>Balances</strong></td><td>Available: $3,210.50 / Current: $3,450.00</td><td>On demand / webhook</td></tr>
+          <tr><td><strong>Transactions</strong></td><td>STARBUCKS #1234 — $6.75 — 2026-05-22</td><td>Webhook (24 h typical)</td></tr>
+          <tr><td><strong>Institution name</strong></td><td>"Chase", "Bank of America"</td><td>Static</td></tr>
+          <tr><td><strong>Account type</strong></td><td>depository / credit / investment</td><td>Static</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="alert">
+      <strong>Important:</strong> The provider never shares your full account number, PIN, or password with the app. The app receives only a masked account number (last 4 digits) and read-only transaction/balance data.
+    </div>
+  </section>
+
+  <!-- ── Section 4: Architecture ── -->
+  <section>
+    <h2>4. Technical Architecture for <span>Budgetix + Plaid</span></h2>
+    <p>Here is how the backend and frontend would be wired for a full Plaid integration inside Budgetix's Spring Boot + Angular architecture.</p>
+
+    <div class="card-grid">
+      <div class="card">
+        <h3>🖥️ Backend (Spring Boot)</h3>
+        <pre><code><span class="cmt">// New entities needed</span>
+PlaidItem           <span class="cmt">// one per linked bank</span>
+  - itemId          <span class="cmt">// Plaid item ID</span>
+  - accessToken     <span class="cmt">// encrypted, never exposed</span>
+  - institutionId
+  - userId
+
+PlaidAccount        <span class="cmt">// one per bank sub-account</span>
+  - plaidAccountId
+  - budgetixAccountId  <span class="cmt">// FK → accounts</span>
+  - lastSyncedAt
+
+<span class="cmt">// New endpoints</span>
+<span class="kw">POST</span> /plaid/link-token   <span class="cmt">// create Plaid link token</span>
+<span class="kw">POST</span> /plaid/exchange     <span class="cmt">// exchange public_token → access_token</span>
+<span class="kw">POST</span> /plaid/webhook      <span class="cmt">// receive balance/tx updates</span>
+<span class="kw">POST</span> /plaid/sync/{id}   <span class="cmt">// manual re-sync trigger</span>
+<span class="kw">DELETE</span> /plaid/{id}      <span class="cmt">// unlink (revoke access)</span></code></pre>
+      </div>
+      <div class="card">
+        <h3>🌐 Frontend (Angular)</h3>
+        <pre><code><span class="cmt">// Plaid Link widget (npm package)</span>
+<span class="str">"ngx-plaid-link"</span>
+<span class="cmt">// or vanilla Plaid Link JS loaded lazily</span>
+
+<span class="cmt">// Flow in AccountsComponent</span>
+linkBank() {
+  <span class="cmt">// 1. fetch link_token from backend</span>
+  plaidService.getLinkToken()
+    .subscribe(token => {
+      <span class="cmt">// 2. open Plaid widget</span>
+      openPlaidLink(token, {
+        onSuccess: (publicToken) => {
+          <span class="cmt">// 3. exchange token</span>
+          plaidService.exchange(publicToken)
+            .subscribe(() => this.load());
+        }
+      });
+    });
+}</code></pre>
+      </div>
+    </div>
+
+    <h3 style="margin-top:32px; margin-bottom:16px">Data flow — Webhook-driven sync</h3>
+    <pre><code><span class="cmt">// Plaid sends this webhook when new transactions are available:</span>
+{
+  <span class="key">"webhook_type"</span>:  <span class="str">"TRANSACTIONS"</span>,
+  <span class="key">"webhook_code"</span>:  <span class="str">"SYNC_UPDATES_AVAILABLE"</span>,
+  <span class="key">"item_id"</span>:       <span class="str">"abc123"</span>
+}
+
+<span class="cmt">// Your Spring Boot webhook handler:</span>
+<span class="kw">@PostMapping</span>(<span class="str">"/plaid/webhook"</span>)
+<span class="kw">public void</span> handleWebhook(<span class="kw">@RequestBody</span> PlaidWebhook event) {
+    <span class="kw">if</span> (<span class="str">"SYNC_UPDATES_AVAILABLE"</span>.equals(event.webhookCode())) {
+        PlaidItem item = plaidItemRepository.findByItemId(event.itemId());
+        <span class="cmt">// pull latest transactions via Plaid SDK</span>
+        List&lt;Transaction&gt; newTxs = plaidClient.transactionsSync(item.getAccessToken());
+        <span class="cmt">// save to transactions table (skip duplicates by plaidTransactionId)</span>
+        transactionSyncService.upsert(item.getUserId(), newTxs);
+        <span class="cmt">// update account balance</span>
+        plaidClient.accountsBalanceGet(item.getAccessToken())
+            .forEach(this::updateAccountBalance);
+    }
+}</code></pre>
+  </section>
+
+  <!-- ── Section 5: Providers ── -->
+  <section>
+    <h2>5. API Providers — <span>Who to Use</span></h2>
+    <p>Choosing the right aggregator depends on your target market (country coverage) and budget.</p>
+
+    <div class="provider-grid">
+      <div class="provider-card">
+        <div class="pname">🇺🇸 Plaid</div>
+        <div class="pcov">US · CA · UK · EU</div>
+        <span class="tag green">12,000+ banks</span>
+        <span class="tag">Best developer docs</span>
+        <p style="margin-top:10px; font-size:.82rem">De-facto standard in the US. Free sandbox. Production: ~$0.30/connected account/month.</p>
+      </div>
+      <div class="provider-card">
+        <div class="pname">🇪🇺 Tink (Visa)</div>
+        <div class="pcov">EU · UK · Nordic</div>
+        <span class="tag green">PSD2 compliant</span>
+        <span class="tag">3,400+ banks</span>
+        <p style="margin-top:10px; font-size:.82rem">Best for European apps. Acquired by Visa in 2021. Strong regulatory compliance out of the box.</p>
+      </div>
+      <div class="provider-card">
+        <div class="pname">🇬🇧 TrueLayer</div>
+        <div class="pcov">UK · EU · AU</div>
+        <span class="tag green">Open Banking</span>
+        <span class="tag">Real-time payments</span>
+        <p style="margin-top:10px; font-size:.82rem">UK Open Banking specialist. Also supports payment initiation (not just read), so users can pay bills in-app.</p>
+      </div>
+      <div class="provider-card">
+        <div class="pname">🇦🇺 Basiq</div>
+        <div class="pcov">Australia · NZ</div>
+        <span class="tag green">CDR compliant</span>
+        <span class="tag">90-day free tier</span>
+        <p style="margin-top:10px; font-size:.82rem">Australian Consumer Data Right (CDR) compliant. Strong coverage for AU/NZ banks including the Big 4.</p>
+      </div>
+      <div class="provider-card">
+        <div class="pname">🌍 Belvo</div>
+        <div class="pcov">Mexico · Brazil · Colombia</div>
+        <span class="tag">LATAM focus</span>
+        <p style="margin-top:10px; font-size:.82rem">Best option for Latin American markets. Also covers some European banks.</p>
+      </div>
+      <div class="provider-card">
+        <div class="pname">🔓 Nordigen (GoCardless)</div>
+        <div class="pcov">EU</div>
+        <span class="tag green">Free tier available</span>
+        <span class="tag green">PSD2</span>
+        <p style="margin-top:10px; font-size:.82rem">Free for basic account data in EU. Acquired by GoCardless. Good for budget-conscious projects.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Section 6: Security ── -->
+  <section>
+    <h2>6. Security Considerations</h2>
+
+    <div class="card-grid">
+      <div class="card">
+        <h3>🔐 What you NEVER store</h3>
+        <table class="compare" style="margin-top:8px">
+          <tbody>
+            <tr><td><span class="no">✗</span></td><td class="label">Bank username/password</td></tr>
+            <tr><td><span class="no">✗</span></td><td class="label">Full account number</td></tr>
+            <tr><td><span class="no">✗</span></td><td class="label">PIN or security answers</td></tr>
+            <tr><td><span class="no">✗</span></td><td class="label">Card CVV</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card">
+        <h3>🛡️ What you must secure carefully</h3>
+        <table class="compare" style="margin-top:8px">
+          <tbody>
+            <tr><td><span class="yes">✓</span></td><td class="label">access_token → encrypt at rest (AES-256)</td></tr>
+            <tr><td><span class="yes">✓</span></td><td class="label">Webhook endpoint → verify Plaid signature header</td></tr>
+            <tr><td><span class="yes">✓</span></td><td class="label">HTTPS only for all API calls</td></tr>
+            <tr><td><span class="yes">✓</span></td><td class="label">Revoke token on account disconnect</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="alert" style="margin-top:24px">
+      <strong>Regulatory note:</strong> In the EU, accessing bank data via PSD2 requires your app to be registered as an AISP (Account Information Service Provider) with your national regulator, OR you must route all requests through a licensed aggregator like Tink/TrueLayer. Using a licensed aggregator handles this for you.
+    </div>
+  </section>
+
+  <!-- ── Section 7: Roadmap ── -->
+  <section>
+    <h2>7. Budgetix Integration <span>Roadmap</span></h2>
+    <p>Here is the phased plan from the current manual-tracking state to a fully live-linked bank integration.</p>
+
+    <div class="timeline">
+      <div class="tl-item done">
+        <div class="tl-phase">Phase 1 — Done ✓</div>
+        <div class="tl-title">Manual account management + bank details</div>
+        <div class="tl-desc">Users create accounts manually. Institution name and last 4 digits are optional informational fields that make accounts identifiable without any bank connection. CSV import for bulk transaction loading.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-phase">Phase 2 — Next</div>
+        <div class="tl-title">Plaid / Tink Sandbox Integration</div>
+        <div class="tl-desc">Add <code>PlaidItem</code> and <code>PlaidAccount</code> entities. Implement link-token → exchange → access-token flow in a Spring Boot service. Use Plaid sandbox to auto-import fake transactions. No real bank data yet.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-phase">Phase 3</div>
+        <div class="tl-title">Webhook-driven live sync</div>
+        <div class="tl-desc">Implement the <code>POST /plaid/webhook</code> handler. When Plaid fires SYNC_UPDATES_AVAILABLE, fetch new transactions and update balances. Store <code>plaidTransactionId</code> on each transaction to prevent duplicates.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-phase">Phase 4</div>
+        <div class="tl-title">Account reconciliation UI</div>
+        <div class="tl-desc">Show a "Last synced X minutes ago" badge on linked accounts. Add a manual Re-Sync button. Flag transactions that were auto-imported vs manually entered. Let users review and categorize auto-imported transactions.</div>
+      </div>
+      <div class="tl-item later">
+        <div class="tl-phase">Phase 5 — Future</div>
+        <div class="tl-title">Multi-region support (Tink for EU, Basiq for AU)</div>
+        <div class="tl-desc">Add a region selector at account-link time. Route EU users to Tink/Nordigen, US users to Plaid, AU users to Basiq. Abstract behind a common <code>BankSyncProvider</code> interface in the backend so switching providers requires minimal changes.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Section 8: Summary ── -->
+  <section>
+    <h2>8. Summary — <span>The Short Answer</span></h2>
+
+    <div class="card" style="border-left: 4px solid var(--primary);">
+      <p><strong>A "real bank account" in Budgetix right now</strong> means: you create an account record, set the starting balance manually to match your actual bank balance, and then log every income/expense transaction yourself (or import via CSV). The "Institution Name" and "Last 4 Digits" fields let you label the account so it's clear which real-world bank account it represents — but no data flows between Budgetix and your bank.</p>
+      <br>
+      <p><strong>Full bank linking</strong> (like Mint, YNAB, or Copilot) means: you click "Connect Bank", go through a secure OAuth flow with your bank, and from that point on your transactions and balance sync automatically — usually within 24 hours of them posting at your bank. This requires integrating with a third-party aggregator (Plaid, Tink, etc.), passing regulatory checks, and paying per-user API fees.</p>
+      <br>
+      <p>Budgetix is architected to support full linking in a future phase. The account data model, transaction schema, and service layer are already designed to accommodate it.</p>
+    </div>
+  </section>
+
+</div>
+
+<footer style="text-align:center; padding:32px; color: var(--muted); font-size:.82rem; border-top:1px solid var(--border);">
+  Budgetix — Internal Technical Documentation &nbsp;·&nbsp; Generated 2026-05-24
+</footer>
+
+</body>
+</html>

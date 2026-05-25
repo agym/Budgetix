@@ -1,0 +1,140 @@
+<p-toast /><p-confirmDialog />
+<div class="page-header">
+  <h1>Recurring Transactions</h1>
+  <p>Automate repeating payments and income — posted by the scheduler on each due date</p>
+</div>
+
+<div class="flex justify-content-end mb-3">
+  <p-button label="New Rule" icon="pi pi-plus" (onClick)="openCreate()" />
+</div>
+
+<div class="recurring-grid">
+  @for (r of rules(); track r.id) {
+    <div class="card rule-card" [class.inactive]="!r.active">
+
+      <div class="rule-header">
+        <div class="rule-title-row">
+          <i class="pi pi-sync rule-icon" [class.dimmed]="!r.active"></i>
+          <div>
+            <div class="rule-name">{{ r.description }}</div>
+            @if (r.accountName) {
+              <div class="rule-sub">{{ r.accountName }}</div>
+            }
+          </div>
+        </div>
+        <p-tag [value]="r.type" [severity]="severityOf(r.type)" />
+      </div>
+
+      <div class="rule-amount" [class.income]="r.type === 'INCOME'" [class.expense]="r.type === 'EXPENSE'">
+        {{ r.amount | currency }}
+      </div>
+
+      <div class="rule-meta">
+        <div class="meta-row">
+          <i class="pi pi-calendar"></i>
+          <span>{{ frequencyLabel(r.frequency) }}</span>
+        </div>
+        @if (r.categoryName) {
+          <div class="meta-row">
+            <i class="pi pi-tag"></i>
+            <span>{{ r.categoryName }}</span>
+          </div>
+        }
+        @if (r.nextRun) {
+          <div class="meta-row">
+            <i class="pi pi-clock"></i>
+            <span>Next: {{ r.nextRun | date:'mediumDate' }}</span>
+          </div>
+        }
+        @if (r.lastRun) {
+          <div class="meta-row text-muted">
+            <i class="pi pi-history"></i>
+            <span>Last: {{ r.lastRun | date:'mediumDate' }}</span>
+          </div>
+        }
+      </div>
+
+      <div class="rule-status">
+        <span class="status-dot" [class.active]="r.active" [class.paused]="!r.active"></span>
+        <span class="status-label">{{ r.active ? 'Active' : 'Paused' }}</span>
+      </div>
+
+      <div class="rule-actions">
+        <div class="action-main">
+          <p-button [label]="r.active ? 'Pause' : 'Resume'"
+                    [icon]="r.active ? 'pi pi-pause' : 'pi pi-play'"
+                    [outlined]="true" size="small"
+                    (onClick)="toggle(r)" />
+        </div>
+        <p-button icon="pi pi-trash" [rounded]="true" [text]="true"
+                  severity="danger" size="small" (onClick)="deleteRule(r)" />
+      </div>
+    </div>
+  }
+
+  @if (rules().length === 0) {
+    <div class="empty-state">
+      <i class="pi pi-sync"></i>
+      <p>No recurring rules yet. Automate your first transaction!</p>
+    </div>
+  }
+</div>
+
+<p-dialog [(visible)]="showForm" header="New Recurring Rule" [modal]="true" [style]="{width:'460px'}">
+  <form [formGroup]="form" class="flex flex-column gap-3 pt-2">
+
+    <div class="field">
+      <label>Description *</label>
+      <input pInputText formControlName="description" placeholder='e.g. "Netflix Subscription"' [style]="{width:'100%'}"/>
+    </div>
+
+    <div class="form-row">
+      <div class="field">
+        <label>Amount *</label>
+        <input pInputText formControlName="amount" type="number" placeholder="0.00" [style]="{width:'100%'}"/>
+      </div>
+      <div class="field">
+        <label>Type *</label>
+        <p-dropdown formControlName="type" [options]="typeOptions"
+                    optionLabel="label" optionValue="value" [style]="{width:'100%'}"/>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Account *</label>
+      <p-dropdown formControlName="accountId" [options]="accountOptions()"
+                  optionLabel="name" optionValue="id" placeholder="Select account"
+                  [style]="{width:'100%'}"/>
+    </div>
+
+    <div class="field">
+      <label>Category</label>
+      <p-dropdown formControlName="categoryId" [options]="categoryOptions()"
+                  optionLabel="name" optionValue="id" placeholder="None"
+                  [showClear]="true" [style]="{width:'100%'}"/>
+    </div>
+
+    <div class="field">
+      <label>Frequency *</label>
+      <p-dropdown formControlName="frequency" [options]="frequencyOptions"
+                  optionLabel="label" optionValue="value" [style]="{width:'100%'}"/>
+    </div>
+
+    <div class="form-row">
+      <div class="field">
+        <label>Start Date *</label>
+        <p-calendar formControlName="startDate" [showButtonBar]="true" [style]="{width:'100%'}"/>
+      </div>
+      <div class="field">
+        <label>End Date</label>
+        <p-calendar formControlName="endDate" [showButtonBar]="true"
+                    placeholder="Never" [style]="{width:'100%'}"/>
+      </div>
+    </div>
+
+  </form>
+  <ng-template pTemplate="footer">
+    <p-button label="Cancel" [text]="true" (onClick)="showForm=false"/>
+    <p-button label="Create Rule" icon="pi pi-check" (onClick)="submit()"/>
+  </ng-template>
+</p-dialog>

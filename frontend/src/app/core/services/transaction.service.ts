@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ApiService } from './api.service';
 import { ApiResponse, PageResponse } from '../models/api.model';
-import { Transaction, TransactionRequest } from '../models/transaction.model';
+import { Transaction, TransactionRequest, TransferRequest } from '../models/transaction.model';
 import { map } from 'rxjs/operators';
 
 export interface TransactionFilter {
@@ -43,6 +43,10 @@ export class TransactionService extends ApiService {
 
   bulkDelete(ids: string[]): Observable<void> {
     return this.post<void>('/transactions/bulk-delete', { ids });
+  }
+
+  transfer(req: TransferRequest): Observable<Transaction[]> {
+    return this.post<Transaction[]>('/transactions/transfer', req);
   }
 
   importCsv(accountId: string, file: File): Observable<Transaction[]> {

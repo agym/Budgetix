@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Budgetix — Complete User Guide & Source Map</title>
+<style>
+:root {
+  --bg: #0d0f14;
+  --surface: #161b26;
+  --surface2: #1e2637;
+  --border: #2a3347;
+  --accent: #6366f1;
+  --accent2: #818cf8;
+  --green: #10b981;
+  --red: #ef4444;
+  --yellow: #f59e0b;
+  --blue: #3b82f6;
+  --text: #e2e8f0;
+  --muted: #94a3b8;
+  --code-bg: #0f1319;
+  --sidebar-w: 270px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh;font-size:14px;line-height:1.6}
+a{color:var(--accent2);text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* ── SIDEBAR ── */
+#sidebar{
+  width:var(--sidebar-w);min-width:var(--sidebar-w);
+  background:var(--surface);border-right:1px solid var(--border);
+  position:fixed;top:0;left:0;height:100vh;overflow-y:auto;
+  display:flex;flex-direction:column;z-index:100;
+}
+#sidebar::-webkit-scrollbar{width:4px}
+#sidebar::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.sidebar-logo{padding:20px 20px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.sidebar-logo .logo-icon{width:32px;height:32px;background:linear-gradient(135deg,var(--accent),var(--blue));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:#fff}
+.sidebar-logo .logo-text{font-size:16px;font-weight:700;color:var(--text)}
+.sidebar-logo .logo-sub{font-size:10px;color:var(--muted)}
+.nav-group{padding:12px 8px 4px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);padding-left:16px}
+.nav-item{display:block;padding:7px 16px;color:var(--muted);border-left:3px solid transparent;transition:all .15s;font-size:12.5px}
+.nav-item:hover{color:var(--text);background:rgba(99,102,241,.08);border-left-color:var(--accent);text-decoration:none}
+.nav-item.active{color:var(--accent2);background:rgba(99,102,241,.12);border-left-color:var(--accent)}
+
+/* ── MAIN ── */
+#main{margin-left:var(--sidebar-w);flex:1;padding:0 40px 80px;max-width:1100px}
+.section{padding-top:60px;border-bottom:1px solid var(--border);padding-bottom:40px}
+.section:last-child{border-bottom:none}
+
+h1{font-size:28px;font-weight:700;margin-bottom:6px;background:linear-gradient(90deg,var(--text),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+h2{font-size:22px;font-weight:700;color:var(--text);margin:32px 0 16px;display:flex;align-items:center;gap:10px}
+h2::before{content:'';width:4px;height:22px;background:linear-gradient(180deg,var(--accent),var(--blue));border-radius:2px;display:inline-block}
+h3{font-size:16px;font-weight:600;color:var(--accent2);margin:24px 0 10px}
+h4{font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin:16px 0 8px}
+p{color:var(--muted);margin-bottom:12px;line-height:1.7}
+.lead{font-size:15px;color:var(--text);margin-bottom:20px}
+
+/* ── HERO BANNER ── */
+.hero{background:linear-gradient(135deg,#1a1f36 0%,#0d1117 50%,#1a1f36 100%);border:1px solid var(--border);border-radius:16px;padding:48px 40px;margin:32px 0;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-80px;right:-80px;width:300px;height:300px;background:radial-gradient(circle,rgba(99,102,241,.25) 0%,transparent 70%);pointer-events:none}
+.hero h1{font-size:34px;margin-bottom:10px}
+.hero p{font-size:15px;max-width:600px}
+.badge-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+.badge{padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600;border:1px solid}
+.badge-purple{background:rgba(99,102,241,.15);border-color:rgba(99,102,241,.4);color:var(--accent2)}
+.badge-green{background:rgba(16,185,129,.15);border-color:rgba(16,185,129,.4);color:var(--green)}
+.badge-blue{background:rgba(59,130,246,.15);border-color:rgba(59,130,246,.4);color:#60a5fa}
+
+/* ── TABLES ── */
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:13px}
+th{text-align:left;padding:10px 14px;background:var(--surface2);color:var(--muted);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.6px;border-bottom:1px solid var(--border)}
+td{padding:9px 14px;border-bottom:1px solid rgba(42,51,71,.5);color:var(--text);vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(99,102,241,.04)}
+
+/* ── CODE ── */
+code{font-family:'Cascadia Code','Fira Code',monospace;font-size:12px;background:var(--code-bg);border:1px solid var(--border);padding:2px 6px;border-radius:4px;color:#a5b4fc}
+pre{background:var(--code-bg);border:1px solid var(--border);border-radius:10px;padding:20px;overflow-x:auto;margin:12px 0;position:relative}
+pre code{background:none;border:none;padding:0;color:#cbd5e1;font-size:12.5px;line-height:1.7}
+.pre-label{position:absolute;top:10px;right:14px;font-size:10px;color:var(--muted);font-family:'Segoe UI',sans-serif}
+
+/* ── CARDS ── */
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px;margin:16px 0}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;transition:border-color .2s}
+.card:hover{border-color:var(--accent)}
+.card-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:12px}
+.card-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px}
+.card-desc{font-size:12.5px;color:var(--muted);line-height:1.6}
+
+/* ── FLOW STEPS ── */
+.flow{display:flex;gap:0;margin:20px 0;flex-wrap:wrap}
+.flow-step{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 20px;flex:1;min-width:150px;position:relative;margin:4px}
+.flow-step .step-num{width:24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-bottom:8px}
+.flow-step .step-title{font-size:12.5px;font-weight:600;color:var(--text);margin-bottom:4px}
+.flow-step .step-desc{font-size:11.5px;color:var(--muted);line-height:1.5}
+.flow-arrow{display:flex;align-items:center;color:var(--accent);font-size:20px;padding:0 4px;align-self:center}
+
+/* ── ALERT BOXES ── */
+.alert{border-radius:10px;padding:14px 18px;margin:16px 0;display:flex;gap:12px;align-items:flex-start;font-size:13px;line-height:1.6}
+.alert-icon{font-size:18px;flex-shrink:0;margin-top:1px}
+.alert-info{background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.3);color:#93c5fd}
+.alert-success{background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.3);color:#6ee7b7}
+.alert-warning{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);color:#fcd34d}
+.alert-danger{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:#fca5a5}
+
+/* ── SOURCE MAP ── */
+.map-row{display:grid;grid-template-columns:1fr 40px 1fr 40px 1fr 40px 1fr;gap:0;margin:10px 0;align-items:stretch}
+.map-cell{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 14px;font-size:11.5px}
+.map-cell .label{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px}
+.map-cell .file{color:var(--accent2);font-family:'Cascadia Code','Fira Code',monospace;font-size:11px;word-break:break-all;line-height:1.4}
+.map-cell .method{color:var(--green);font-size:11px;font-family:monospace}
+.map-cell .entity{color:var(--yellow);font-size:11px;font-family:monospace}
+.map-arrow{display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:18px;font-weight:300}
+.map-fe .label{color:var(--accent2)}
+.map-svc .label{color:var(--green)}
+.map-ep .label{color:var(--yellow)}
+.map-be .label{color:#f472b6}
+.map-ent .label{color:var(--muted)}
+
+.endpoint-pill{display:inline-block;padding:2px 8px;border-radius:4px;font-size:10.5px;font-weight:600;font-family:monospace;margin-right:4px;margin-bottom:3px}
+.pill-get{background:rgba(16,185,129,.15);color:var(--green);border:1px solid rgba(16,185,129,.3)}
+.pill-post{background:rgba(99,102,241,.15);color:var(--accent2);border:1px solid rgba(99,102,241,.3)}
+.pill-put{background:rgba(245,158,11,.15);color:var(--yellow);border:1px solid rgba(245,158,11,.3)}
+.pill-delete{background:rgba(239,68,68,.15);color:var(--red);border:1px solid rgba(239,68,68,.3)}
+.pill-patch{background:rgba(59,130,246,.15);color:#60a5fa;border:1px solid rgba(59,130,246,.3)}
+
+/* ── SECURITY LAYERS ── */
+.security-layer{display:flex;align-items:stretch;gap:0;margin:8px 0}
+.sec-num{width:36px;flex-shrink:0;background:linear-gradient(180deg,var(--accent),var(--blue));border-radius:8px 0 0 8px;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:13px}
+.sec-content{flex:1;background:var(--surface);border:1px solid var(--border);border-left:none;border-radius:0 8px 8px 0;padding:12px 16px}
+.sec-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px}
+.sec-desc{font-size:12px;color:var(--muted)}
+
+/* ── FEATURE STATUS ── */
+.status-done{color:var(--green);font-weight:600}
+.status-partial{color:var(--yellow)}
+.status-planned{color:var(--muted)}
+
+/* ── MISC ── */
+.divider{border:none;border-top:1px solid var(--border);margin:32px 0}
+.tag{display:inline-block;padding:1px 8px;border-radius:12px;font-size:10.5px;font-weight:600;margin:1px}
+.tag-income{background:rgba(16,185,129,.15);color:var(--green)}
+.tag-expense{background:rgba(239,68,68,.15);color:var(--red)}
+.tag-transfer{background:rgba(99,102,241,.15);color:var(--accent2)}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:900px){.two-col{grid-template-columns:1fr}.map-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════ SIDEBAR ═══════════════════════════════════════════ -->
+<nav id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">B</div>
+    <div>
+      <div class="logo-text">Budgetix</div>
+      <div class="logo-sub">User Guide &amp; Source Map</div>
+    </div>
+  </div>
+
+  <div class="nav-group">Getting Started</div>
+  <a class="nav-item" href="#overview">App Overview</a>
+  <a class="nav-item" href="#register">Register &amp; Login</a>
+  <a class="nav-item" href="#navigation">Navigation</a>
+
+  <div class="nav-group">Core Features</div>
+  <a class="nav-item" href="#dashboard">Dashboard</a>
+  <a class="nav-item" href="#transactions">Transactions</a>
+  <a class="nav-item" href="#accounts">Accounts</a>
+  <a class="nav-item" href="#budgets">Budgets</a>
+  <a class="nav-item" href="#goals">Savings Goals</a>
+  <a class="nav-item" href="#recurring">Recurring Rules</a>
+  <a class="nav-item" href="#categories">Categories</a>
+
+  <div class="nav-group">Analysis</div>
+  <a class="nav-item" href="#calendar">Calendar</a>
+  <a class="nav-item" href="#reports">Reports &amp; Export</a>
+  <a class="nav-item" href="#insights">Insights</a>
+
+  <div class="nav-group">Settings &amp; Security</div>
+  <a class="nav-item" href="#settings">Settings</a>
+  <a class="nav-item" href="#notifications">Notifications</a>
+  <a class="nav-item" href="#security">Security Model</a>
+
+  <div class="nav-group">Bank Linking</div>
+  <a class="nav-item" href="#bank-manual">Manual Entry (Current)</a>
+  <a class="nav-item" href="#bank-openbanking">Open Banking Flow</a>
+  <a class="nav-item" href="#bank-security">Bank Link Security</a>
+  <a class="nav-item" href="#bank-roadmap">Integration Roadmap</a>
+
+  <div class="nav-group">Source Code Map</div>
+  <a class="nav-item" href="#map-auth">Auth Layer</a>
+  <a class="nav-item" href="#map-features">Feature Map</a>
+  <a class="nav-item" href="#map-infra">Infrastructure</a>
+  <a class="nav-item" href="#map-db">DB Schema</a>
+</nav>
+
+<!-- ═══════════════════════════════════════════ MAIN ═══════════════════════════════════════════ -->
+<main id="main">
+
+<!-- ─── OVERVIEW ─── -->
+<div class="section" id="overview">
+  <div class="hero">
+    <h1>Budgetix Complete Guide</h1>
+    <p class="lead">Full user guide, bank account linking deep-dive, and source code map for every feature — frontend to backend.</p>
+    <div class="badge-row">
+      <span class="badge badge-purple">Angular 21</span>
+      <span class="badge badge-blue">Spring Boot 3</span>
+      <span class="badge badge-green">PostgreSQL 16</span>
+      <span class="badge badge-purple">Redis 7</span>
+      <span class="badge badge-green">PrimeNG 17</span>
+    </div>
+  </div>
+
+  <h2>What Budgetix Does</h2>
+  <p>Budgetix is a personal finance management platform that lets you track income and expenses across multiple accounts, set budgets, work toward savings goals, and get AI-style insights about your spending — all in one dark-themed, multi-language application.</p>
+
+  <div class="card-grid">
+    <div class="card"><div class="card-icon" style="background:rgba(99,102,241,.15)">📊</div><div class="card-title">Dashboard &amp; Analytics</div><div class="card-desc">Live KPI cards, 3 chart types, 6-month trend bars, daily trends, projections and burn-rate warnings.</div></div>
+    <div class="card"><div class="card-icon" style="background:rgba(16,185,129,.15)">💳</div><div class="card-title">Multi-Account Tracking</div><div class="card-desc">Cash, bank, credit card, savings, and investment accounts. Full transfer support between accounts.</div></div>
+    <div class="card"><div class="card-icon" style="background:rgba(245,158,11,.15)">📅</div><div class="card-title">Budgets &amp; Goals</div><div class="card-desc">Category budgets with rollover, progress bars and alerts. Savings goals with manual contributions.</div></div>
+    <div class="card"><div class="card-icon" style="background:rgba(239,68,68,.15)">🔁</div><div class="card-title">Recurring Transactions</div><div class="card-desc">6 frequency options, automated hourly posting via scheduler. Pause / resume without deleting.</div></div>
+    <div class="card"><div class="card-icon" style="background:rgba(59,130,246,.15)">📈</div><div class="card-title">Reports &amp; Insights</div><div class="card-desc">Monthly CSV/PDF exports, 11 insight types auto-generated monthly or on demand.</div></div>
+    <div class="card"><div class="card-icon" style="background:rgba(168,85,247,.15)">🔐</div><div class="card-title">Security</div><div class="card-desc">JWT + refresh rotation, email OTP, 2FA, OAuth2 Google login, BCrypt passwords, session timeout.</div></div>
+  </div>
+</div>
+
+<!-- ─── REGISTER & LOGIN ─── -->
+<div class="section" id="register">
+  <h2>Register &amp; Login</h2>
+
+  <h3>Registration Flow</h3>
+  <div class="flow">
+    <div class="flow-step"><div class="step-num">1</div><div class="step-title">Fill the form</div><div class="step-desc">Name, email, password (min 8 chars). Strength validated in real-time.</div></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><div class="step-num">2</div><div class="step-title">OTP sent</div><div class="step-desc">Backend sends a 6-digit code to your email via MailHog (dev) or SMTP (prod).</div></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><div class="step-num">3</div><div class="step-title">Verify email</div><div class="step-desc">Enter the 6-digit OTP. Resend available (max 3 times / 24 hrs).</div></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><div class="step-num">4</div><div class="step-title">Access granted</div><div class="step-desc">Receive access + refresh token pair, redirected to Dashboard.</div></div>
+  </div>
+
+  <h3>Login Flow</h3>
+  <div class="flow">
+    <div class="flow-step"><div class="step-num">1</div><div class="step-title">Email + Password</div><div class="step-desc">Standard credentials.</div></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><div class="step-num">2</div><div class="step-title">2FA Check</div><div class="step-desc">If 2FA enabled, a 6-digit code is emailed and a second input step appears.</div></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><div class="step-num">3</div><div class="step-title">Tokens issued</div><div class="step-desc">Access token (15 min) + refresh token (7 days) stored in localStorage.</div></div>
+  </div>
+
+  <h3>Token Refresh</h3>
+  <p>The frontend HTTP interceptor (<code>auth.interceptor.ts</code>) automatically catches <code>401</code> responses, calls <code>POST /auth/refresh</code> with the stored refresh token, and retries the original request. This is transparent to the user.</p>
+
+  <h3>Google OAuth2</h3>
+  <p>Click <strong>Continue with Google</strong> on the login page. The browser redirects to Google's consent screen. On approval, Google redirects back to <code>/auth/oauth2/callback</code> with an authorization code. The backend exchanges it for a Google access token, creates or matches a user account, and issues Budgetix tokens.</p>
+
+  <h3>Password Reset</h3>
+  <div class="flow">
+    <div class="flow-step"><div class="step-num">1</div><div class="step-title">Forgot Password</div><div class="step-desc">Enter email → OTP sent.</div></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><div class="step-num">2</div><div class="step-title">Enter OTP</div><div class="step-desc">6-digit code from email.</div></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><div class="step-num">3</div><div class="step-title">New Password</div><div class="step-desc">Min 8 chars. Confirm match validated client-side.</div></div>
+  </div>
+</div>
+
+<!-- ─── NAVIGATION ─── -->
+<div class="section" id="navigation">
+  <h2>Navigation &amp; Shell</h2>
+
+  <h3>Sidebar Groups</h3>
+  <table>
+    <tr><th>Group</th><th>Pages</th></tr>
+    <tr><td><strong>Overview</strong></td><td>Dashboard · Transactions</td></tr>
+    <tr><td><strong>Finance</strong></td><td>Accounts · Budgets · Goals · Recurring · Categories</td></tr>
+    <tr><td><strong>Insights</strong></td><td>Calendar · Insights · Reports</td></tr>
+    <tr><td><strong>Account</strong></td><td>Settings</td></tr>
+  </table>
+
+  <h3>Topbar Elements</h3>
+  <table>
+    <tr><th>Element</th><th>Behaviour</th></tr>
+    <tr><td>Hamburger menu</td><td>Collapses sidebar to icon-only mode (70 px width)</td></tr>
+    <tr><td>Language switcher</td><td>EN / FR / AR — persisted in localStorage. Arabic switches the entire layout to RTL.</td></tr>
+    <tr><td>Notification bell 🔔</td><td>Badge shows unread count, polled every 60 s from <code>GET /notifications/unread-count</code></td></tr>
+    <tr><td>User avatar</td><td>Initials chip, links to Settings</td></tr>
+    <tr><td>Sign out</td><td>Calls <code>POST /auth/logout</code>, clears localStorage, navigates to landing page</td></tr>
+  </table>
+
+  <h3>Session Timeout</h3>
+  <p>After 120 seconds of inactivity (no mouse/keyboard events), a warning dialog appears with a countdown timer and progress bar. Click <strong>Continue Session</strong> to reset, or <strong>Sign Out</strong> to log out immediately.</p>
+</div>
+
+<!-- ─── DASHBOARD ─── -->
+<div class="section" id="dashboard">
+  <h2>Dashboard</h2>
+  <p><strong>Route:</strong> <code>/dashboard</code></p>
+
+  <h3>KPI Cards</h3>
+  <table>
+    <tr><th>Card</th><th>Value</th><th>Detail</th></tr>
+    <tr><td>Total Income</td><td>Sum of income this month</td><td>% change vs last month</td></tr>
+    <tr><td>Total Expenses</td><td>Sum of expenses this month</td><td>% change vs last month</td></tr>
+    <tr><td>Net Savings</td><td>Income − Expenses</td><td>Color-coded green/red</td></tr>
+    <tr><td>Net Worth</td><td>Sum of all account balances</td><td>Snapshot across all accounts</td></tr>
+  </table>
+
+  <h3>Projection Strip</h3>
+  <table>
+    <tr><th>Metric</th><th>Formula</th></tr>
+    <tr><td>Avg Daily Spend</td><td>Total expenses ÷ days elapsed in month</td></tr>
+    <tr><td>Projected Month Expense</td><td>Avg daily spend × days in month</td></tr>
+    <tr><td>Projected End Balance</td><td>Net worth + (projected income − projected expense)</td></tr>
+    <tr><td>Burn Rate Warning</td><td>Shown only when negative — "~N days until $0"</td></tr>
+  </table>
+
+  <h3>Charts</h3>
+  <table>
+    <tr><th>Chart</th><th>Type</th><th>Data source</th></tr>
+    <tr><td>Income vs Expenses</td><td>Grouped bar (6 months)</td><td><code>GET /dashboard/charts/income-vs-expenses?months=6</code></td></tr>
+    <tr><td>Spending by Category</td><td>Donut pie</td><td><code>GET /dashboard/charts/spending-by-category?from=&amp;to=</code></td></tr>
+    <tr><td>Daily Trend</td><td>Bar + line combo</td><td><code>GET /dashboard/charts/daily-trend?month=&amp;year=</code></td></tr>
+  </table>
+</div>
+
+<!-- ─── TRANSACTIONS ─── -->
+<div class="section" id="transactions">
+  <h2>Transactions</h2>
+  <p><strong>Route:</strong> <code>/transactions</code></p>
+
+  <h3>Transaction Types</h3>
+  <p><span class="tag tag-income">INCOME</span> <span class="tag tag-expense">EXPENSE</span> <span class="tag tag-transfer">TRANSFER</span></p>
+
+  <h3>Creating a Transaction</h3>
+  <table>
+    <tr><th>Field</th><th>Required</th><th>Notes</th></tr>
+    <tr><td>Type</td><td>Yes</td><td>INCOME / EXPENSE / TRANSFER</td></tr>
+    <tr><td>Amount</td><td>Yes</td><td>Min $0.01</td></tr>
+    <tr><td>Account</td><td>Yes</td><td>From your account list</td></tr>
+    <tr><td>Category</td><td>No</td><td>If omitted, auto-categorization from description keywords is attempted</td></tr>
+    <tr><td>Description</td><td>No</td><td>Short label</td></tr>
+    <tr><td>Notes</td><td>No</td><td>Multi-line memo stored with the record</td></tr>
+    <tr><td>Date</td><td>Yes</td><td>Defaults to today</td></tr>
+    <tr><td>Tags</td><td>No</td><td>Comma/Enter-separated chips. Stored as a Set&lt;String&gt;. Searchable/filterable.</td></tr>
+  </table>
+
+  <h3>CSV Import</h3>
+  <p>Navigate to <strong>Transactions → Import CSV</strong>. Select an account and upload a <code>.csv</code> file in this format:</p>
+  <pre><code>date,description,amount,type
+2026-04-01,Salary,3000,INCOME
+2026-04-03,Supermarket,45.50,EXPENSE</code></pre>
+  <p>The backend parses each row, applies auto-categorization rules, and returns a count of imported records.</p>
+
+  <h3>Bulk Delete</h3>
+  <p>Check rows using the left checkboxes, then click <strong>Delete Selected (N)</strong>. A confirmation dialog shows the count before committing.</p>
+
+  <h3>Account Transfer</h3>
+  <p>Click <strong>Transfer</strong> in the page header (requires ≥ 2 accounts). The backend creates two linked <code>TRANSFER</code> transactions sharing a <code>transferPairId</code>. Deleting either leg automatically deletes the other and reverses both balance changes.</p>
+</div>
+
+<!-- ─── ACCOUNTS ─── -->
+<div class="section" id="accounts">
+  <h2>Accounts</h2>
+  <p><strong>Route:</strong> <code>/accounts</code></p>
+
+  <h3>Account Types</h3>
+  <table>
+    <tr><th>Type</th><th>Use case</th></tr>
+    <tr><td><code>CASH</code></td><td>Physical wallet, petty cash</td></tr>
+    <tr><td><code>BANK</code></td><td>Checking or savings account at a bank</td></tr>
+    <tr><td><code>CREDIT_CARD</code></td><td>Credit card debt tracking</td></tr>
+    <tr><td><code>SAVINGS</code></td><td>High-yield savings, emergency fund</td></tr>
+    <tr><td><code>INVESTMENT</code></td><td>Brokerage, ISA, pension</td></tr>
+  </table>
+
+  <h3>Account Fields</h3>
+  <table>
+    <tr><th>Field</th><th>Required</th><th>Notes</th></tr>
+    <tr><td>Name</td><td>Yes</td><td>Display name, e.g. "Main Checking"</td></tr>
+    <tr><td>Type</td><td>Yes</td><td>One of the 5 types above</td></tr>
+    <tr><td>Initial Balance</td><td>No</td><td>Only used on creation; subsequent balance is transaction-driven</td></tr>
+    <tr><td>Currency</td><td>No</td><td>ISO 4217 (e.g. USD, EUR, GBP); defaults to USD</td></tr>
+    <tr><td>Color</td><td>No</td><td>Hex color for the card's left accent border</td></tr>
+    <tr><td>Institution Name</td><td>No</td><td>Bank name shown on card (e.g. "Chase Bank", "HSBC")</td></tr>
+    <tr><td>Last 4 Digits</td><td>No</td><td>Last 4 of account/card number; must be exactly 4 digits. Displayed as <strong>···· 4821</strong></td></tr>
+    <tr><td>Default Account</td><td>No</td><td>Pre-selected when creating new transactions</td></tr>
+  </table>
+
+  <div class="alert alert-info"><span class="alert-icon">ℹ️</span><span>The <strong>Institution Name</strong> and <strong>Last 4 Digits</strong> are manual entry fields. They do not connect to any bank system — they are labels so you can identify which real-world account a Budgetix account represents. See the <a href="#bank-openbanking">Open Banking</a> section for live bank linking.</span></div>
+
+  <h3>Card Display</h3>
+  <p>Each account card shows: Name · Type · Balance (green/red) · Currency. If institution name or last 4 digits are set, the subtitle reads: <code>Bank · Chase Bank ···· 4821</code></p>
+</div>
+
+<!-- ─── BUDGETS ─── -->
+<div class="section" id="budgets">
+  <h2>Budgets</h2>
+  <p><strong>Route:</strong> <code>/budgets</code></p>
+
+  <p>Create monthly spending limits per category (or a global limit across all categories). The budget's <strong>spent</strong> amount updates automatically as transactions are recorded.</p>
+
+  <h3>Budget Fields</h3>
+  <table>
+    <tr><th>Field</th><th>Notes</th></tr>
+    <tr><td>Category</td><td>Optional. Leave empty for a global budget covering all expense categories.</td></tr>
+    <tr><td>Amount</td><td>Monthly spending limit.</td></tr>
+    <tr><td>Rollover</td><td>When enabled, any unspent balance carries forward to next month as a bonus allowance.</td></tr>
+  </table>
+
+  <h3>Progress Colours</h3>
+  <table>
+    <tr><th>Usage</th><th>Colour</th></tr>
+    <tr><td>&lt; 80%</td><td><span style="color:var(--green)">Green</span> — on track</td></tr>
+    <tr><td>80–99%</td><td><span style="color:var(--yellow)">Yellow</span> — warning</td></tr>
+    <tr><td>≥ 100%</td><td><span style="color:var(--red)">Red</span> — exceeded</td></tr>
+  </table>
+</div>
+
+<!-- ─── GOALS ─── -->
+<div class="section" id="goals">
+  <h2>Savings Goals</h2>
+  <p><strong>Route:</strong> <code>/goals</code></p>
+
+  <p>Define a financial target (e.g. Emergency Fund $10,000 by Dec 2026) and manually contribute amounts to track progress.</p>
+
+  <h3>Goal Statuses</h3>
+  <table>
+    <tr><th>Status</th><th>Meaning</th></tr>
+    <tr><td><code>ACTIVE</code></td><td>In progress — contributions accepted</td></tr>
+    <tr><td><code>COMPLETED</code></td><td>Target reached</td></tr>
+    <tr><td><code>PAUSED</code></td><td>Temporarily stopped</td></tr>
+    <tr><td><code>CANCELLED</code></td><td>Abandoned</td></tr>
+  </table>
+
+  <h3>Contributing</h3>
+  <p>Click <strong>Contribute</strong> on an ACTIVE goal. Enter an amount and an optional note. Each contribution is stored as a <code>GoalContribution</code> record. The <code>currentAmount</code> is the live sum of all contributions.</p>
+
+  <div class="alert alert-success"><span class="alert-icon">🎯</span><span>The <strong>Insights</strong> engine monitors goal milestones (e.g. 25%, 50%, 75%, 100%) and generates a notification when you hit one.</span></div>
+</div>
+
+<!-- ─── RECURRING ─── -->
+<div class="section" id="recurring">
+  <h2>Recurring Transactions</h2>
+  <p><strong>Route:</strong> <code>/recurring</code></p>
+
+  <p>Automate predictable income or expenses (salary, rent, subscriptions) so they appear in your transaction list and update balances without manual entry.</p>
+
+  <h3>Frequencies</h3>
+  <table>
+    <tr><th>Frequency</th><th>Interval</th><th>Example</th></tr>
+    <tr><td>DAILY</td><td>Every day</td><td>Daily expense allowance</td></tr>
+    <tr><td>WEEKLY</td><td>Every 7 days</td><td>Weekly grocery run</td></tr>
+    <tr><td>BIWEEKLY</td><td>Every 14 days</td><td>Bi-weekly paycheck</td></tr>
+    <tr><td>MONTHLY</td><td>Same day each month</td><td>Netflix, rent, salary</td></tr>
+    <tr><td>QUARTERLY</td><td>Every 3 months</td><td>Quarterly insurance</td></tr>
+    <tr><td>YEARLY</td><td>Once per year</td><td>Annual subscription</td></tr>
+  </table>
+
+  <h3>Scheduler Logic</h3>
+  <p>The <code>RecurringScheduler</code> runs <strong>every hour</strong>. For each active rule where <code>nextRun ≤ now</code>:</p>
+  <div class="flow">
+    <div class="flow-step"><div class="step-num">1</div><div class="step-title">Create Transaction</div><div class="step-desc">New Transaction record with the rule's amount, type, description, and account.</div></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><div class="step-num">2</div><div class="step-title">Update Balance</div><div class="step-desc">Account.balance adjusted (debit for EXPENSE, credit for INCOME).</div></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><div class="step-num">3</div><div class="step-title">Update Budget</div><div class="step-desc">Matching Budget.spent incremented if a budget covers this category/period.</div></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><div class="step-num">4</div><div class="step-title">Advance nextRun</div><div class="step-desc">nextRun calculated for the next occurrence. If after endDate, rule deactivated.</div></div>
+  </div>
+</div>
+
+<!-- ─── CATEGORIES ─── -->
+<div class="section" id="categories">
+  <h2>Categories &amp; Auto-Categorization</h2>
+  <p><strong>Route:</strong> <code>/categories</code></p>
+
+  <h3>Category Hierarchy</h3>
+  <p>Categories support one level of nesting. <strong>System categories</strong> are pre-seeded and shared across all users (50+ categories across Income, Expense, and Transfer types). <strong>User categories</strong> are private and can have any name, icon, colour, and parent.</p>
+
+  <h3>Auto-Categorization Rules</h3>
+  <p>Each category can have keyword rules. When a transaction is created without an explicit category, the backend scans the description against all keyword rules for that user and assigns the first matching category.</p>
+  <pre><code>Example rule: Category "Streaming" → keyword "netflix"
+Transaction description: "Netflix monthly charge" → auto-assigned to Streaming</code></pre>
+
+  <p>Add rules via the <strong>Rules</strong> button on any category card (including system categories).</p>
+</div>
+
+<!-- ─── CALENDAR ─── -->
+<div class="section" id="calendar">
+  <h2>Financial Calendar</h2>
+  <p><strong>Route:</strong> <code>/calendar</code></p>
+
+  <p>A monthly day-grid overlay showing all transactions. Each day cell displays income/expense totals as coloured badges and up to 3 transaction pills. Overflow shows as "+N more".</p>
+
+  <div class="alert alert-info"><span class="alert-icon">💡</span><span>The calendar is entirely <strong>client-side grouping</strong> — it reuses the existing transaction endpoint (<code>GET /transactions?size=500</code>) and groups results by date in Angular signals. No extra backend endpoint is needed.</span></div>
+
+  <table>
+    <tr><th>Transaction type</th><th>Pill colour</th></tr>
+    <tr><td>INCOME</td><td style="color:var(--green)">Green</td></tr>
+    <tr><td>EXPENSE</td><td style="color:var(--red)">Red</td></tr>
+    <tr><td>TRANSFER</td><td style="color:var(--accent2)">Indigo</td></tr>
+  </table>
+</div>
+
+<!-- ─── REPORTS ─── -->
+<div class="section" id="reports">
+  <h2>Reports &amp; Export</h2>
+  <p><strong>Route:</strong> <code>/reports</code></p>
+
+  <h3>Monthly Summary KPIs</h3>
+  <p>Total Income · Total Expenses · Net Savings · Savings Rate (%). Savings rate is colour-rated:</p>
+  <table>
+    <tr><th>Rate</th><th>Rating</th></tr>
+    <tr><td>≥ 20%</td><td><span class="status-done">Great!</span></td></tr>
+    <tr><td>10–19%</td><td><span class="status-partial">Average</span></td></tr>
+    <tr><td>&lt; 10%</td><td><span style="color:var(--red)">Low — review your expenses</span></td></tr>
+  </table>
+
+  <h3>Export Formats</h3>
+  <table>
+    <tr><th>Format</th><th>Endpoint</th><th>Filename</th></tr>
+    <tr><td>CSV</td><td><code>GET /reports/export/csv?month=&amp;year=</code></td><td><code>report-2026-05.csv</code></td></tr>
+    <tr><td>PDF</td><td><code>GET /reports/export/pdf?month=&amp;year=</code></td><td><code>report-2026-05.pdf</code></td></tr>
+  </table>
+</div>
+
+<!-- ─── INSIGHTS ─── -->
+<div class="section" id="insights">
+  <h2>Insights</h2>
+  <p><strong>Route:</strong> <code>/insights</code></p>
+
+  <p>Automatically generated analysis of your financial patterns. Generated on the <strong>1st of every month at 08:00 UTC</strong> for all verified users, or on-demand via the <strong>Generate Insights</strong> button.</p>
+
+  <table>
+    <tr><th>Insight Type</th><th>Trigger</th><th>Sentiment</th></tr>
+    <tr><td>HIGH_SAVINGS_RATE</td><td>Savings ≥ 30%</td><td><span class="status-done">Positive</span></td></tr>
+    <tr><td>LOW_SAVINGS_RATE</td><td>Savings &lt; 10%</td><td><span style="color:var(--red)">Negative</span></td></tr>
+    <tr><td>SPENDING_DECREASE</td><td>MoM spend dropped</td><td><span class="status-done">Positive</span></td></tr>
+    <tr><td>SPENDING_INCREASE</td><td>MoM spend rose</td><td><span style="color:var(--red)">Negative</span></td></tr>
+    <tr><td>GOAL_MILESTONE</td><td>25/50/75/100% reached</td><td><span class="status-done">Positive</span></td></tr>
+    <tr><td>BUDGET_ON_TRACK</td><td>Usage &lt; 90%</td><td><span class="status-done">Positive</span></td></tr>
+    <tr><td>BUDGET_EXCEEDED</td><td>Usage ≥ 100%</td><td><span style="color:var(--red)">Negative</span></td></tr>
+    <tr><td>UNUSUAL_SPENDING</td><td>Statistical anomaly detected</td><td><span style="color:var(--yellow)">Warning</span></td></tr>
+    <tr><td>SUBSCRIPTION_SUMMARY</td><td>Recurring subscriptions detected</td><td><span style="color:var(--blue)">Info</span></td></tr>
+    <tr><td>MONTHLY_SUMMARY</td><td>Monthly wrap-up</td><td><span style="color:var(--blue)">Info</span></td></tr>
+    <tr><td>INCOME_CHANGE</td><td>Income variation detected</td><td><span style="color:var(--yellow)">Warning</span></td></tr>
+  </table>
+</div>
+
+<!-- ─── SETTINGS ─── -->
+<div class="section" id="settings">
+  <h2>Settings</h2>
+  <p><strong>Route:</strong> <code>/settings</code> — 3 tabs</p>
+
+  <div class="two-col">
+    <div>
+      <h3>Tab 1 — Profile</h3>
+      <table>
+        <tr><th>Field</th><th>Notes</th></tr>
+        <tr><td>Full Name</td><td>Display name across the app</td></tr>
+        <tr><td>Currency</td><td>ISO 4217 (e.g. USD, EUR, GBP)</td></tr>
+        <tr><td>Monthly Income</td><td>Used for projections</td></tr>
+        <tr><td>Timezone</td><td>e.g. UTC, Europe/London</td></tr>
+      </table>
+    </div>
+    <div>
+      <h3>Tab 2 — Security</h3>
+      <p><strong>Change Password</strong> — current password required. New password minimum 8 characters.</p>
+      <p><strong>Two-Factor Auth</strong> — toggle on/off. When enabled, every login sends a 6-digit code to your email.</p>
+    </div>
+  </div>
+
+  <h3>Tab 3 — Notifications</h3>
+  <table>
+    <tr><th>Preference</th><th>Default</th></tr>
+    <tr><td>Budget Alerts</td><td>On</td></tr>
+    <tr><td>Goal Milestones</td><td>On</td></tr>
+    <tr><td>Weekly Summary</td><td>Off</td></tr>
+    <tr><td>Large Transactions</td><td>On</td></tr>
+  </table>
+</div>
+
+<!-- ─── NOTIFICATIONS ─── -->
+<div class="section" id="notifications">
+  <h2>Notifications</h2>
+  <p>In-app notification centre accessible from the bell icon in the topbar. The unread count badge is refreshed every 60 seconds.</p>
+
+  <table>
+    <tr><th>Action</th><th>Endpoint</th></tr>
+    <tr><td>List all</td><td><code>GET /notifications?unreadOnly=false&amp;page=0&amp;size=10</code></td></tr>
+    <tr><td>Unread count</td><td><code>GET /notifications/unread-count</code></td></tr>
+    <tr><td>Mark single read</td><td><code>PUT /notifications/{id}/read</code></td></tr>
+    <tr><td>Mark all read</td><td><code>PUT /notifications/read-all</code></td></tr>
+    <tr><td>Delete</td><td><code>DELETE /notifications/{id}</code></td></tr>
+  </table>
+</div>
+
+<!-- ─── SECURITY MODEL ─── -->
+<div class="section" id="security">
+  <h2>Security Model</h2>
+
+  <h3>Authentication Layers</h3>
+
+  <div class="security-layer"><div class="sec-num">1</div><div class="sec-content"><div class="sec-title">BCrypt Password Hashing</div><div class="sec-desc">Passwords are never stored in plain text. BCrypt with a work factor of 10 is applied at registration and verified at login.</div></div></div>
+  <div class="security-layer"><div class="sec-num">2</div><div class="sec-content"><div class="sec-title">JWT Access Tokens (15 minutes)</div><div class="sec-desc">Signed with HS512 using a 32-char+ secret. Short expiry limits the window of a stolen token. Sent as <code>Authorization: Bearer &lt;token&gt;</code> on every API request.</div></div></div>
+  <div class="security-layer"><div class="sec-num">3</div><div class="sec-content"><div class="sec-title">Refresh Token Rotation (7 days)</div><div class="sec-desc">Stored in the database (<code>refresh_tokens</code> table). On each use, the old token is invalidated and a new pair is issued. Logout immediately deletes the token from the DB, preventing reuse.</div></div></div>
+  <div class="security-layer"><div class="sec-num">4</div><div class="sec-content"><div class="sec-title">Email OTP Verification</div><div class="sec-desc">6-digit time-limited OTP for email verification, password reset, and 2FA. Rate-limited to 3 resends per 24 hours to prevent brute-force.</div></div></div>
+  <div class="security-layer"><div class="sec-num">5</div><div class="sec-content"><div class="sec-title">Two-Factor Authentication (2FA)</div><div class="sec-desc">Optional per user. When enabled, a second 6-digit code is emailed at each login — even if your password is compromised, an attacker still needs access to your email.</div></div></div>
+  <div class="security-layer"><div class="sec-num">6</div><div class="sec-content"><div class="sec-title">Session Inactivity Timeout</div><div class="sec-desc">120-second inactivity timer on the frontend. Automatic sign-out prevents unauthorized access on shared devices.</div></div></div>
+  <div class="security-layer"><div class="sec-num">7</div><div class="sec-content"><div class="sec-title">CORS &amp; CSRF</div><div class="sec-desc">CORS configured to allow only the frontend origin. CSRF protection is disabled because the API uses stateless JWT (not cookies), making CSRF attacks inapplicable.</div></div></div>
+  <div class="security-layer"><div class="sec-num">8</div><div class="sec-content"><div class="sec-title">User Data Isolation</div><div class="sec-desc">Every entity query is scoped to <code>user_id = currentUser.getId()</code>. There is no admin API that could return other users' data through normal endpoints.</div></div></div>
+</div>
+
+<!-- ════════════════════════ BANK LINKING ════════════════════════ -->
+<div class="section" id="bank-manual">
+  <h2>Bank Account Linking — Manual Entry (Current)</h2>
+
+  <div class="alert alert-warning"><span class="alert-icon">⚠️</span><span>The current implementation uses <strong>manual entry</strong>. You type in your bank name and the last 4 digits of your card/account number. Budgetix does <em>not</em> connect to your bank, read transactions from it, or store any sensitive bank credentials. This is a labelling system only.</span></div>
+
+  <h3>How to label an account</h3>
+  <div class="flow">
+    <div class="flow-step"><div class="step-num">1</div><div class="step-title">Open Accounts</div><div class="step-desc">Navigate to <strong>/accounts</strong></div></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><div class="step-num">2</div><div class="step-title">Create or Edit</div><div class="step-desc">Click <strong>+ New Account</strong> or the edit pencil on an existing card.</div></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><div class="step-num">3</div><div class="step-title">Fill Bank Details</div><div class="step-desc">Enter <strong>Institution Name</strong> (e.g. "Chase Bank") and <strong>Last 4 Digits</strong> (e.g. "4821").</div></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><div class="step-num">4</div><div class="step-title">Save</div><div class="step-desc">The card subtitle updates to: <strong>Bank · Chase Bank ···· 4821</strong></div></div>
+  </div>
+
+  <h3>What this stores</h3>
+  <table>
+    <tr><th>Field</th><th>Where</th><th>Type</th><th>Privacy</th></tr>
+    <tr><td>institution_name</td><td><code>accounts</code> table</td><td>VARCHAR(100)</td><td>Not sensitive — just a label</td></tr>
+    <tr><td>last_four</td><td><code>accounts</code> table</td><td>VARCHAR(4)</td><td>Last 4 only — not full card number, not PAN</td></tr>
+  </table>
+</div>
+
+<div class="section" id="bank-openbanking">
+  <h2>Open Banking / Real Bank Linking (Roadmap)</h2>
+  <p class="lead">Real bank linking — where Budgetix reads your actual transactions from your bank — requires an <strong>Open Banking aggregator</strong> like Plaid, Tink, or TrueLayer. Here is exactly how it works.</p>
+
+  <h3>The 6-Step Open Banking Flow</h3>
+  <div class="flow" style="flex-direction:column;gap:8px">
+    <div class="flow-step" style="display:flex;align-items:flex-start;gap:16px;border-left:4px solid var(--accent)">
+      <div class="step-num" style="flex-shrink:0">1</div>
+      <div><div class="step-title">User initiates bank linking</div><div class="step-desc">User clicks "Link a real bank account" in the Budgetix UI. The frontend calls the Budgetix backend to create a <strong>Link Token</strong> (Plaid) or an <strong>Auth URL</strong> (Tink/TrueLayer). This is a short-lived, single-use token — Budgetix's API key never leaves the backend.</div></div>
+    </div>
+    <div class="flow-step" style="display:flex;align-items:flex-start;gap:16px;border-left:4px solid var(--blue)">
+      <div class="step-num" style="flex-shrink:0">2</div>
+      <div><div class="step-title">Aggregator's secure UI opens</div><div class="step-desc">Plaid Link (or Tink/TrueLayer's hosted flow) opens in a modal or redirect. The user selects their bank, enters their bank credentials, and completes any Multi-Factor Authentication their bank requires. <strong>Budgetix never sees these credentials.</strong></div></div>
+    </div>
+    <div class="flow-step" style="display:flex;align-items:flex-start;gap:16px;border-left:4px solid var(--green)">
+      <div class="step-num" style="flex-shrink:0">3</div>
+      <div><div class="step-title">OAuth consent &amp; bank MFA</div><div class="step-desc">Modern banks use OAuth2 — the user is redirected to their bank's website, grants consent ("Allow Budgetix to view your accounts and transactions"), and is redirected back. Older banks use screen-scraping via the aggregator (this is being phased out in most regions).</div></div>
+    </div>
+    <div class="flow-step" style="display:flex;align-items:flex-start;gap:16px;border-left:4px solid var(--yellow)">
+      <div class="step-num" style="flex-shrink:0">4</div>
+      <div><div class="step-title">Aggregator returns access token</div><div class="step-desc">After consent, the aggregator returns a permanent <strong>access token</strong> (e.g. Plaid's <code>access_token</code>) to the Budgetix backend. This is stored encrypted in the database. It allows Budgetix to fetch data from that bank on behalf of the user indefinitely (until revoked).</div></div>
+    </div>
+    <div class="flow-step" style="display:flex;align-items:flex-start;gap:16px;border-left:4px solid var(--accent2)">
+      <div class="step-num" style="flex-shrink:0">5</div>
+      <div><div class="step-title">Budgetix fetches transactions</div><div class="step-desc">Using the stored access token, Budgetix calls the aggregator API (<code>GET /transactions</code> in Plaid's API) to retrieve real bank transactions. These are mapped to Budgetix's transaction format and stored in the database, applying auto-categorization rules.</div></div>
+    </div>
+    <div class="flow-step" style="display:flex;align-items:flex-start;gap:16px;border-left:4px solid var(--red)">
+      <div class="step-num" style="flex-shrink:0">6</div>
+      <div><div class="step-title">Webhooks for real-time updates</div><div class="step-desc">The aggregator pushes webhook events to Budgetix's backend when new transactions appear at the bank. Budgetix processes these asynchronously, creating new transaction records without polling. Users see their bank activity reflected in near real-time.</div></div>
+    </div>
+  </div>
+
+  <h3>Aggregator Comparison</h3>
+  <table>
+    <tr><th>Provider</th><th>Best for</th><th>Coverage</th><th>Consent model</th></tr>
+    <tr><td><strong>Plaid</strong></td><td>US/Canada apps</td><td>12,000+ US institutions</td><td>OAuth2 + screen-scrape fallback</td></tr>
+    <tr><td><strong>Tink</strong> (Visa)</td><td>European apps</td><td>3,500+ EU banks (PSD2)</td><td>OAuth2 (PSD2 compliant)</td></tr>
+    <tr><td><strong>TrueLayer</strong></td><td>UK + EU</td><td>UK Open Banking + EU PSD2</td><td>OAuth2 only (no scraping)</td></tr>
+    <tr><td><strong>Basiq</strong></td><td>Australia</td><td>Australian CDR banks</td><td>OAuth2 (CDR)</td></tr>
+    <tr><td><strong>Nordigen</strong> (GoCardless)</td><td>EU, free tier</td><td>2,000+ EU banks</td><td>OAuth2 (PSD2)</td></tr>
+  </table>
+
+  <h3>What data is fetched</h3>
+  <table>
+    <tr><th>Data</th><th>Budgetix usage</th></tr>
+    <tr><td>Account balance</td><td>Updates Account.balance automatically</td></tr>
+    <tr><td>Transaction amount, date, description</td><td>Creates Transaction records</td></tr>
+    <tr><td>Account number (masked)</td><td>Populates lastFour field automatically</td></tr>
+    <tr><td>Bank name</td><td>Populates institutionName field automatically</td></tr>
+  </table>
+  <p><strong>Budgetix does NOT receive:</strong> full card/account numbers, sort codes in plaintext, online banking passwords, OTP codes, or any ability to initiate payments.</p>
+</div>
+
+<div class="section" id="bank-security">
+  <h2>Bank Linking Security</h2>
+
+  <div class="security-layer"><div class="sec-num">🔒</div><div class="sec-content"><div class="sec-title">Credentials never touch Budgetix</div><div class="sec-desc">Bank credentials are entered only on the aggregator's (Plaid/Tink) or the bank's own OAuth page. Budgetix receives only an opaque access token — it has no visibility into username/password.</div></div></div>
+  <div class="security-layer"><div class="sec-num">🔑</div><div class="sec-content"><div class="sec-title">Access tokens encrypted at rest</div><div class="sec-desc">The access token stored in the Budgetix database is encrypted with AES-256 before storage. The decryption key is loaded from an environment variable — not stored in code.</div></div></div>
+  <div class="security-layer"><div class="sec-num">📋</div><div class="sec-content"><div class="sec-title">Read-only scope</div><div class="sec-desc">The OAuth scope requested from the bank is read-only: <code>accounts:read</code>, <code>transactions:read</code>. Budgetix cannot initiate transfers or make payments on your behalf.</div></div></div>
+  <div class="security-layer"><div class="sec-num">🚫</div><div class="sec-content"><div class="sec-title">Instant revocation</div><div class="sec-desc">Users can unlink a bank account at any time. Budgetix calls the aggregator's token invalidation endpoint and deletes the stored access token. The aggregator informs the bank to revoke consent.</div></div></div>
+  <div class="security-layer"><div class="sec-num">🌐</div><div class="sec-content"><div class="sec-title">TLS everywhere</div><div class="sec-desc">All communication between Budgetix ↔ aggregator ↔ bank uses HTTPS/TLS 1.2+. Aggregator APIs are called only from the backend (server-to-server), never from the browser.</div></div></div>
+  <div class="security-layer"><div class="sec-num">🇪🇺</div><div class="sec-content"><div class="sec-title">PSD2 / Open Banking regulatory compliance</div><div class="sec-desc">EU PSD2 and UK Open Banking regulations mandate that banks support OAuth2-based third-party access via licensed "Account Information Service Providers" (AISPs). Aggregators like Tink and TrueLayer are licensed AISPs, giving them legally sanctioned API access to EU/UK banks.</div></div></div>
+</div>
+
+<div class="section" id="bank-roadmap">
+  <h2>Bank Linking Integration Roadmap</h2>
+
+  <table>
+    <tr><th>Phase</th><th>Milestone</th><th>Details</th></tr>
+    <tr><td>Phase 1 ✅</td><td>Manual entry</td><td>Institution name + last 4 digits as labels. <strong>Done.</strong></td></tr>
+    <tr><td>Phase 2</td><td>Aggregator integration</td><td>Integrate Plaid (US) or Tink (EU). Backend: store encrypted access tokens; call aggregator to fetch transactions on demand.</td></tr>
+    <tr><td>Phase 3</td><td>Webhook sync</td><td>Register Budgetix's webhook endpoint with the aggregator. Process real-time transaction events asynchronously.</td></tr>
+    <tr><td>Phase 4</td><td>Balance sync</td><td>Automatically reconcile Account.balance with the bank's live balance. Flag discrepancies.</td></tr>
+    <tr><td>Phase 5</td><td>Multi-bank</td><td>Link multiple banks per user. Each linked bank maps to one or more Budgetix accounts.</td></tr>
+  </table>
+
+  <h3>Backend files to create for Phase 2</h3>
+  <pre><code>backend/src/main/java/com/budgetix/
+├── banking/
+│   ├── controller/BankLinkController.java     # POST /bank/link-token, POST /bank/exchange, DELETE /bank/{id}
+│   ├── service/BankLinkService.java            # Plaid/Tink API calls, token management
+│   ├── entity/LinkedBank.java                  # Stores encrypted access token + accountId
+│   └── dto/PlaidExchangeRequest.java           # { publicToken, institutionName, accountIds[] }
+└── config/PlaidClientConfig.java               # Plaid SDK configuration bean</code></pre>
+</div>
+
+<!-- ════════════════════════ SOURCE MAP ════════════════════════ -->
+<div class="section" id="map-auth">
+  <h2>Source Code Map — Authentication</h2>
+  <p class="lead">Every request flows: <strong>Angular Component → Angular Service → HTTP Interceptor → Spring Controller → Spring Service → Repository → Entity/DB</strong></p>
+
+  <h3>Auth Layer Files</h3>
+  <table>
+    <tr><th>Layer</th><th>File</th><th>Responsibility</th></tr>
+    <tr><td>FE Component</td><td><code>features/auth/login/login.component.ts</code></td><td>Login form, 2FA step, Google OAuth button</td></tr>
+    <tr><td>FE Component</td><td><code>features/auth/register/register.component.ts</code></td><td>Registration form with password strength</td></tr>
+    <tr><td>FE Component</td><td><code>features/auth/verify-email/verify-email.component.ts</code></td><td>6-digit OTP input, resend cooldown (60s)</td></tr>
+    <tr><td>FE Component</td><td><code>features/auth/oauth2-callback/oauth2-callback.component.ts</code></td><td>Handles Google redirect, extracts tokens from URL</td></tr>
+    <tr><td>FE Service</td><td><code>core/services/auth.service.ts</code></td><td>All auth API calls (register, login, logout, refresh, OTP)</td></tr>
+    <tr><td>FE Interceptor</td><td><code>core/interceptors/auth.interceptor.ts</code></td><td>Injects Bearer token; catches 401 → auto refresh → retry</td></tr>
+    <tr><td>FE Guard</td><td><code>core/guards/auth.guard.ts</code></td><td>Blocks unauthenticated users from protected routes</td></tr>
+    <tr><td>FE Guard</td><td><code>core/guards/guest.guard.ts</code></td><td>Redirects authenticated users away from /auth/*</td></tr>
+    <tr><td>BE Controller</td><td><code>auth/controller/AuthController.java</code></td><td>POST /register, /login, /refresh, /logout, /verify-email, OTP endpoints</td></tr>
+    <tr><td>BE Service</td><td><code>auth/service/AuthService.java</code></td><td>BCrypt verify, JWT generation, OTP creation, email dispatch</td></tr>
+    <tr><td>BE Filter</td><td><code>config/JwtAuthenticationFilter.java</code></td><td>Validates JWT on every request; sets SecurityContext</td></tr>
+    <tr><td>BE Config</td><td><code>config/SecurityConfig.java</code></td><td>HTTP security rules, public vs protected endpoints, OAuth2 setup</td></tr>
+    <tr><td>BE Entity</td><td><code>user/entity/User.java</code> → <code>users</code> table</td><td>id, email, password (bcrypt), name, emailVerified, twoFactorEnabled</td></tr>
+    <tr><td>BE Entity</td><td><code>auth/entity/OtpCode.java</code> → <code>otp_codes</code> table</td><td>code, type, expiresAt, used</td></tr>
+    <tr><td>BE Entity</td><td><code>auth/entity/RefreshToken.java</code> → <code>refresh_tokens</code> table</td><td>token (UUID), expiresAt</td></tr>
+  </table>
+</div>
+
+<div class="section" id="map-features">
+  <h2>Source Code Map — Feature-by-Feature</h2>
+
+  <!-- DASHBOARD -->
+  <h3>Dashboard</h3>
+  <table>
+    <tr><th>Layer</th><th>File</th><th>Key endpoints / methods</th></tr>
+    <tr><td>FE Component</td><td><code>features/dashboard/dashboard.component.ts</code></td><td>Signals: overview$, chartData$. 4 KPI cards + 3 charts.</td></tr>
+    <tr><td>FE Service</td><td><code>core/services/dashboard.service.ts</code></td><td><code>getOverview()</code>, <code>getSpendingByCategory(from,to)</code>, <code>getIncomeVsExpenses(months)</code>, <code>getDailyTrend(m,y)</code></td></tr>
+    <tr><td>BE Controller</td><td><code>dashboard/controller/DashboardController.java</code></td><td><span class="endpoint-pill pill-get">GET</span> /dashboard/overview · /charts/spending-by-category · /charts/income-vs-expenses · /charts/daily-trend</td></tr>
+    <tr><td>BE Service</td><td><code>dashboard/service/DashboardService.java</code></td><td>Aggregates transaction sums, MoM deltas, daily groupings</td></tr>
+    <tr><td>DB Query</td><td><code>TransactionRepository</code></td><td>Custom JPQL queries: sumByType, groupByCategory, groupByDay</td></tr>
+  </table>
+
+  <hr class="divider"/>
+
+  <!-- TRANSACTIONS -->
+  <h3>Transactions</h3>
+  <table>
+    <tr><th>Layer</th><th>File</th><th>Key endpoints / methods</th></tr>
+    <tr><td>FE Component</td><td><code>features/transactions/transactions.component.ts</code></td><td>Paginated table, filter signals, CRUD modals, bulk select, CSV import dialog</td></tr>
+    <tr><td>FE Service</td><td><code>core/services/transaction.service.ts</code></td><td><code>getAll(filter)</code>, <code>create(req)</code>, <code>update(id,req)</code>, <code>remove(id)</code>, <code>bulkDelete(ids)</code>, <code>transfer(req)</code>, <code>importCsv(accountId,file)</code>, <code>uploadReceipt(id,file)</code></td></tr>
+    <tr><td>FE Model</td><td><code>core/models/transaction.model.ts</code></td><td>Transaction · TransactionRequest · TransferRequest · TransactionFilter</td></tr>
+    <tr><td>BE Controller</td><td><code>transaction/controller/TransactionController.java</code></td><td><span class="endpoint-pill pill-get">GET</span><span class="endpoint-pill pill-post">POST</span><span class="endpoint-pill pill-put">PUT</span><span class="endpoint-pill pill-delete">DELETE</span> /transactions · /bulk-delete · /transfer · /{id}/receipt · /import</td></tr>
+    <tr><td>BE Service</td><td><code>transaction/service/TransactionService.java</code></td><td>Balance adjustment on create/update/delete; transfer pair creation; CSV parsing; auto-categorization trigger</td></tr>
+    <tr><td>BE Service</td><td><code>category/service/AutoCategorizationService.java</code></td><td>Scans description against keyword rules → assigns category</td></tr>
+    <tr><td>BE Entity</td><td><code>transaction/entity/Transaction.java</code> → <code>transactions</code> table</td><td>amount, type, description, notes, date, receipt, tags, transferPairId, transferCredit</td></tr>
+    <tr><td>BE DTO</td><td><code>transaction/dto/TransactionFilterRequest.java</code></td><td>startDate, endDate, categoryId, accountId, type, search, page, size (max 1000)</td></tr>
+  </table>
+
+  <hr class="divider"/>
+
+  <!-- ACCOUNTS -->
+  <h3>Accounts</h3>
+  <table>
+    <tr><th>Layer</th><th>File</th><th>Key endpoints / methods</th></tr>
+    <tr><td>FE Component</td><td><code>features/accounts/accounts.component.ts</code></td><td>Card grid, create/edit modal with institution + lastFour fields, transfer dialog</td></tr>
+    <tr><td>FE Service</td><td><code>core/services/account.service.ts</code></td><td><code>getAll()</code>, <code>getById(id)</code>, <code>create(req)</code>, <code>update(id,req)</code>, <code>remove(id)</code></td></tr>
+    <tr><td>FE Model</td><td><code>core/models/account.model.ts</code></td><td>Account: id, name, type, balance, currency, color, icon, isDefault, institutionName?, lastFour?</td></tr>
+    <tr><td>BE Controller</td><td><code>account/controller/AccountController.java</code></td><td><span class="endpoint-pill pill-get">GET</span><span class="endpoint-pill pill-post">POST</span><span class="endpoint-pill pill-put">PUT</span><span class="endpoint-pill pill-delete">DELETE</span> /accounts, /accounts/{id}</td></tr>
+    <tr><td>BE Service</td><td><code>account/service/AccountService.java</code></td><td>create/update/delete; balance adjustment; isDefault handling</td></tr>
+    <tr><td>BE Entity</td><td><code>account/entity/Account.java</code> → <code>accounts</code> table</td><td>name, type, balance, currency, color, icon, isDefault, institutionName (VARCHAR 100), lastFour (VARCHAR 4)</td></tr>
+    <tr><td>BE DTO</td><td><code>account/dto/AccountRequest.java</code></td><td>name, type, initialBalance?, currency, color, icon, isDefault, institutionName, lastFour</td></tr>
+    <tr><td>BE DTO</td><td><code>account/dto/AccountResponse.java</code></td><td>id, name, type, balance, currency, color, icon, isDefault, institutionName, lastFour, createdAt</td></tr>
+    <tr><td>DB Migration</td><td><code>V5__add_account_bank_details.sql</code></td><td>Added institution_name VARCHAR(100) and last_four CHAR(4)</td></tr>
+    <tr><td>DB Migration</td><td><code>V6__fix_last_four_varchar.sql</code></td><td>Converted last_four CHAR(4) → VARCHAR(4) (Hibernate 6 type compatibility)</td></tr>
+  </table>
+
+  <hr class="divider"/>
+
+  <!-- BUDGETS -->
+  <h3>Budgets</h3>
+  <table>
+    <tr><th>Layer</th><th>File</th><th>Notes</th></tr>
+    <tr><td>FE Component</td><td><code>features/budgets/budgets.component.ts</code></td><td>Period selector (month/year), card grid, progress bars</td></tr>
+    <tr><td>FE Service</td><td><code>core/services/budget.service.ts</code></td><td><code>getByPeriod(month,year)</code>, <code>create(req)</code>, <code>update(id,req)</code>, <code>remove(id)</code></td></tr>
+    <tr><td>BE Controller</td><td><code>budget/controller/BudgetController.java</code></td><td><span class="endpoint-pill pill-get">GET</span><span class="endpoint-pill pill-post">POST</span><span class="endpoint-pill pill-put">PUT</span><span class="endpoint-pill pill-delete">DELETE</span> /budgets</td></tr>
+    <tr><td>BE Entity</td><td><code>budget/entity/Budget.java</code> → <code>budgets</code> table</td><td>amount, spent, period, month, year, rollover, rolledAmount</td></tr>
+    <tr><td>BE Logic</td><td><code>transaction/service/TransactionService.java</code></td><td>On transaction create/update/delete: finds matching Budget and adjusts spent</td></tr>
+  </table>
+
+  <hr class="divider"/>
+
+  <!-- GOALS -->
+  <h3>Savings Goals</h3>
+  <table>
+    <tr><th>Layer</th><th>File</th><th>Notes</th></tr>
+    <tr><td>FE Component</td><td><code>features/goals/goals.component.ts</code></td><td>Goal cards, contribution modal, status badge</td></tr>
+    <tr><td>FE Service</td><td><code>core/services/goal.service.ts</code></td><td><code>getAll()</code>, <code>create(req)</code>, <code>update(id,req)</code>, <code>contribute(id,amount,note?)</code>, <code>updateStatus(id,status)</code>, <code>remove(id)</code></td></tr>
+    <tr><td>BE Controller</td><td><code>goal/controller/GoalController.java</code></td><td><span class="endpoint-pill pill-get">GET</span><span class="endpoint-pill pill-post">POST</span><span class="endpoint-pill pill-put">PUT</span><span class="endpoint-pill pill-patch">PATCH</span><span class="endpoint-pill pill-delete">DELETE</span> /goals, /{id}/contribute, /{id}/status</td></tr>
+    <tr><td>BE Entity</td><td><code>goal/entity/SavingsGoal.java</code> → <code>savings_goals</code> table</td><td>name, targetAmount, currentAmount, deadline, status, icon, color</td></tr>
+    <tr><td>BE Entity</td><td><code>goal/entity/GoalContribution.java</code> → <code>goal_contributions</code> table</td><td>amount, note, date; FK to savings_goals</td></tr>
+  </table>
+
+  <hr class="divider"/>
+
+  <!-- RECURRING -->
+  <h3>Recurring Transactions</h3>
+  <table>
+    <tr><th>Layer</th><th>File</th><th>Notes</th></tr>
+    <tr><td>FE Component</td><td><code>features/recurring/recurring.component.ts</code></td><td>Card grid, pause/resume, delete, new rule dialog</td></tr>
+    <tr><td>FE Service</td><td><code>core/services/recurring.service.ts</code></td><td><code>getAll()</code>, <code>create(req)</code>, <code>toggle(id)</code>, <code>remove(id)</code></td></tr>
+    <tr><td>BE Controller</td><td><code>recurring/controller/RecurringController.java</code></td><td><span class="endpoint-pill pill-get">GET</span><span class="endpoint-pill pill-post">POST</span><span class="endpoint-pill pill-delete">DELETE</span> /recurring, /{id}/toggle</td></tr>
+    <tr><td>BE Scheduler</td><td><code>recurring/scheduler/RecurringScheduler.java</code></td><td>@Scheduled fixedDelay=3600000 (hourly). Creates transactions, adjusts balances, sends notifications.</td></tr>
+    <tr><td>BE Entity</td><td><code>recurring/entity/RecurringTransaction.java</code> → <code>recurring_transactions</code> table</td><td>frequency, startDate, endDate, nextRun, lastRun, isActive</td></tr>
+  </table>
+
+  <hr class="divider"/>
+
+  <!-- CATEGORIES -->
+  <h3>Categories</h3>
+  <table>
+    <tr><th>Layer</th><th>File</th><th>Notes</th></tr>
+    <tr><td>FE Component</td><td><code>features/categories/categories.component.ts</code></td><td>System + user category sections, rules dialog, icon/color pickers</td></tr>
+    <tr><td>FE Service</td><td><code>core/services/category.service.ts</code></td><td><code>getAll()</code>, <code>create(req)</code>, <code>update(id,req)</code>, <code>remove(id)</code>, <code>addRule(id,keyword)</code></td></tr>
+    <tr><td>BE Controller</td><td><code>category/controller/CategoryController.java</code></td><td><span class="endpoint-pill pill-get">GET</span><span class="endpoint-pill pill-post">POST</span><span class="endpoint-pill pill-put">PUT</span><span class="endpoint-pill pill-delete">DELETE</span> /categories, /{id}/rules</td></tr>
+    <tr><td>BE Entity</td><td><code>category/entity/Category.java</code> → <code>categories</code> table</td><td>name, icon, color, type, is_system, parent_id (self-ref FK)</td></tr>
+    <tr><td>BE Entity</td><td><code>category/entity/AutoCategorizationRule.java</code> → <code>auto_categorization_rules</code> table</td><td>keyword, FK to categories</td></tr>
+    <tr><td>BE Seed</td><td><code>V2__seed_categories.sql</code></td><td>50+ system categories pre-seeded with icons, colors, and keyword rules</td></tr>
+    <tr><td>BE Cache</td><td>Redis — key: <code>categories::{userId}</code></td><td>TTL 10 min; invalidated on category create/update/delete. Uses ArrayList (not List.of) for Jackson compatibility.</td></tr>
+  </table>
+
+  <hr class="divider"/>
+
+  <!-- CALENDAR -->
+  <h3>Financial Calendar</h3>
+  <table>
+    <tr><th>Layer</th><th>File</th><th>Notes</th></tr>
+    <tr><td>FE Component</td><td><code>features/calendar/calendar.component.ts</code></td><td>Computed signals group transactions by date. Uses CurrencyPipe, SkeletonModule, ToastModule.</td></tr>
+    <tr><td>FE Service</td><td><code>core/services/transaction.service.ts</code></td><td>Calls <code>getAll({startDate, endDate, size: 500})</code> — reuses the transaction endpoint</td></tr>
+    <tr><td>BE Controller</td><td><code>transaction/controller/TransactionController.java</code></td><td>Same GET /transactions endpoint; size cap raised to 1000</td></tr>
+    <tr><td>BE DTO</td><td><code>transaction/dto/TransactionFilterRequest.java</code></td><td>size validation: <code>if (size &lt;= 0 || size &gt; 1000) size = 20;</code></td></tr>
+  </table>
+
+  <hr class="divider"/>
+
+  <!-- REPORTS -->
+  <h3>Reports</h3>
+  <table>
+    <tr><th>Layer</th><th>File</th><th>Notes</th></tr>
+    <tr><td>FE Component</td><td><code>features/reports/reports.component.ts</code></td><td>Month/year picker, KPI cards, charts, category breakdown table, export buttons</td></tr>
+    <tr><td>FE Service</td><td><code>core/services/report.service.ts</code></td><td><code>getMonthly(m,y)</code>, <code>exportCsv(m,y)</code>, <code>exportPdf(m,y)</code></td></tr>
+    <tr><td>BE Controller</td><td><code>report/controller/ReportController.java</code></td><td><span class="endpoint-pill pill-get">GET</span> /reports/monthly · /export/csv · /export/pdf</td></tr>
+    <tr><td>BE Service</td><td><code>report/service/ReportService.java</code></td><td>Aggregates transaction data; iText/OpenCSV for PDF/CSV generation</td></tr>
+  </table>
+
+  <hr class="divider"/>
+
+  <!-- INSIGHTS -->
+  <h3>Insights</h3>
+  <table>
+    <tr><th>Layer</th><th>File</th><th>Notes</th></tr>
+    <tr><td>FE Component</td><td><code>features/insights/insights.component.ts</code></td><td>Insight card list, generate button, dismiss (✕) button</td></tr>
+    <tr><td>FE Service</td><td><code>core/services/insight.service.ts</code></td><td><code>getAll()</code>, <code>generate()</code>, <code>dismiss(id)</code></td></tr>
+    <tr><td>BE Controller</td><td><code>insight/controller/InsightController.java</code></td><td><span class="endpoint-pill pill-get">GET</span><span class="endpoint-pill pill-post">POST</span><span class="endpoint-pill pill-delete">DELETE</span> /insights, /generate, /{id}/dismiss</td></tr>
+    <tr><td>BE Scheduler</td><td><code>insight/scheduler/InsightScheduler.java</code></td><td>@Scheduled cron="0 0 8 1 * *" (1st of month, 08:00 UTC)</td></tr>
+    <tr><td>BE Entity</td><td><code>insight/entity/Insight.java</code> → <code>insights</code> table</td><td>type, title, message, data (JSONB), period, dismissed</td></tr>
+  </table>
+
+  <hr class="divider"/>
+
+  <!-- SETTINGS / USER -->
+  <h3>Settings &amp; User Profile</h3>
+  <table>
+    <tr><th>Layer</th><th>File</th><th>Notes</th></tr>
+    <tr><td>FE Component</td><td><code>features/settings/settings.component.ts</code></td><td>3-tab layout: Profile · Security · Notifications</td></tr>
+    <tr><td>FE Service</td><td><code>core/services/user.service.ts</code></td><td><code>getMe()</code>, <code>updateProfile(name)</code>, <code>updateSettings(partial)</code>, <code>changePassword(cur,new)</code>, <code>enableTwoFactor(bool)</code></td></tr>
+    <tr><td>BE Controller</td><td><code>user/controller/UserController.java</code></td><td><span class="endpoint-pill pill-get">GET</span><span class="endpoint-pill pill-put">PUT</span> /users/me · /users/profile · /users/settings · /users/password</td></tr>
+    <tr><td>BE Entity</td><td><code>user/entity/User.java</code> → <code>users</code> table</td><td>email, password (bcrypt), name, avatar, emailVerified, twoFactorEnabled, twoFactorSecret, role, provider</td></tr>
+    <tr><td>BE Entity</td><td><code>user/entity/UserProfile.java</code> → <code>user_profiles</code> table</td><td>currency, monthlyIncome, timezone, notifyBudgetAlerts, notifyGoalReminders, notifyWeeklySummary, financialGoalType</td></tr>
+  </table>
+
+  <hr class="divider"/>
+
+  <!-- NOTIFICATIONS -->
+  <h3>Notifications</h3>
+  <table>
+    <tr><th>Layer</th><th>File</th><th>Notes</th></tr>
+    <tr><td>FE Component</td><td><code>layout/topbar/topbar.component.ts</code></td><td>Notification bell, badge, dropdown list</td></tr>
+    <tr><td>FE Service</td><td><code>core/services/notification.service.ts</code></td><td><code>getAll(unreadOnly,page,size)</code>, <code>getUnreadCount()</code>, <code>markRead(id)</code>, <code>markAllRead()</code>, <code>remove(id)</code></td></tr>
+    <tr><td>BE Controller</td><td><code>notification/controller/NotificationController.java</code></td><td><span class="endpoint-pill pill-get">GET</span><span class="endpoint-pill pill-put">PUT</span><span class="endpoint-pill pill-delete">DELETE</span> /notifications · /unread-count · /{id}/read · /read-all</td></tr>
+    <tr><td>BE Entity</td><td><code>notification/entity/Notification.java</code> → <code>notifications</code> table</td><td>type, title, message, data (JSONB), read</td></tr>
+  </table>
+</div>
+
+<div class="section" id="map-infra">
+  <h2>Source Code Map — Infrastructure &amp; Config</h2>
+
+  <table>
+    <tr><th>Component</th><th>File / Location</th><th>Details</th></tr>
+    <tr><td>Security config</td><td><code>config/SecurityConfig.java</code></td><td>Public: /auth/**, /swagger-ui/**, /v3/api-docs/**, /actuator/health · All else: JWT required · OAuth2 Google · CORS enabled · CSRF disabled</td></tr>
+    <tr><td>JWT filter</td><td><code>config/JwtAuthenticationFilter.java</code></td><td>Validates Bearer token per request; extracts userId; sets SecurityContext</td></tr>
+    <tr><td>JWT utilities</td><td><code>auth/util/JwtUtil.java</code></td><td>generate(), validate(), extractUserId() for both access and refresh tokens</td></tr>
+    <tr><td>Redis cache</td><td><code>config/RedisConfig.java</code></td><td>TTL: 10 min. Uses Jackson + default typing. Keys: <code>categories::{userId}</code></td></tr>
+    <tr><td>Email service</td><td><code>notification/service/EmailService.java</code></td><td>JavaMailSender. Sends OTPs, 2FA codes, goal/budget alerts</td></tr>
+    <tr><td>File upload</td><td><code>transaction/service/FileStorageService.java</code></td><td>Saves receipts to UPLOAD_DIR/{userId}/. Returns URL path.</td></tr>
+    <tr><td>App config</td><td><code>resources/application.yml</code></td><td>DB: localhost:5433 · Redis: localhost:6380 · Server: :3000 · JWT expiry: 15min/7days · Upload limit: 5MB</td></tr>
+    <tr><td>FE proxy</td><td><code>frontend/vite.config.ts</code></td><td>Proxies /api → http://localhost:3000 during dev</td></tr>
+    <tr><td>FE environment</td><td><code>frontend/src/environments/environment.ts</code></td><td><code>{ production: false, apiUrl: '/api' }</code></td></tr>
+    <tr><td>Docker compose</td><td><code>docker-compose.yml</code></td><td>PostgreSQL 16 (:5433) + Redis 7 (:6380) + MailHog (:8025)</td></tr>
+    <tr><td>Angular budget</td><td><code>frontend/angular.json</code></td><td>anyComponentStyle warning: 20kB · error: 32kB · initial: 2MB/4MB</td></tr>
+  </table>
+</div>
+
+<div class="section" id="map-db">
+  <h2>Source Code Map — Database Schema</h2>
+
+  <h3>Flyway Migration History</h3>
+  <table>
+    <tr><th>Version</th><th>File</th><th>What it adds</th></tr>
+    <tr><td>V1</td><td><code>V1__init_schema.sql</code></td><td>All core tables: users, user_profiles, accounts, categories, auto_categorization_rules, transactions, transaction_tags, budgets, budget_alerts, savings_goals, goal_contributions, recurring_transactions, notifications, otp_codes, refresh_tokens, insights</td></tr>
+    <tr><td>V2</td><td><code>V2__seed_categories.sql</code></td><td>50+ system categories (Income, Expense, Transfer) with icons, colors, and keyword auto-categorization rules (Netflix, Starbucks, Salary, etc.)</td></tr>
+    <tr><td>V3</td><td><code>V3__add_oauth_provider.sql</code></td><td>OAuth2 support: <code>provider</code> column (LOCAL/GOOGLE), <code>provider_id</code>, make password nullable for OAuth users</td></tr>
+    <tr><td>V4</td><td><code>V4__add_transfer_support.sql</code></td><td>Transfer pair support: <code>transfer_pair_id UUID</code> and <code>transfer_credit BOOLEAN</code> on transactions table + index</td></tr>
+    <tr><td>V5</td><td><code>V5__add_account_bank_details.sql</code></td><td>Bank detail labels: <code>institution_name VARCHAR(100)</code> and <code>last_four CHAR(4)</code> on accounts table</td></tr>
+    <tr><td>V6</td><td><code>V6__fix_last_four_varchar.sql</code></td><td>Type fix: ALTER COLUMN last_four TYPE VARCHAR(4) — required because Hibernate 6 expects Types#VARCHAR but PostgreSQL CHAR maps to Types#CHAR (bpchar)</td></tr>
+  </table>
+
+  <h3>Entity Relationships</h3>
+  <pre><code>users
+ ├── user_profiles         (1:1)
+ ├── accounts              (1:many)
+ │    └── transactions     (1:many, via account_id)
+ ├── categories            (1:many, user-created; NULL user_id = system)
+ │    ├── categories        (self-ref, parent_id for hierarchy)
+ │    └── auto_categorization_rules  (1:many)
+ ├── transactions          (1:many, via user_id)
+ │    └── transaction_tags  (element collection)
+ ├── budgets               (1:many)
+ │    └── budget_alerts     (1:many)
+ ├── savings_goals         (1:many)
+ │    └── goal_contributions  (1:many)
+ ├── recurring_transactions  (1:many)
+ ├── notifications         (1:many)
+ ├── insights              (1:many)
+ ├── otp_codes             (1:many)
+ └── refresh_tokens        (1:many)</code></pre>
+
+  <h3>Key Indexes</h3>
+  <table>
+    <tr><th>Table</th><th>Index</th><th>Purpose</th></tr>
+    <tr><td>transactions</td><td><code>idx_transactions_user_date</code></td><td>Fast filtering by user + date range (dashboard, calendar, reports)</td></tr>
+    <tr><td>transactions</td><td><code>idx_transfer_pair_id</code></td><td>Fast lookup of transfer partner transaction</td></tr>
+    <tr><td>budgets</td><td><code>idx_budgets_user_period</code></td><td>Fast lookup by user + month + year</td></tr>
+    <tr><td>otp_codes</td><td><code>idx_otp_user_type</code></td><td>Fast OTP lookup at login / email verify</td></tr>
+    <tr><td>refresh_tokens</td><td><code>idx_refresh_token</code></td><td>Unique index on token string for fast invalidation</td></tr>
+  </table>
+</div>
+
+</main>
+
+<script>
+// Sidebar active state on scroll
+const sections = document.querySelectorAll('.section');
+const navItems = document.querySelectorAll('.nav-item');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      navItems.forEach(n => n.classList.remove('active'));
+      const link = document.querySelector('.nav-item[href="#' + e.target.id + '"]');
+      if (link) link.classList.add('active');
+    }
+  });
+}, { rootMargin: '-20% 0px -75% 0px' });
+sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>

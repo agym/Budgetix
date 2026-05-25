@@ -4,7 +4,9 @@
   <p>Manage your bank accounts, cash, and cards</p>
 </div>
 
-<div class="flex justify-content-end mb-3">
+<div class="flex justify-content-end gap-2 mb-3">
+  <p-button label="Transfer" icon="pi pi-arrows-h" severity="secondary" [outlined]="true"
+            (onClick)="openTransfer()" [disabled]="accounts().length < 2" />
   <p-button label="Add Account" icon="pi pi-plus" (onClick)="openCreate()" />
 </div>
 
@@ -18,7 +20,11 @@
           </div>
           <div>
             <div class="account-name">{{ account.name }}</div>
-            <div class="account-type text-muted">{{ account.type | titlecase }}</div>
+            <div class="account-type text-muted">
+              {{ account.type | titlecase }}
+              @if (account.institutionName) { · {{ account.institutionName }} }
+              @if (account.lastFour) { &nbsp;••••&nbsp;{{ account.lastFour }} }
+            </div>
           </div>
         </div>
         <div class="account-balance" [class.text-income]="account.balance >= 0"
@@ -27,6 +33,9 @@
         </div>
       </div>
       <div class="flex gap-2 mt-3 justify-content-end">
+        <p-button icon="pi pi-arrows-h" [rounded]="true" [text]="true" severity="secondary"
+                  title="Transfer from this account" (onClick)="openTransfer(account)"
+                  [disabled]="accounts().length < 2" />
         <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="secondary" (onClick)="openEdit(account)" />
         <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger" (onClick)="confirmDelete(account)" />
       </div>
@@ -67,9 +76,65 @@
       <label>Color</label>
       <input type="color" formControlName="color" style="width:60px;height:36px;border:none;padding:0;cursor:pointer"/>
     </div>
+    <div class="field">
+      <label>Institution Name <span class="text-muted">(optional)</span></label>
+      <input pInputText formControlName="institutionName" placeholder="e.g. Chase Bank, HSBC…" [style]="{width:'100%'}"/>
+    </div>
+    <div class="field">
+      <label>Last 4 digits <span class="text-muted">(optional)</span></label>
+      <input pInputText formControlName="lastFour" maxlength="4" placeholder="1234" [style]="{width:'100%'}"/>
+      @if (form.get('lastFour')?.errors?.['pattern']) {
+        <small class="p-error">Must be exactly 4 digits</small>
+      }
+    </div>
   </form>
   <ng-template pTemplate="footer">
     <p-button label="Cancel" [text]="true" (onClick)="showForm=false"/>
     <p-button [label]="editId ? 'Save' : 'Create'" (onClick)="submit()"/>
+  </ng-template>
+</p-dialog>
+
+<!-- Transfer dialog -->
+<p-dialog [(visible)]="showTransfer" header="Transfer Between Accounts"
+          [modal]="true" [style]="{width:'440px'}" [draggable]="false">
+  <form [formGroup]="transferForm" class="flex flex-column gap-3 pt-2">
+
+    <div class="transfer-flow">
+      <div class="field" style="flex:1">
+        <label>From Account *</label>
+        <p-dropdown formControlName="fromAccountId" [options]="accounts()"
+                    optionLabel="name" optionValue="id" placeholder="Source"
+                    [style]="{width:'100%'}"/>
+      </div>
+      <div class="transfer-arrow"><i class="pi pi-arrow-right"></i></div>
+      <div class="field" style="flex:1">
+        <label>To Account *</label>
+        <p-dropdown formControlName="toAccountId"
+                    [options]="toOptions(transferForm.get('fromAccountId')?.value)"
+                    optionLabel="name" optionValue="id" placeholder="Destination"
+                    [style]="{width:'100%'}"/>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Amount *</label>
+      <input pInputText formControlName="amount" type="number" placeholder="0.00" [style]="{width:'100%'}"/>
+    </div>
+
+    <div class="field">
+      <label>Date *</label>
+      <p-calendar formControlName="date" dateFormat="yy-mm-dd" [style]="{width:'100%'}"/>
+    </div>
+
+    <div class="field">
+      <label>Description</label>
+      <input pInputText formControlName="description" placeholder="Optional memo…" [style]="{width:'100%'}"/>
+    </div>
+
+  </form>
+  <ng-template pTemplate="footer">
+    <p-button label="Cancel" [text]="true" (onClick)="showTransfer=false"/>
+    <p-button label="Execute Transfer" icon="pi pi-arrows-h"
+              (onClick)="submitTransfer()" [loading]="transferring()"/>
   </ng-template>
 </p-dialog>

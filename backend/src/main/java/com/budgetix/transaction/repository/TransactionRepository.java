@@ -47,4 +47,6 @@ public interface TransactionRepository extends JpaRepository<Transaction, UUID>,
 
     @Query("SELECT COUNT(t) FROM Transaction t WHERE t.category.id = :categoryId AND t.user.id = :userId")
     long countByCategory(UUID categoryId, UUID userId);
+
+    Optional<Transaction> findByTransferPairIdAndIdNot(UUID transferPairId, UUID id);
 }

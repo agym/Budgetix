@@ -17,6 +17,6 @@ public record TransactionFilterRequest(
 ) {
     public TransactionFilterRequest {
         if (page < 0) page = 0;
-        if (size <= 0 || size > 100) size = 20;
+        if (size <= 0 || size > 1000) size = 20;
     }
 }

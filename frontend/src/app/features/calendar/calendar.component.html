@@ -1,0 +1,94 @@
+<p-toast />
+
+<div class="page-header">
+  <div>
+    <h1>Financial Calendar</h1>
+    <p>A day-by-day view of your income and expenses</p>
+  </div>
+</div>
+
+<!-- Month navigator + summary strip -->
+<div class="cal-toolbar">
+  <div class="cal-nav">
+    <button class="nav-btn" (click)="prev()"><i class="pi pi-chevron-left"></i></button>
+    <span class="month-label">{{ monthLabel() }}</span>
+    <button class="nav-btn" (click)="next()"><i class="pi pi-chevron-right"></i></button>
+    <button class="today-btn" (click)="today()">Today</button>
+  </div>
+
+  @if (!loading()) {
+    <div class="cal-summary">
+      <div class="summary-pill income">
+        <i class="pi pi-arrow-down-left"></i>
+        <span>{{ monthIncome() | currency }}</span>
+      </div>
+      <div class="summary-pill expense">
+        <i class="pi pi-arrow-up-right"></i>
+        <span>{{ monthExpense() | currency }}</span>
+      </div>
+      <div class="summary-pill net" [class.positive]="monthIncome() >= monthExpense()"
+                                    [class.negative]="monthIncome() < monthExpense()">
+        <i class="pi pi-wallet"></i>
+        <span>{{ (monthIncome() - monthExpense()) | currency }}</span>
+      </div>
+    </div>
+  }
+</div>
+
+<!-- Calendar grid -->
+<div class="cal-grid-wrap card">
+
+  <!-- Week day headers -->
+  <div class="cal-header-row">
+    @for (day of weekDays; track day) {
+      <div class="cal-header-cell">{{ day }}</div>
+    }
+  </div>
+
+  <!-- Day cells -->
+  @if (loading()) {
+    <div class="cal-body">
+      @for (i of [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35]; track i) {
+        <p-skeleton height="100px" borderRadius="8px" />
+      }
+    </div>
+  } @else {
+    <div class="cal-body">
+      @for (day of days(); track day.date) {
+        <div class="cal-day"
+             [class.other-month]="!day.isCurrentMonth"
+             [class.today]="day.isToday"
+             [class.has-tx]="day.transactions.length > 0">
+
+          <div class="day-num">{{ day.date.getDate() }}</div>
+
+          @if (day.transactions.length > 0) {
+            <div class="day-amounts">
+              @if (day.totalIncome > 0) {
+                <span class="amt income">+{{ day.totalIncome | currency:'USD':'symbol':'1.0-0' }}</span>
+              }
+              @if (day.totalExpense > 0) {
+                <span class="amt expense">-{{ day.totalExpense | currency:'USD':'symbol':'1.0-0' }}</span>
+              }
+            </div>
+
+            <div class="day-tx-list">
+              @for (tx of day.transactions.slice(0, 3); track tx.id) {
+                <div class="tx-pill" [class.income]="tx.type==='INCOME'"
+                     [class.expense]="tx.type==='EXPENSE'"
+                     [class.transfer]="tx.type==='TRANSFER'"
+                     [title]="tx.description || tx.type">
+                  <span class="tx-pill-desc">{{ tx.description || tx.type }}</span>
+                  <span class="tx-pill-amt">{{ tx.amount | currency:'USD':'symbol':'1.0-0' }}</span>
+                </div>
+              }
+              @if (day.transactions.length > 3) {
+                <div class="tx-more">+{{ day.transactions.length - 3 }} more</div>
+              }
+            </div>
+          }
+        </div>
+      }
+    </div>
+  }
+</div>

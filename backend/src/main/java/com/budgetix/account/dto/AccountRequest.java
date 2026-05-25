@@ -13,5 +13,7 @@ public record AccountRequest(
     String currency,
     String color,
     String icon,
-    boolean isDefault
+    boolean isDefault,
+    String institutionName,
+    String lastFour
 ) {}

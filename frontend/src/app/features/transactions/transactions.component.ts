@@ -12,6 +12,8 @@ import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { SkeletonModule } from 'primeng/skeleton';
 import { FileUploadModule } from 'primeng/fileupload';
+import { ChipModule } from 'primeng/chip';
+import { InputTextareaModule } from 'primeng/inputtextarea';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { TransactionService } from '../../core/services/transaction.service';
 import { CategoryService } from '../../core/services/category.service';
@@ -28,7 +30,7 @@ import { Account } from '../../core/models/account.model';
     CurrencyPipe, DatePipe, DecimalPipe, FormsModule, ReactiveFormsModule,
     TableModule, ButtonModule, DialogModule, InputTextModule,
     DropdownModule, CalendarModule, TagModule, ToastModule,
-    ConfirmDialogModule, SkeletonModule, FileUploadModule
+    ConfirmDialogModule, SkeletonModule, FileUploadModule, ChipModule, InputTextareaModule
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './transactions.component.html',
@@ -53,6 +55,8 @@ export class TransactionsComponent implements OnInit {
   filterAccount = '';
   importAccountId = '';
   csvFile: File | null = null;
+  tagInput = '';
+  formTags: string[] = [];
 
   typeOptions = [
     { label: 'Income',   value: 'INCOME' },
@@ -80,6 +84,7 @@ export class TransactionsComponent implements OnInit {
       accountId:   [null, Validators.required],
       categoryId:  [null],
       description: [''],
+      notes:       [''],
       date:        [new Date(), Validators.required]
     });
 
@@ -118,25 +123,40 @@ export class TransactionsComponent implements OnInit {
 
   openCreate(): void {
     this.editId = null;
+    this.formTags = [];
+    this.tagInput = '';
     this.form.reset({ type: 'EXPENSE', date: new Date() });
     this.showForm = true;
   }
 
   openEdit(tx: Transaction): void {
     this.editId = tx.id;
+    this.formTags = [...(tx.tags ?? [])];
+    this.tagInput = '';
     this.form.patchValue({
       type: tx.type, amount: tx.amount,
       accountId: tx.account.id, categoryId: tx.category?.id,
-      description: tx.description, date: new Date(tx.date)
+      description: tx.description, notes: tx.notes ?? '',
+      date: new Date(tx.date)
     });
     this.showForm = true;
+  }
+
+  addTag(): void {
+    const t = this.tagInput.trim().toLowerCase();
+    if (t && !this.formTags.includes(t)) this.formTags.push(t);
+    this.tagInput = '';
+  }
+
+  removeTag(tag: string): void {
+    this.formTags = this.formTags.filter(t => t !== tag);
   }
 
   submit(): void {
     if (this.form.invalid) return;
     this.submitting.set(true);
     const val = this.form.value;
-    const req = { ...val, date: val.date.toISOString() };
+    const req = { ...val, date: val.date.toISOString(), tags: this.formTags };
     const obs = this.editId ? this.txService.update(this.editId, req) : this.txService.create(req);
     obs.subscribe({
       next: () => {

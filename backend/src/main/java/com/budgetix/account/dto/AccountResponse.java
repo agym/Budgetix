@@ -16,10 +16,13 @@ public record AccountResponse(
     String color,
     String icon,
     boolean isDefault,
+    String institutionName,
+    String lastFour,
     LocalDateTime createdAt
 ) {
     public static AccountResponse from(Account a) {
         return new AccountResponse(a.getId(), a.getName(), a.getType(), a.getBalance(),
-            a.getCurrency(), a.getColor(), a.getIcon(), a.isDefault(), a.getCreatedAt());
+            a.getCurrency(), a.getColor(), a.getIcon(), a.isDefault(),
+            a.getInstitutionName(), a.getLastFour(), a.getCreatedAt());
     }
 }

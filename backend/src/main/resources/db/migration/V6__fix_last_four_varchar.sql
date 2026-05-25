@@ -1,0 +1,1 @@
+ALTER TABLE accounts ALTER COLUMN last_four TYPE VARCHAR(4);

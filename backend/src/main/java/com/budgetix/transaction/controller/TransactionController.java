@@ -5,6 +5,7 @@ import com.budgetix.common.dto.PageResponse;
 import com.budgetix.transaction.dto.TransactionFilterRequest;
 import com.budgetix.transaction.dto.TransactionRequest;
 import com.budgetix.transaction.dto.TransactionResponse;
+import com.budgetix.transaction.dto.TransferRequest;
 import com.budgetix.transaction.service.CsvImportService;
 import com.budgetix.transaction.service.TransactionService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -77,6 +78,14 @@ public class TransactionController {
     public ResponseEntity<ApiResponse<Void>> delete(@AuthenticationPrincipal UserDetails p, @PathVariable UUID id) {
         transactionService.delete(uid(p), id);
         return ResponseEntity.ok(ApiResponse.ok("Transaction deleted"));
+    }
+
+    @PostMapping("/transfer")
+    public ResponseEntity<ApiResponse<List<TransactionResponse>>> transfer(
+            @AuthenticationPrincipal UserDetails p,
+            @Valid @RequestBody TransferRequest req) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .body(ApiResponse.created(transactionService.transfer(uid(p), req)));
     }
 
     @PostMapping("/bulk-delete")

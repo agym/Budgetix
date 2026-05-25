@@ -12,7 +12,17 @@ export interface Transaction {
   tags: string[];
   account: { id: string; name: string; icon?: string; color?: string };
   category?: { id: string; name: string; icon?: string; color?: string };
+  transferPairId?: string;
+  transferCredit?: boolean;
   createdAt: string;
+}
+
+export interface TransferRequest {
+  fromAccountId: string;
+  toAccountId: string;
+  amount: number;
+  date: string;
+  description?: string;
 }
 
 export interface TransactionRequest {

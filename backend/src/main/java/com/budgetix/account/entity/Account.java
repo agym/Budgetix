@@ -42,6 +42,12 @@ public class Account {
     private String color;
     private String icon;
 
+    @Column(name = "institution_name", length = 100)
+    private String institutionName;
+
+    @Column(name = "last_four", length = 4)
+    private String lastFour;
+
     @Column(name = "is_default")
     @Builder.Default
     private boolean isDefault = false;

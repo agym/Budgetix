@@ -122,6 +122,33 @@
 label        { font-size: 0.8rem; font-weight: 600; color: var(--text-color); }
 .req         { color: #ef4444; }
 
+/* ── Tag input ── */
+.tag-input-row {
+  display: flex; gap: 0.4rem; align-items: center;
+}
+.tag-add-btn {
+  width: 36px; height: 40px; border-radius: 8px; border: 1.5px solid var(--input-border);
+  background: var(--input-bg); color: var(--text-color-secondary); cursor: pointer;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  transition: background 0.12s, border-color 0.12s, color 0.12s;
+  &:hover { background: var(--primary-50); border-color: var(--primary); color: var(--primary); }
+}
+.tag-chips {
+  display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.45rem;
+}
+.tag-chip {
+  display: inline-flex; align-items: center; gap: 0.3rem;
+  background: var(--primary-50); color: var(--primary);
+  border: 1px solid var(--primary-200); border-radius: 9999px;
+  padding: 0.18rem 0.55rem; font-size: 0.75rem; font-weight: 600;
+  button {
+    background: none; border: none; cursor: pointer; padding: 0; line-height: 1;
+    color: inherit; opacity: 0.7; display: flex; align-items: center;
+    i { font-size: 0.62rem; }
+    &:hover { opacity: 1; }
+  }
+}
+
 /* ── Import dialog ── */
 .import-body { display: flex; flex-direction: column; gap: 1rem; }
 .import-format-hint {

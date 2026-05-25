@@ -5,17 +5,19 @@ import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { DropdownModule } from 'primeng/dropdown';
+import { CalendarModule } from 'primeng/calendar';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { AccountService } from '../../core/services/account.service';
+import { TransactionService } from '../../core/services/transaction.service';
 import { Account, AccountType } from '../../core/models/account.model';
 
 @Component({
   selector: 'app-accounts',
   standalone: true,
   imports: [CurrencyPipe, TitleCasePipe, FormsModule, ReactiveFormsModule, ButtonModule, DialogModule,
-    InputTextModule, DropdownModule, ToastModule, ConfirmDialogModule],
+    InputTextModule, DropdownModule, CalendarModule, ToastModule, ConfirmDialogModule],
   providers: [MessageService, ConfirmationService],
   templateUrl: './accounts.component.html',
   styleUrl: './accounts.component.scss'
@@ -23,8 +25,11 @@ import { Account, AccountType } from '../../core/models/account.model';
 export class AccountsComponent implements OnInit {
   accounts = signal<Account[]>([]);
   showForm = false;
+  showTransfer = false;
   editId: string | null = null;
   form!: FormGroup;
+  transferForm!: FormGroup;
+  transferring = signal(false);
 
   typeOptions = [
     { label: 'Cash', value: 'CASH' },
@@ -36,6 +41,7 @@ export class AccountsComponent implements OnInit {
 
   constructor(
     private accountService: AccountService,
+    private txService: TransactionService,
     private fb: FormBuilder,
     private toast: MessageService,
     private confirm: ConfirmationService
@@ -47,9 +53,49 @@ export class AccountsComponent implements OnInit {
       type: ['BANK', Validators.required],
       initialBalance: [0],
       currency: ['USD'],
-      color: ['#6366f1']
+      color: ['#6366f1'],
+      institutionName: [''],
+      lastFour: ['', [Validators.pattern(/^\d{4}$/)]]
+    });
+    this.transferForm = this.fb.group({
+      fromAccountId: [null, Validators.required],
+      toAccountId:   [null, Validators.required],
+      amount:        [null, [Validators.required, Validators.min(0.01)]],
+      date:          [new Date(), Validators.required],
+      description:   ['']
     });
     this.load();
+  }
+
+  openTransfer(preselect?: Account): void {
+    this.transferForm.reset({ date: new Date(), fromAccountId: preselect?.id ?? null });
+    this.showTransfer = true;
+  }
+
+  submitTransfer(): void {
+    if (this.transferForm.invalid) return;
+    const val = this.transferForm.value;
+    if (val.fromAccountId === val.toAccountId) {
+      this.toast.add({ severity: 'error', summary: 'Select two different accounts' });
+      return;
+    }
+    this.transferring.set(true);
+    this.txService.transfer({ ...val, date: val.date.toISOString() }).subscribe({
+      next: () => {
+        this.toast.add({ severity: 'success', summary: 'Transfer completed' });
+        this.showTransfer = false;
+        this.transferring.set(false);
+        this.load();
+      },
+      error: (e) => {
+        this.toast.add({ severity: 'error', summary: e.error?.error || 'Transfer failed' });
+        this.transferring.set(false);
+      }
+    });
+  }
+
+  toOptions(excludeId: string | null): Account[] {
+    return this.accounts().filter(a => a.id !== excludeId);
   }
 
   load(): void {
@@ -64,7 +110,10 @@ export class AccountsComponent implements OnInit {
 
   openEdit(a: Account): void {
     this.editId = a.id;
-    this.form.patchValue({ name: a.name, type: a.type, currency: a.currency, color: a.color });
+    this.form.patchValue({
+      name: a.name, type: a.type, currency: a.currency, color: a.color,
+      institutionName: a.institutionName ?? '', lastFour: a.lastFour ?? ''
+    });
     this.showForm = true;
   }
 

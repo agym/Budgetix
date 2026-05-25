@@ -62,6 +62,13 @@ public class Transaction {
     @Column(name = "recurring_id")
     private UUID recurringId;
 
+    @Column(name = "transfer_pair_id")
+    private UUID transferPairId;
+
+    @Column(name = "transfer_credit")
+    @Builder.Default
+    private boolean transferCredit = false;
+
     @ElementCollection
     @CollectionTable(name = "transaction_tags", joinColumns = @JoinColumn(name = "transaction_id"))
     @Column(name = "tag")

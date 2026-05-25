@@ -20,6 +20,8 @@ public record TransactionResponse(
     Set<String> tags,
     AccountRef account,
     CategoryRef category,
+    UUID transferPairId,
+    boolean transferCredit,
     LocalDateTime createdAt
 ) {
     public record AccountRef(UUID id, String name, String icon, String color) {}
@@ -38,6 +40,6 @@ public record TransactionResponse(
 
         return new TransactionResponse(t.getId(), t.getAmount(), t.getType(), t.getDescription(),
             t.getNotes(), t.getDate(), t.getReceipt(), t.isRecurring(), t.getTags(),
-            account, category, t.getCreatedAt());
+            account, category, t.getTransferPairId(), t.isTransferCredit(), t.getCreatedAt());
     }
 }

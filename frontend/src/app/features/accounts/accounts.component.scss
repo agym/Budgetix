@@ -75,6 +75,19 @@
   display: flex; gap: 0.35rem;
 }
 
+/* ── Transfer dialog ── */
+.transfer-flow {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.75rem;
+}
+.transfer-arrow {
+  padding-bottom: 0.6rem;
+  color: var(--primary);
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
 /* ── Dialog form ── */
 .dialog-form { display: flex; flex-direction: column; gap: 0.9rem; padding-top: 0.25rem; }
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; }

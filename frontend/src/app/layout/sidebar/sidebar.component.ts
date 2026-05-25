@@ -34,16 +34,19 @@ export class SidebarComponent {
     {
       heading: 'Finance',
       items: [
-        { label: 'Accounts',     icon: 'pi-building-columns', route: '/accounts' },
-        { label: 'Budgets',      icon: 'pi-chart-bar',        route: '/budgets' },
-        { label: 'Goals',        icon: 'pi-flag',             route: '/goals' },
+        { label: 'Accounts',     icon: 'pi-building-columns', route: '/accounts'    },
+        { label: 'Budgets',      icon: 'pi-chart-bar',        route: '/budgets'     },
+        { label: 'Goals',        icon: 'pi-flag',             route: '/goals'       },
+        { label: 'Recurring',    icon: 'pi-sync',             route: '/recurring'   },
+        { label: 'Categories',   icon: 'pi-tag',              route: '/categories'  },
       ]
     },
     {
       heading: 'Insights',
       items: [
-        { label: 'Insights',     icon: 'pi-lightbulb',        route: '/insights' },
-        { label: 'Reports',      icon: 'pi-file-pdf',         route: '/reports' },
+        { label: 'Calendar',     icon: 'pi-calendar',         route: '/calendar'    },
+        { label: 'Insights',     icon: 'pi-lightbulb',        route: '/insights'    },
+        { label: 'Reports',      icon: 'pi-file-pdf',         route: '/reports'     },
       ]
     },
     {

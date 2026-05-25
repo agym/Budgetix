@@ -1,0 +1,163 @@
+<p-toast /><p-confirmDialog />
+<div class="page-header">
+  <h1>Categories</h1>
+  <p>Manage income and expense categories, and define auto-categorization rules</p>
+</div>
+
+<div class="flex justify-content-end mb-3">
+  <p-button label="New Category" icon="pi pi-plus" (onClick)="openCreate()" />
+</div>
+
+<!-- User-created categories -->
+<section class="section">
+  <div class="section-title">Your Categories</div>
+
+  @if (userCategories().length === 0) {
+    <div class="empty-state">
+      <i class="pi pi-tag"></i>
+      <p>No custom categories yet. Create one to start organizing your transactions.</p>
+    </div>
+  }
+
+  <div class="cat-grid">
+    @for (c of userCategories(); track c.id) {
+      <div class="card cat-card">
+        <div class="cat-header">
+          <div class="cat-icon" [style.background]="c.color || '#6366f1'">
+            <i [class]="'pi ' + (c.icon || 'pi-tag')"></i>
+          </div>
+          <div class="cat-info">
+            <div class="cat-name">{{ c.name }}</div>
+            @if (c.parentId) {
+              <div class="cat-parent text-muted">Sub-category</div>
+            }
+          </div>
+          <p-tag [value]="c.type" [severity]="typeSeverity(c.type)" />
+        </div>
+
+        @if (c.children.length > 0) {
+          <div class="children-list">
+            @for (ch of c.children; track ch.id) {
+              <div class="child-item">
+                <i [class]="'pi ' + (ch.icon || 'pi-tag')" [style.color]="ch.color || '#6366f1'"></i>
+                <span>{{ ch.name }}</span>
+              </div>
+            }
+          </div>
+        }
+
+        <div class="cat-actions">
+          <p-button label="Rules" icon="pi pi-bolt" [outlined]="true" size="small"
+                    (onClick)="openRules(c)" />
+          <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" size="small"
+                    (onClick)="openEdit(c)" />
+          <p-button icon="pi pi-trash" [rounded]="true" [text]="true"
+                    severity="danger" size="small" (onClick)="deleteCategory(c)" />
+        </div>
+      </div>
+    }
+  </div>
+</section>
+
+<!-- System categories (read-only) -->
+<section class="section mt-4">
+  <div class="section-title">System Categories <span class="section-badge">read-only</span></div>
+  <div class="cat-grid">
+    @for (c of systemCategories(); track c.id) {
+      <div class="card cat-card system-card">
+        <div class="cat-header">
+          <div class="cat-icon" [style.background]="c.color || '#64748b'">
+            <i [class]="'pi ' + (c.icon || 'pi-tag')"></i>
+          </div>
+          <div class="cat-info">
+            <div class="cat-name">{{ c.name }}</div>
+            @if (c.children.length > 0) {
+              <div class="text-muted" style="font-size:0.75rem">{{ c.children.length }} sub-categories</div>
+            }
+          </div>
+          <p-tag [value]="c.type" [severity]="typeSeverity(c.type)" />
+        </div>
+
+        <div class="cat-actions">
+          <p-button label="Rules" icon="pi pi-bolt" [outlined]="true" size="small"
+                    (onClick)="openRules(c)" />
+        </div>
+      </div>
+    }
+  </div>
+</section>
+
+<!-- Create / Edit dialog -->
+<p-dialog [(visible)]="showForm"
+          [header]="editTarget ? 'Edit Category' : 'New Category'"
+          [modal]="true" [style]="{width:'420px'}">
+  <form [formGroup]="form" class="flex flex-column gap-3 pt-2">
+
+    <div class="field">
+      <label>Name *</label>
+      <input pInputText formControlName="name" placeholder='e.g. "Groceries"' [style]="{width:'100%'}"/>
+    </div>
+
+    <div class="form-row">
+      <div class="field">
+        <label>Type *</label>
+        <p-dropdown formControlName="type" [options]="typeOptions"
+                    optionLabel="label" optionValue="value" [style]="{width:'100%'}"/>
+      </div>
+      <div class="field">
+        <label>Color</label>
+        <input type="color" formControlName="color" class="color-picker"/>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Icon</label>
+      <div class="icon-grid">
+        @for (icon of iconOptions; track icon) {
+          <button type="button" class="icon-btn-pick"
+                  [class.selected]="form.get('icon')?.value === icon"
+                  [style.color]="form.get('color')?.value || '#6366f1'"
+                  (click)="form.get('icon')?.setValue(icon)">
+            <i [class]="'pi ' + icon"></i>
+          </button>
+        }
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Parent Category (for sub-categories)</label>
+      <p-dropdown formControlName="parentId" [options]="parentOptions()"
+                  optionLabel="name" optionValue="id"
+                  placeholder="None (top-level)"
+                  [showClear]="true" [style]="{width:'100%'}"/>
+    </div>
+
+  </form>
+  <ng-template pTemplate="footer">
+    <p-button label="Cancel" [text]="true" (onClick)="showForm=false"/>
+    <p-button [label]="editTarget ? 'Save' : 'Create'" icon="pi pi-check" (onClick)="submit()"/>
+  </ng-template>
+</p-dialog>
+
+<!-- Auto-categorization rules dialog -->
+<p-dialog [(visible)]="showRuleDialog"
+          [header]="'Auto-categorization Rules — ' + (ruleTarget?.name ?? '')"
+          [modal]="true" [style]="{width:'420px'}">
+  <div class="flex flex-column gap-3 pt-2">
+    <p class="text-muted" style="font-size:0.85rem">
+      When a transaction description matches a keyword, it is automatically assigned to
+      <strong>{{ ruleTarget?.name }}</strong>.
+    </p>
+    <div class="add-rule-row">
+      <input pInputText [(ngModel)]="newKeyword" placeholder='e.g. "netflix"'
+             (keyup.enter)="addRule()" style="flex:1"/>
+      <p-button label="Add" icon="pi pi-plus" (onClick)="addRule()" [disabled]="!newKeyword.trim()"/>
+    </div>
+    <p class="text-muted" style="font-size:0.8rem">
+      Keywords are case-insensitive and match partial descriptions.
+    </p>
+  </div>
+  <ng-template pTemplate="footer">
+    <p-button label="Done" (onClick)="showRuleDialog=false"/>
+  </ng-template>
+</p-dialog>

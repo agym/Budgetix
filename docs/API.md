@@ -213,9 +213,10 @@ List all accounts for the authenticated user.
 {
   "data": [
     {
-      "id": "...", "name": "Main Checking", "type": "CHECKING",
+      "id": "...", "name": "Main Checking", "type": "BANK",
       "balance": 3200.50, "currency": "USD", "color": "#2563eb",
-      "icon": "pi-wallet", "isDefault": true
+      "icon": "pi-wallet", "isDefault": true,
+      "institutionName": "Chase Bank", "lastFour": "4821"
     }
   ]
 }
@@ -229,22 +230,36 @@ Create a new account.
 **Request**
 ```json
 {
-  "name": "Emergency Savings",
-  "type": "SAVINGS",
-  "balance": 1000.00,
+  "name": "Main Checking",
+  "type": "BANK",
+  "initialBalance": 3200.50,
   "currency": "USD",
-  "color": "#10b981",
-  "icon": "pi-shield",
-  "isDefault": false
+  "color": "#2563eb",
+  "icon": "pi-wallet",
+  "isDefault": true,
+  "institutionName": "Chase Bank",
+  "lastFour": "4821"
 }
 ```
 
 Account types: `CASH`, `BANK`, `CREDIT_CARD`, `SAVINGS`, `INVESTMENT`
 
+| Field | Required | Notes |
+|-------|----------|-------|
+| `name` | Yes | Display name |
+| `type` | Yes | One of the 5 account types |
+| `initialBalance` | No | Starting balance (create only); defaults to 0 |
+| `currency` | No | ISO 4217 code; defaults to USD |
+| `color` | No | Hex color for UI |
+| `icon` | No | PrimeIcons class name |
+| `isDefault` | No | If true, clears the flag from any other account |
+| `institutionName` | No | Bank/institution name shown on the account card |
+| `lastFour` | No | Last 4 digits of account or card number (exactly 4 digits) |
+
 ---
 
 ### PUT `/accounts/{id}`
-Update an account (same body as POST).
+Update an account (same body as POST, `initialBalance` is ignored on update).
 
 ---
 
@@ -348,6 +363,36 @@ Upload a receipt image or PDF. `multipart/form-data`, field name `file`.
 ```json
 { "data": "/uploads/receipts/{userId}/{filename}" }
 ```
+
+---
+
+### POST `/transactions/transfer`
+Create a linked account-to-account transfer. Atomically creates two `TRANSFER` transactions (debit + credit) sharing a `transferPairId`, and updates both account balances.
+
+**Request**
+```json
+{
+  "fromAccountId": "uuid",
+  "toAccountId":   "uuid",
+  "amount":        500.00,
+  "date":          "2026-05-20T10:00:00",
+  "description":   "Move savings (optional)"
+}
+```
+
+**Response** `201 Created`
+```json
+{
+  "data": [
+    { "id": "uuid-debit",  "type": "TRANSFER", "transferCredit": false, "account": { "name": "Checking" }, ... },
+    { "id": "uuid-credit", "type": "TRANSFER", "transferCredit": true,  "account": { "name": "Savings"  }, ... }
+  ]
+}
+```
+
+**Errors**
+- `400` — `fromAccountId` equals `toAccountId`
+- `404` — Either account not found or not owned by the user
 
 ---
 
@@ -533,12 +578,12 @@ List all notifications (most recent first).
 
 ---
 
-### PATCH `/notifications/{id}/read`
+### PUT `/notifications/{id}/read`
 Mark a single notification as read.
 
 ---
 
-### PATCH `/notifications/read-all`
+### PUT `/notifications/read-all`
 Mark all notifications as read.
 
 ---
@@ -560,7 +605,7 @@ Trigger on-demand insight generation for the authenticated user. Analyses curren
 
 ---
 
-### PATCH `/insights/{id}/dismiss`
+### DELETE `/insights/{id}/dismiss`
 Dismiss an insight permanently.
 
 ---

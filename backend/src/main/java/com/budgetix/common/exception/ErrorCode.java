@@ -34,6 +34,7 @@ public enum ErrorCode {
     INSUFFICIENT_GOAL_BALANCE(HttpStatus.BAD_REQUEST, "Contribution exceeds goal target"),
     CANNOT_DELETE_SYSTEM_CATEGORY(HttpStatus.FORBIDDEN, "Cannot delete system category"),
     ACCOUNT_HAS_TRANSACTIONS(HttpStatus.CONFLICT, "Cannot delete account with existing transactions"),
+    INVALID_TRANSFER(HttpStatus.BAD_REQUEST, "Source and destination accounts must be different"),
     INVALID_CSV_FORMAT(HttpStatus.BAD_REQUEST, "Invalid CSV format"),
     FILE_TOO_LARGE(HttpStatus.PAYLOAD_TOO_LARGE, "File size exceeds limit"),
     UNSUPPORTED_FILE_TYPE(HttpStatus.BAD_REQUEST, "Unsupported file type"),

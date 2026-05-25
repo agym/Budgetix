@@ -1,0 +1,198 @@
+.page-header {
+  margin-bottom: 1.25rem;
+  h1 { font-size: 1.4rem; font-weight: 700; color: var(--text-color); letter-spacing: -0.02em; }
+  p  { color: var(--text-color-secondary); font-size: 0.875rem; margin-top: 0.2rem; }
+}
+
+/* ── Toolbar ── */
+.cal-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.cal-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.month-label {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-color);
+  min-width: 180px;
+  text-align: center;
+  letter-spacing: -0.01em;
+}
+
+.nav-btn {
+  width: 34px; height: 34px; border-radius: 8px;
+  border: 1px solid var(--border); background: var(--bg-card);
+  color: var(--text-color-secondary); cursor: pointer; font-size: 0.8rem;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.13s, border-color 0.13s, color 0.13s;
+  &:hover { background: var(--bg-hover); border-color: var(--border-hover); color: var(--text-color); }
+}
+
+.today-btn {
+  height: 34px; padding: 0 1rem; border-radius: 8px;
+  border: 1px solid var(--primary-200); background: var(--primary-50);
+  color: var(--primary); font-size: 0.8rem; font-weight: 600; cursor: pointer;
+  transition: background 0.13s, color 0.13s;
+  &:hover { background: var(--primary); color: white; }
+}
+
+.cal-summary {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.summary-pill {
+  display: inline-flex; align-items: center; gap: 0.35rem;
+  padding: 0.3rem 0.75rem; border-radius: 9999px;
+  font-size: 0.8rem; font-weight: 700;
+  i { font-size: 0.72rem; }
+
+  &.income   { background: rgba(22,163,74,0.1);  color: #16a34a; }
+  &.expense  { background: rgba(220,38,38,0.1);  color: #dc2626; }
+  &.net      { background: var(--surface-100); color: var(--text-color-secondary); }
+  &.net.positive { background: rgba(22,163,74,0.1);  color: #16a34a; }
+  &.net.negative { background: rgba(220,38,38,0.1);  color: #dc2626; }
+}
+
+/* ── Grid wrapper ── */
+.cal-grid-wrap {
+  padding: 0;
+  overflow: hidden;
+}
+
+/* ── Header row ── */
+.cal-header-row {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  border-bottom: 1px solid var(--border);
+}
+
+.cal-header-cell {
+  text-align: center;
+  padding: 0.6rem 0;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-color-secondary);
+}
+
+/* ── Day grid ── */
+.cal-body {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.cal-day {
+  min-height: 100px;
+  padding: 0.45rem 0.5rem 0.5rem;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-card);
+  transition: background 0.12s;
+
+  &:nth-child(7n) { border-right: none; }
+
+  &.other-month {
+    background: var(--bg-elevated);
+    .day-num { color: var(--surface-400); }
+  }
+
+  &.today {
+    background: var(--primary-50);
+    .day-num {
+      background: var(--primary);
+      color: white;
+      border-radius: 50%;
+      width: 22px; height: 22px;
+      display: flex; align-items: center; justify-content: center;
+    }
+  }
+
+  &.has-tx:hover { background: var(--bg-hover); }
+}
+
+.day-num {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-color);
+  margin-bottom: 0.3rem;
+  width: 22px; height: 22px;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.day-amounts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin-bottom: 0.3rem;
+}
+
+.amt {
+  font-size: 0.66rem;
+  font-weight: 700;
+  padding: 0.1rem 0.35rem;
+  border-radius: 4px;
+  &.income  { background: rgba(22,163,74,0.12);  color: #16a34a; }
+  &.expense { background: rgba(220,38,38,0.12);  color: #dc2626; }
+}
+
+.day-tx-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.tx-pill {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.25rem;
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.64rem;
+  font-weight: 600;
+  overflow: hidden;
+
+  &.income   { background: rgba(22,163,74,0.1);  color: #16a34a; }
+  &.expense  { background: rgba(220,38,38,0.1);  color: #dc2626; }
+  &.transfer { background: var(--primary-50);    color: var(--primary); }
+}
+
+.tx-pill-desc {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tx-pill-amt { flex-shrink: 0; font-weight: 700; }
+
+.tx-more {
+  font-size: 0.62rem;
+  color: var(--text-color-secondary);
+  text-align: right;
+  padding-right: 0.25rem;
+}
+
+@media (max-width: 768px) {
+  .cal-day { min-height: 70px; padding: 0.3rem; }
+  .tx-pill-desc { display: none; }
+  .month-label { min-width: 140px; font-size: 0.95rem; }
+}
+
+@media (max-width: 480px) {
+  .cal-day { min-height: 50px; }
+  .day-amounts, .day-tx-list { display: none; }
+}

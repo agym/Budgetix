@@ -216,6 +216,31 @@
       <label>Date <span class="req">*</span></label>
       <p-calendar formControlName="date" [showTime]="false" dateFormat="yy-mm-dd" [style]="{width:'100%'}"/>
     </div>
+    <div class="field">
+      <label>Notes</label>
+      <textarea pInputTextarea formControlName="notes" rows="2"
+                placeholder="Optional notes or memo…" style="width:100%;resize:vertical"></textarea>
+    </div>
+    <div class="field">
+      <label>Tags</label>
+      <div class="tag-input-row">
+        <input pInputText [(ngModel)]="tagInput" [ngModelOptions]="{standalone:true}"
+               placeholder='Add tag and press Enter…' (keyup.enter)="addTag()" style="flex:1"/>
+        <button type="button" class="tag-add-btn" (click)="addTag()">
+          <i class="pi pi-plus"></i>
+        </button>
+      </div>
+      @if (formTags.length > 0) {
+        <div class="tag-chips">
+          @for (tag of formTags; track tag) {
+            <span class="tag-chip">
+              {{ tag }}
+              <button type="button" (click)="removeTag(tag)"><i class="pi pi-times"></i></button>
+            </span>
+          }
+        </div>
+      }
+    </div>
   </form>
   <ng-template pTemplate="footer">
     <p-button label="Cancel" [text]="true" severity="secondary" (onClick)="showForm=false"/>

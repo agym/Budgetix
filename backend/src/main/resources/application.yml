@@ -57,8 +57,16 @@ spring:
       max-file-size: ${MAX_FILE_SIZE:5MB}
       max-request-size: 10MB
 
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6380}
+      connect-timeout: 2000
+
   cache:
-    type: simple
+    type: redis
+    redis:
+      time-to-live: 600000   # 10 minutes
 
 server:
   port: ${PORT:3000}

@@ -49,6 +49,18 @@ export const routes: Routes = [
       {
         path: 'settings',
         loadComponent: () => import('./features/settings/settings.component').then(m => m.SettingsComponent)
+      },
+      {
+        path: 'recurring',
+        loadComponent: () => import('./features/recurring/recurring.component').then(m => m.RecurringComponent)
+      },
+      {
+        path: 'categories',
+        loadComponent: () => import('./features/categories/categories.component').then(m => m.CategoriesComponent)
+      },
+      {
+        path: 'calendar',
+        loadComponent: () => import('./features/calendar/calendar.component').then(m => m.CalendarComponent)
       }
     ]
   },

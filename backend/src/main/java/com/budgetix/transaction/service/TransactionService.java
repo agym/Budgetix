@@ -11,6 +11,7 @@ import com.budgetix.common.exception.ErrorCode;
 import com.budgetix.transaction.dto.TransactionFilterRequest;
 import com.budgetix.transaction.dto.TransactionRequest;
 import com.budgetix.transaction.dto.TransactionResponse;
+import com.budgetix.transaction.dto.TransferRequest;
 import com.budgetix.transaction.entity.Transaction;
 import com.budgetix.transaction.repository.TransactionRepository;
 import com.budgetix.user.entity.User;
@@ -128,8 +129,72 @@ public class TransactionService {
     }
 
     @Transactional
+    public List<TransactionResponse> transfer(UUID userId, TransferRequest req) {
+        if (req.fromAccountId().equals(req.toAccountId()))
+            throw new AppException(ErrorCode.INVALID_TRANSFER);
+
+        User user = userService.getEntity(userId);
+        Account from = accountRepository.findByIdAndUserId(req.fromAccountId(), userId)
+            .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_FOUND));
+        Account to = accountRepository.findByIdAndUserId(req.toAccountId(), userId)
+            .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_FOUND));
+
+        UUID pairId = UUID.randomUUID();
+        String desc = req.description() != null && !req.description().isBlank()
+            ? req.description() : null;
+
+        Transaction debit = Transaction.builder()
+            .user(user).account(from)
+            .amount(req.amount()).type(TransactionType.TRANSFER)
+            .description(desc != null ? desc : "Transfer to " + to.getName())
+            .date(req.date()).transferPairId(pairId).transferCredit(false)
+            .build();
+
+        Transaction credit = Transaction.builder()
+            .user(user).account(to)
+            .amount(req.amount()).type(TransactionType.TRANSFER)
+            .description(desc != null ? desc : "Transfer from " + from.getName())
+            .date(req.date()).transferPairId(pairId).transferCredit(true)
+            .build();
+
+        from.setBalance(from.getBalance().subtract(req.amount()));
+        to.setBalance(to.getBalance().add(req.amount()));
+        accountRepository.save(from);
+        accountRepository.save(to);
+
+        return List.of(
+            TransactionResponse.from(transactionRepository.save(debit)),
+            TransactionResponse.from(transactionRepository.save(credit))
+        );
+    }
+
+    @Transactional
     public void delete(UUID userId, UUID id) {
         Transaction tx = findOwned(userId, id);
+
+        if (tx.getTransferPairId() != null) {
+            // Reverse this leg's balance effect
+            if (tx.isTransferCredit()) {
+                tx.getAccount().setBalance(tx.getAccount().getBalance().subtract(tx.getAmount()));
+            } else {
+                tx.getAccount().setBalance(tx.getAccount().getBalance().add(tx.getAmount()));
+            }
+            accountRepository.save(tx.getAccount());
+            // Delete paired leg and reverse its balance
+            transactionRepository.findByTransferPairIdAndIdNot(tx.getTransferPairId(), id)
+                .ifPresent(pair -> {
+                    if (pair.isTransferCredit()) {
+                        pair.getAccount().setBalance(pair.getAccount().getBalance().subtract(pair.getAmount()));
+                    } else {
+                        pair.getAccount().setBalance(pair.getAccount().getBalance().add(pair.getAmount()));
+                    }
+                    accountRepository.save(pair.getAccount());
+                    transactionRepository.delete(pair);
+                });
+            transactionRepository.delete(tx);
+            return;
+        }
+
         updateAccountBalance(tx.getAccount(), tx.getAmount(), tx.getType(), false);
         budgetUpdateService.updateOnTransactionDelete(tx);
         transactionRepository.delete(tx);

@@ -20,9 +20,10 @@
 12. [Internationalisation](#12-internationalisation)
 13. [Categories & Auto-Categorization](#13-categories--auto-categorization)
 14. [Recurring Transactions](#14-recurring-transactions)
-15. [Backend API](#15-backend-api)
-16. [Data Models](#16-data-models)
-17. [Scheduled Jobs](#17-scheduled-jobs)
+15. [Financial Calendar](#15-financial-calendar)
+16. [Backend API](#16-backend-api)
+17. [Data Models](#17-data-models)
+18. [Scheduled Jobs](#18-scheduled-jobs)
 
 ---
 
@@ -153,10 +154,13 @@ GET /dashboard/charts/daily-trend?month={m}&year={y}
 | Category | No | Flat list of user + system categories |
 | Description | No | Free text |
 | Date | Yes | Defaults to today |
+| Notes | No | Multi-line memo stored with the transaction |
+| Tags | No | Free-form lowercase tags; chip UI with Enter-to-add and ✕ remove |
 
 **Delete**
 - Single: confirmation dialog.
 - Bulk: select rows → "Delete Selected" with count confirmation.
+- Deleting a **Transfer** transaction automatically deletes its paired leg and reverses both account balances.
 
 ### CSV Import
 1. Open Import CSV dialog.
@@ -186,15 +190,27 @@ GET /dashboard/charts/daily-trend?month={m}&year={y}
 | Initial Balance | No | Only on create; defaults to 0 |
 | Currency | No | 3-letter code, defaults to USD |
 | Color | No | Color picker, defaults to #6366f1 |
+| Institution Name | No | Bank or institution name (e.g. "Chase Bank", "HSBC") |
+| Last 4 Digits | No | Last 4 digits of account/card number; validated as exactly 4 digits |
 
 ### Display
 - Card grid with left-colored border.
 - Balance shown in green (positive) or red (negative).
-- Account type shown as subtitle.
+- Account type shown as subtitle; if institution name or last 4 digits are set, displayed inline: `Bank · Chase Bank ···· 1234`.
+- Per-card **Transfer** icon button pre-selects that account as the source.
 
 ### CRUD
 - **Create / Edit** — modal form.
 - **Delete** — confirmation dialog (backend prevents deletion if transactions exist).
+
+### Account-to-Account Transfer
+- **Transfer button** in the page header (disabled if fewer than 2 accounts exist).
+- **Transfer dialog** fields: From Account · To Account · Amount · Date · Description (optional).
+- Backend creates **two linked `TRANSFER` transactions** atomically sharing a `transferPairId`:
+  - Debit leg on the source account (balance decreases).
+  - Credit leg on the destination account (balance increases).
+- Deleting either leg deletes both and reverses both balance changes.
+- Endpoint: `POST /transactions/transfer`
 
 ---
 
@@ -379,8 +395,8 @@ Save button calls `PUT /users/profile` + `PUT /users/settings`.
 | Group | Items |
 |-------|-------|
 | Overview | Dashboard · Transactions |
-| Finance | Accounts · Budgets · Goals |
-| Insights | Insights · Reports |
+| Finance | Accounts · Budgets · Goals · Recurring · Categories |
+| Insights | Calendar · Insights · Reports |
 | Account | Settings |
 
 - Collapsible (icon-only mode at 70px width).
@@ -413,7 +429,7 @@ Save button calls `PUT /users/profile` + `PUT /users/settings`.
 
 ## 13. Categories & Auto-Categorization
 
-> **Status:** Backend complete. Frontend UI not yet built — categories are consumed by Transactions and Budgets but are not directly managed through a dedicated screen.
+**Route:** `/categories`
 
 ### Category Fields
 
@@ -442,6 +458,12 @@ Each category can have one or more keyword rules. When a new transaction is crea
 
 **API for rules:** `POST /categories/{id}/rules` — adds a rule to a category.
 
+### Frontend UI
+- **Your Categories** section — card grid of user-created categories. Each card shows: colored icon, name, type tag, sub-category list, and action buttons (Rules · Edit · Delete).
+- **System Categories** section — read-only cards; Rules button still available (users can add keyword rules to system categories).
+- **Create / Edit dialog** — Name, Type (Income/Expense/Transfer), Color picker, Icon picker (20 PrimeNG icons), Parent category dropdown.
+- **Auto-categorization Rules dialog** — keyword input with Enter-to-add; keywords are case-insensitive. System categories cannot be edited or deleted.
+
 ### Category API
 
 | Method | Path | Description |
@@ -456,7 +478,7 @@ Each category can have one or more keyword rules. When a new transaction is crea
 
 ## 14. Recurring Transactions
 
-> **Status:** Backend complete with hourly scheduler. Frontend UI not yet built.
+**Route:** `/recurring`
 
 Recurring transactions automate the creation of predictable income or expense entries (e.g. salary, rent, subscriptions) so they appear in the transaction list and update account balances without manual entry.
 
@@ -503,6 +525,12 @@ A single endpoint enables/disables a recurring transaction without deleting it:
 
 `POST /recurring/{id}/toggle` — flips `isActive`.
 
+### Frontend UI
+- Card grid — each card shows: description, account name, amount (color-coded by type), frequency, next/last run dates, active status dot with green glow.
+- **Pause / Resume** button per card.
+- **Delete** with confirmation dialog.
+- **New Rule** dialog — Description, Amount, Type, Account, Category, Frequency, Start Date, End Date (optional).
+
 ### Recurring API
 
 | Method | Path | Description |
@@ -514,7 +542,38 @@ A single endpoint enables/disables a recurring transaction without deleting it:
 
 ---
 
-## 15. Backend API
+## 15. Financial Calendar
+
+**Route:** `/calendar`
+
+A monthly calendar view that overlays all transactions on a day grid, giving users an immediate sense of when money comes in and goes out.
+
+### Layout
+- **Month navigator** — Previous / Next / Today buttons, current month label.
+- **Summary strip** — Total income, total expenses, and net for the displayed month (color-coded pills).
+- **7-column day grid** — Sunday through Saturday. Each cell contains:
+  - Day number (today highlighted in primary blue circle).
+  - Aggregated income / expense totals for the day (colored badges).
+  - Up to 3 transaction pills (description + amount); overflow shown as "+N more".
+  - Dimmed styling for days outside the current month.
+
+### Transaction Pills
+| Type | Color |
+|------|-------|
+| INCOME | Green |
+| EXPENSE | Red |
+| TRANSFER | Primary blue |
+
+### Data
+- Fetches `GET /transactions?startDate=&endDate=&size=500` for the displayed month.
+- Entirely client-side grouping — no extra backend endpoint needed.
+- Responsive: pills hide descriptions on small screens; amounts hide on very small screens.
+
+---
+
+## 16. Backend API
+
+> **Flyway migration history:** V1 (initial schema) · V2 (seed categories) · V3 (OAuth2 columns) · V4 (transfer pair support) · V5 (institution_name / last_four) · V6 (fix last_four CHAR→VARCHAR)
 
 ### Base URL: `/api`
 
@@ -532,12 +591,13 @@ A single endpoint enables/disables a recurring transaction without deleting it:
 #### Transactions — `/transactions`
 | Method | Path | Description |
 |--------|------|-------------|
-| GET | `/` | Paginated list with filters |
+| GET | `/` | Paginated list with filters (startDate, endDate, categoryId, accountId, type, search, page, size) |
 | GET | `/{id}` | Single transaction |
-| POST | `/` | Create |
+| POST | `/` | Create (body: amount, type, accountId, categoryId?, description?, notes?, date, tags?) |
 | PUT | `/{id}` | Update |
-| DELETE | `/{id}` | Delete |
+| DELETE | `/{id}` | Delete (also deletes transfer pair if applicable) |
 | POST | `/bulk-delete` | `{ ids: string[] }` |
+| POST | `/transfer` | Create linked transfer pair `{ fromAccountId, toAccountId, amount, date, description? }` |
 | POST | `/{id}/receipt` | Upload receipt (multipart) |
 | POST | `/import` | CSV import `{ accountId, file }` |
 
@@ -602,6 +662,7 @@ financialGoalType?
 ```
 id · name · type (CASH|BANK|CREDIT_CARD|SAVINGS|INVESTMENT)
 balance · currency · color · icon · isDefault
+institutionName? · lastFour? (VARCHAR 4 digits)
 → User (many:1)
 ```
 
@@ -609,6 +670,7 @@ balance · currency · color · icon · isDefault
 ```
 id · amount · type (INCOME|EXPENSE|TRANSFER)
 description · notes · date · receipt? · recurring · tags[]
+transferPairId? · transferCredit (false=debit/source, true=credit/destination)
 → User (many:1) · Account (many:1) · Category (many:1, optional)
 ```
 
@@ -705,12 +767,16 @@ id · token · expiresAt
 | 2FA | ✅ | ✅ | Email-based TOTP |
 | Password Reset | ✅ | ✅ | OTP-based |
 | Session Timeout | ✅ | — | Frontend inactivity |
-| Dashboard KPIs | ✅ | ✅ | 12+ metrics |
+| Dashboard KPIs | ✅ | ✅ | 12+ metrics incl. Net Worth |
 | Dashboard Charts | ✅ | ✅ | 3 chart types |
 | Transactions CRUD | ✅ | ✅ | |
-| Transaction Filters | ✅ | ✅ | Search, type, account |
+| Transaction Notes | ✅ | ✅ | Multi-line memo field |
+| Transaction Tags | ✅ | ✅ | Free-form chip tags |
+| Transaction Filters | ✅ | ✅ | Search, type, account, date range |
 | CSV Import | ✅ | ✅ | |
-| Receipt Upload | — | ✅ | UI not yet wired |
+| Receipt Upload | — | ✅ | Backend endpoint exists; UI not yet wired |
+| Bank Details (Institution + Last 4) | ✅ | ✅ | Manual entry on account card; displayed inline on card subtitle |
+| Account-to-Account Transfer | ✅ | ✅ | Atomic two-sided transfer with pair linking |
 | Accounts CRUD | ✅ | ✅ | |
 | Budgets CRUD | ✅ | ✅ | |
 | Budget Rollover | ✅ | ✅ | |
@@ -722,14 +788,15 @@ id · token · expiresAt
 | PDF Export | ✅ | ✅ | |
 | Insights View | ✅ | ✅ | |
 | Insights Generate | ✅ | ✅ | |
-| Auto-categorisation | — | ✅ | Rule-based, UI not wired — see §13 |
-| Recurring Transactions | — | ✅ | UI not yet built — see §14 |
-| Notifications | ✅ (Settings) | ✅ | |
+| Auto-categorisation | ✅ | ✅ | Keyword rules UI in Categories page |
+| Recurring Transactions | ✅ | ✅ | Card grid, pause/resume, hourly scheduler |
+| Categories CRUD | ✅ | ✅ | Icon picker, color picker, hierarchy |
+| Financial Calendar | ✅ | — | Client-side grouping of existing transactions |
+| Notifications | ✅ | ✅ | |
 | Notification Bell | ✅ | ✅ | Unread count badge |
 | Profile Settings | ✅ | ✅ | |
 | Security Settings | ✅ | ✅ | |
 | Notification Prefs | ✅ | ✅ | |
 | Multi-language | ✅ | — | EN / FR / AR + RTL |
-| Categories CRUD | — | ✅ | UI not yet built — see §13 |
-| Dark Mode | ❌ | — | Not implemented |
+| Dark / Light Mode | ✅ | — | CSS variable theme system |
 | Mobile Responsive | Partial | — | Topbar adapts; sidebar collapses |

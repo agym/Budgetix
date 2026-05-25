@@ -45,6 +45,8 @@ public class AccountService {
             .color(req.color())
             .icon(req.icon())
             .isDefault(req.isDefault())
+            .institutionName(req.institutionName())
+            .lastFour(req.lastFour())
             .build();
 
         if (req.isDefault()) clearDefaultFlag(userId);
@@ -61,6 +63,8 @@ public class AccountService {
         if (req.color() != null) account.setColor(req.color());
         if (req.icon() != null) account.setIcon(req.icon());
         if (req.currency() != null) account.setCurrency(req.currency());
+        account.setInstitutionName(req.institutionName());
+        account.setLastFour(req.lastFour());
         if (req.isDefault() && !account.isDefault()) {
             clearDefaultFlag(userId);
             account.setDefault(true);

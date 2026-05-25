@@ -11,6 +11,8 @@ import com.budgetix.common.exception.ErrorCode;
 import com.budgetix.user.entity.User;
 import com.budgetix.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,11 +27,13 @@ public class CategoryService {
     private final AutoCategorizationRuleRepository ruleRepository;
     private final UserService userService;
 
+    @Cacheable(value = "categories", key = "#userId")
     public List<CategoryResponse> getAll(UUID userId) {
         return categoryRepository.findRootCategoriesForUser(userId)
             .stream().map(CategoryResponse::from).toList();
     }
 
+    @CacheEvict(value = "categories", key = "#userId")
     @Transactional
     public CategoryResponse create(UUID userId, CategoryRequest req) {
         User user = userService.getEntity(userId);
@@ -52,6 +56,7 @@ public class CategoryService {
         return CategoryResponse.from(categoryRepository.save(category));
     }
 
+    @CacheEvict(value = "categories", key = "#userId")
     @Transactional
     public CategoryResponse update(UUID userId, UUID id, CategoryRequest req) {
         Category category = findUserOwned(userId, id);
@@ -68,6 +73,7 @@ public class CategoryService {
         return CategoryResponse.from(categoryRepository.save(category));
     }
 
+    @CacheEvict(value = "categories", key = "#userId")
     @Transactional
     public void delete(UUID userId, UUID id) {
         Category category = findUserOwned(userId, id);
@@ -75,6 +81,7 @@ public class CategoryService {
         categoryRepository.delete(category);
     }
 
+    @CacheEvict(value = "categories", key = "#userId")
     @Transactional
     public void addRule(UUID userId, UUID categoryId, String keyword) {
         Category category = findUserOwned(userId, categoryId);

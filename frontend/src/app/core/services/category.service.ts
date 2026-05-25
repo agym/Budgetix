@@ -23,4 +23,8 @@ export class CategoryService extends ApiService {
   remove(id: string): Observable<void> {
     return this.delete<void>(`/categories/${id}`);
   }
+
+  addRule(id: string, keyword: string): Observable<void> {
+    return this.post<void>(`/categories/${id}/rules`, { keyword });
+  }
 }

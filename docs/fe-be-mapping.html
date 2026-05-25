@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Budgetix — Full FE ↔ BE Feature Map</title>
+<style>
+:root{
+  --bg:#0f172a;--s1:#1e293b;--s2:#273449;--s3:#2e3d54;
+  --border:#334155;--primary:#6366f1;--pl:#818cf8;
+  --green:#10b981;--amber:#f59e0b;--red:#ef4444;--blue:#3b82f6;--cyan:#06b6d4;
+  --text:#f1f5f9;--muted:#94a3b8;--r:10px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;font-size:14px;line-height:1.6}
+
+/* NAV */
+.sidenav{position:fixed;left:0;top:0;bottom:0;width:220px;background:var(--s1);border-right:1px solid var(--border);overflow-y:auto;z-index:100;padding:16px 0}
+.sidenav h2{font-size:.65rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;padding:10px 20px 6px;margin-top:8px}
+.sidenav a{display:flex;align-items:center;gap:8px;padding:7px 20px;color:var(--muted);text-decoration:none;font-size:.82rem;transition:.15s}
+.sidenav a:hover,.sidenav a.active{color:var(--pl);background:rgba(99,102,241,.12)}
+.sidenav a .dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0}
+
+/* MAIN */
+main{margin-left:220px;padding:0 40px 80px}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,#1e1b4b,#0f172a 60%,#1e293b);padding:50px 0 40px;text-align:center;margin-bottom:40px;border-bottom:1px solid var(--border)}
+.hero h1{font-size:2rem;font-weight:800;color:var(--pl);margin-bottom:8px}
+.hero p{color:var(--muted);max-width:640px;margin:0 auto;font-size:.95rem}
+.hero .meta{margin-top:16px;display:flex;justify-content:center;gap:24px;flex-wrap:wrap}
+.meta-item{background:rgba(99,102,241,.12);border:1px solid rgba(99,102,241,.25);border-radius:100px;padding:4px 14px;font-size:.75rem;color:var(--pl);font-weight:600}
+
+/* STATUS BAR */
+.status-bar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:32px;padding:16px 20px;background:var(--s1);border:1px solid var(--border);border-radius:var(--r)}
+.sb-item{display:flex;align-items:center;gap:6px;font-size:.78rem}
+.sb-dot{width:8px;height:8px;border-radius:50%}
+.ok{background:var(--green)} .warn{background:var(--amber)} .err{background:var(--red)}
+
+/* SECTION */
+section{margin-bottom:60px}
+.section-head{display:flex;align-items:center;gap:14px;margin-bottom:24px;padding-bottom:12px;border-bottom:2px solid var(--border)}
+.section-head .icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
+.section-head h2{font-size:1.3rem;font-weight:700}
+.section-head .route{font-size:.78rem;color:var(--cyan);background:rgba(6,182,212,.1);border:1px solid rgba(6,182,212,.25);border-radius:6px;padding:2px 10px;margin-left:4px}
+
+/* MAPPING GRID */
+.map-grid{display:grid;grid-template-columns:1fr 60px 1fr;gap:0;margin-bottom:24px;align-items:start}
+.map-col{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.map-col.be{background:var(--s2)}
+.col-head{padding:10px 16px;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.09em;border-bottom:1px solid var(--border)}
+.col-head.fe{background:rgba(99,102,241,.15);color:var(--pl)}
+.col-head.be{background:rgba(16,185,129,.12);color:var(--green)}
+.map-arrow{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:8px 0}
+.arrow-line{width:100%;height:2px;background:linear-gradient(90deg,var(--primary),var(--green))}
+.arrow-label{font-size:.62rem;color:var(--muted);text-align:center;line-height:1.2}
+.map-row{display:flex;align-items:flex-start;gap:8px;padding:10px 16px;border-bottom:1px solid var(--border);font-size:.8rem}
+.map-row:last-child{border-bottom:none}
+.map-row .label{color:var(--muted);min-width:70px;flex-shrink:0;font-size:.72rem;padding-top:1px}
+.map-row .val{color:var(--text);word-break:break-all}
+.map-row .val code{font-family:'Cascadia Code','Fira Code',monospace;font-size:.75rem;background:rgba(255,255,255,.05);padding:1px 5px;border-radius:4px}
+
+/* ENDPOINT TABLE */
+.ep-table{width:100%;border-collapse:collapse;margin-bottom:20px;font-size:.78rem}
+.ep-table th{background:var(--s2);padding:8px 12px;text-align:left;color:var(--muted);font-size:.7rem;text-transform:uppercase;letter-spacing:.07em}
+.ep-table td{padding:9px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+.ep-table tr:last-child td{border-bottom:none}
+.ep-table .method{font-family:monospace;font-weight:700;font-size:.72rem;padding:2px 7px;border-radius:5px}
+.GET{background:rgba(16,185,129,.15);color:#34d399}
+.POST{background:rgba(99,102,241,.15);color:var(--pl)}
+.PUT{background:rgba(245,158,11,.15);color:#fbbf24}
+.PATCH{background:rgba(6,182,212,.15);color:#67e8f9}
+.DELETE{background:rgba(239,68,68,.15);color:#f87171}
+.ep-path{font-family:'Cascadia Code','Fira Code',monospace;color:var(--cyan);font-size:.77rem}
+.ep-desc{color:var(--muted)}
+.ep-auth{font-size:.67rem;background:rgba(239,68,68,.1);color:#fca5a5;border:1px solid rgba(239,68,68,.2);border-radius:4px;padding:1px 6px;display:inline-block;vertical-align:middle;margin-left:4px}
+
+/* REQUEST/RESPONSE */
+pre{background:#0d1117;border:1px solid var(--border);border-radius:8px;padding:14px 16px;overflow-x:auto;font-family:'Cascadia Code','Fira Code',monospace;font-size:.75rem;line-height:1.6;color:#e2e8f0;margin:8px 0 16px}
+.kw{color:#c792ea}.str{color:#a5f3fc}.num{color:#fbbf24}.key{color:#7dd3fc}.cmt{color:#4b5563}
+
+/* CARDS */
+.card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:20px;margin-bottom:16px}
+.card h3{font-size:.88rem;font-weight:700;margin-bottom:12px;color:var(--text)}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:800px){.two-col,.map-grid{display:block}.map-arrow{transform:rotate(90deg);margin:8px auto}}
+
+/* TAGS */
+.tag{display:inline-block;border-radius:5px;padding:1px 8px;font-size:.7rem;font-weight:600;margin:2px}
+.tag-purple{background:rgba(99,102,241,.15);color:var(--pl);border:1px solid rgba(99,102,241,.25)}
+.tag-green{background:rgba(16,185,129,.15);color:#34d399;border:1px solid rgba(16,185,129,.25)}
+.tag-amber{background:rgba(245,158,11,.15);color:#fbbf24;border:1px solid rgba(245,158,11,.25)}
+.tag-red{background:rgba(239,68,68,.15);color:#f87171;border:1px solid rgba(239,68,68,.25)}
+.tag-cyan{background:rgba(6,182,212,.15);color:#67e8f9;border:1px solid rgba(6,182,212,.25)}
+
+/* HIGHLIGHT BOX */
+.highlight{background:rgba(99,102,241,.08);border:1px solid rgba(99,102,241,.3);border-left:4px solid var(--primary);border-radius:8px;padding:14px 18px;margin:16px 0;font-size:.82rem;color:#c7d2fe}
+.highlight.green{background:rgba(16,185,129,.06);border-color:rgba(16,185,129,.3);border-left-color:var(--green);color:#a7f3d0}
+.highlight.amber{background:rgba(245,158,11,.06);border-color:rgba(245,158,11,.3);border-left-color:var(--amber);color:#fde68a}
+
+/* FLOW */
+.flow{display:flex;align-items:center;gap:0;flex-wrap:wrap;margin:12px 0}
+.f-step{background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;min-width:110px;text-align:center;flex:1}
+.f-step .fn{font-size:.7rem;font-weight:700;color:var(--text)}
+.f-step .fd{font-size:.65rem;color:var(--muted);margin-top:2px}
+.f-arr{padding:0 8px;color:var(--primary-light);font-size:1rem;flex-shrink:0}
+
+/* UI LOCATOR */
+.ui-locator{display:flex;align-items:flex-start;gap:16px;background:var(--s2);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:16px}
+.ui-locator .steps{flex:1}
+.ui-locator .step{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px;font-size:.8rem}
+.ui-locator .step:last-child{margin-bottom:0}
+.step-num{width:22px;height:22px;border-radius:50%;background:var(--primary);color:#fff;font-size:.65rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR NAV -->
+<nav class="sidenav">
+  <div style="padding:16px 20px 12px;border-bottom:1px solid var(--border);margin-bottom:8px">
+    <div style="font-weight:800;color:var(--pl);font-size:1rem">Budgetix</div>
+    <div style="font-size:.68rem;color:var(--muted)">FE ↔ BE Feature Map</div>
+  </div>
+  <h2>Overview</h2>
+  <a href="#status"><span class="dot"></span>Build Status</a>
+  <a href="#architecture"><span class="dot"></span>Architecture</a>
+  <h2>Auth</h2>
+  <a href="#auth"><span class="dot"></span>Authentication</a>
+  <h2>Features</h2>
+  <a href="#dashboard"><span class="dot"></span>Dashboard</a>
+  <a href="#transactions"><span class="dot"></span>Transactions</a>
+  <a href="#accounts"><span class="dot"></span>Accounts ★</a>
+  <a href="#budgets"><span class="dot"></span>Budgets</a>
+  <a href="#goals"><span class="dot"></span>Savings Goals</a>
+  <a href="#recurring"><span class="dot"></span>Recurring</a>
+  <a href="#categories"><span class="dot"></span>Categories</a>
+  <a href="#calendar"><span class="dot"></span>Calendar</a>
+  <a href="#insights"><span class="dot"></span>Insights</a>
+  <a href="#reports"><span class="dot"></span>Reports</a>
+  <a href="#notifications"><span class="dot"></span>Notifications</a>
+  <a href="#settings"><span class="dot"></span>Settings</a>
+  <h2>Reference</h2>
+  <a href="#datamodel"><span class="dot"></span>Data Models</a>
+  <a href="#scheduler"><span class="dot"></span>Schedulers</a>
+</nav>
+
+<main>
+<div class="hero">
+  <h1>Budgetix — Full FE ↔ BE Feature Map</h1>
+  <p>Every frontend component, route, and service mapped to its backend controller, service, and REST endpoints. Generated 2026-05-24.</p>
+  <div class="meta">
+    <span class="meta-item">Spring Boot 3 · Java 21</span>
+    <span class="meta-item">Angular 21 Standalone</span>
+    <span class="meta-item">PostgreSQL 16 · Redis 7</span>
+    <span class="meta-item">PrimeNG 17</span>
+    <span class="meta-item">Base URL: /api</span>
+  </div>
+</div>
+
+<!-- STATUS -->
+<section id="status">
+  <div class="section-head">
+    <div class="icon" style="background:rgba(16,185,129,.15)">✅</div>
+    <h2>Build Status</h2>
+  </div>
+  <div class="status-bar">
+    <div class="sb-item"><div class="sb-dot ok"></div> Backend: mvn compile → SUCCESS</div>
+    <div class="sb-item"><div class="sb-dot ok"></div> Frontend: tsc --noEmit → 0 errors</div>
+    <div class="sb-item"><div class="sb-dot ok"></div> Angular build → complete (no warnings)</div>
+    <div class="sb-item"><div class="sb-dot ok"></div> Flyway V1–V5 migrations ready</div>
+    <div class="sb-item"><div class="sb-dot ok"></div> Redis FLUSHALL applied (stale cache cleared)</div>
+    <div class="sb-item"><div class="sb-dot warn"></div> Restart backend to apply V5 migration</div>
+  </div>
+  <div class="highlight amber">
+    <strong>Action required:</strong> Stop the running Spring Boot process (Ctrl+C) and restart with <code>mvn spring-boot:run</code>. Flyway will automatically run V5 which adds <code>institution_name</code> and <code>last_four</code> columns to the <code>accounts</code> table.
+  </div>
+</section>
+
+<!-- ARCHITECTURE -->
+<section id="architecture">
+  <div class="section-head">
+    <div class="icon" style="background:rgba(99,102,241,.15)">🏗️</div>
+    <h2>Application Architecture</h2>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <h3>Frontend Layer Stack</h3>
+      <table class="ep-table">
+        <thead><tr><th>Layer</th><th>Technology</th><th>Location</th></tr></thead>
+        <tbody>
+          <tr><td>Router</td><td>Angular Router</td><td><code>src/app/app.routes.ts</code></td></tr>
+          <tr><td>Shell</td><td>ShellComponent</td><td><code>layout/shell/</code></td></tr>
+          <tr><td>Sidebar</td><td>SidebarComponent</td><td><code>layout/sidebar/</code></td></tr>
+          <tr><td>Topbar</td><td>TopbarComponent</td><td><code>layout/topbar/</code></td></tr>
+          <tr><td>Features</td><td>Standalone Components</td><td><code>features/*/</code></td></tr>
+          <tr><td>Services</td><td>Angular Injectable</td><td><code>core/services/</code></td></tr>
+          <tr><td>HTTP</td><td>ApiService (base)</td><td><code>core/services/api.service.ts</code></td></tr>
+          <tr><td>Auth Interceptor</td><td>JWT bearer injection</td><td><code>core/interceptors/</code></td></tr>
+          <tr><td>Guards</td><td>authGuard / guestGuard</td><td><code>core/guards/</code></td></tr>
+          <tr><td>Models</td><td>TypeScript interfaces</td><td><code>core/models/</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <h3>Backend Layer Stack</h3>
+      <table class="ep-table">
+        <thead><tr><th>Layer</th><th>Technology</th><th>Location</th></tr></thead>
+        <tbody>
+          <tr><td>Security</td><td>JWT Filter + Spring Security</td><td><code>config/SecurityConfig.java</code></td></tr>
+          <tr><td>Controllers</td><td>@RestController</td><td><code>*/controller/</code></td></tr>
+          <tr><td>Services</td><td>@Service + @Transactional</td><td><code>*/service/</code></td></tr>
+          <tr><td>Repositories</td><td>JPA + Spring Data</td><td><code>*/repository/</code></td></tr>
+          <tr><td>Entities</td><td>Hibernate @Entity</td><td><code>*/entity/</code></td></tr>
+          <tr><td>DTOs</td><td>Java Records</td><td><code>*/dto/</code></td></tr>
+          <tr><td>Cache</td><td>Redis (@Cacheable)</td><td><code>config/RedisCacheConfig.java</code></td></tr>
+          <tr><td>DB Migrations</td><td>Flyway V1–V5</td><td><code>resources/db/migration/</code></td></tr>
+          <tr><td>Scheduler</td><td>@Scheduled (hourly)</td><td><code>recurring/RecurringScheduler</code></td></tr>
+          <tr><td>Exception</td><td>GlobalExceptionHandler</td><td><code>common/exception/</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Request Flow — Every API call follows this path</h3>
+    <div class="flow" style="flex-wrap:wrap;gap:4px">
+      <div class="f-step"><div class="fn">Angular Component</div><div class="fd">calls service method</div></div>
+      <div class="f-arr">→</div>
+      <div class="f-step"><div class="fn">Angular Service</div><div class="fd">ApiService.get/post/put</div></div>
+      <div class="f-arr">→</div>
+      <div class="f-step"><div class="fn">HTTP Interceptor</div><div class="fd">injects Bearer token</div></div>
+      <div class="f-arr">→</div>
+      <div class="f-step"><div class="fn">Vite Proxy</div><div class="fd">/api → localhost:3000</div></div>
+      <div class="f-arr">→</div>
+      <div class="f-step"><div class="fn">JWT Filter</div><div class="fd">validates access token</div></div>
+      <div class="f-arr">→</div>
+      <div class="f-step"><div class="fn">@RestController</div><div class="fd">maps route, calls service</div></div>
+      <div class="f-arr">→</div>
+      <div class="f-step"><div class="fn">@Service</div><div class="fd">business logic, DB ops</div></div>
+      <div class="f-arr">→</div>
+      <div class="f-step"><div class="fn">ApiResponse wrapper</div><div class="fd">{ success, data, error }</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- AUTH -->
+<section id="auth">
+  <div class="section-head">
+    <div class="icon" style="background:rgba(239,68,68,.15)">🔐</div>
+    <h2>Authentication & Security</h2>
+  </div>
+
+  <div class="map-grid">
+    <div class="map-col">
+      <div class="col-head fe">Frontend</div>
+      <div class="map-row"><span class="label">Routes</span><span class="val">/auth/login · /auth/register · /auth/verify-email · /auth/forgot-password · /auth/reset-password</span></div>
+      <div class="map-row"><span class="label">Components</span><span class="val">login/ · register/ · verify-email/ · forgot-password/ · reset-password/ · oauth2-callback/</span></div>
+      <div class="map-row"><span class="label">Service</span><span class="val"><code>core/services/auth.service.ts</code></span></div>
+      <div class="map-row"><span class="label">Guard</span><span class="val"><code>guestGuard</code> on /auth/* · <code>authGuard</code> on protected routes</span></div>
+      <div class="map-row"><span class="label">Storage</span><span class="val">accessToken + refreshToken stored in localStorage</span></div>
+      <div class="map-row"><span class="label">Interceptor</span><span class="val">Adds <code>Authorization: Bearer &lt;accessToken&gt;</code> to every request. On 401, calls refresh and retries.</span></div>
+    </div>
+    <div class="map-arrow"><div class="arrow-line"></div><div class="arrow-label">HTTP<br>REST</div></div>
+    <div class="map-col be">
+      <div class="col-head be">Backend</div>
+      <div class="map-row"><span class="label">Controller</span><span class="val"><code>auth/AuthController.java</code> → /auth/*</span></div>
+      <div class="map-row"><span class="label">Service</span><span class="val"><code>auth/AuthService.java</code> · <code>OtpService.java</code> · <code>EmailService.java</code></span></div>
+      <div class="map-row"><span class="label">OAuth2</span><span class="val"><code>OAuth2UserService.java</code> · <code>OAuth2SuccessHandler.java</code></span></div>
+      <div class="map-row"><span class="label">JWT</span><span class="val"><code>JwtUtil.java</code> · <code>JwtAuthenticationFilter.java</code></span></div>
+      <div class="map-row"><span class="label">Entities</span><span class="val">User · RefreshToken · OtpCode</span></div>
+    </div>
+  </div>
+
+  <table class="ep-table">
+    <thead><tr><th>Method</th><th>Endpoint</th><th>Auth</th><th>FE Component</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td><span class="method POST">POST</span></td><td class="ep-path">/auth/register</td><td>—</td><td>register/</td><td class="ep-desc">Creates user; sends OTP to email via MailHog</td></tr>
+      <tr><td><span class="method POST">POST</span></td><td class="ep-path">/auth/verify-email</td><td>—</td><td>verify-email/</td><td class="ep-desc">Validates 6-digit OTP; marks email as verified</td></tr>
+      <tr><td><span class="method POST">POST</span></td><td class="ep-path">/auth/resend-verification</td><td>—</td><td>verify-email/</td><td class="ep-desc">Resends OTP (rate-limited: 3/24h)</td></tr>
+      <tr><td><span class="method POST">POST</span></td><td class="ep-path">/auth/login</td><td>—</td><td>login/</td><td class="ep-desc">Returns accessToken + refreshToken. If 2FA enabled → returns TWO_FACTOR_REQUIRED</td></tr>
+      <tr><td><span class="method POST">POST</span></td><td class="ep-path">/auth/refresh</td><td>—</td><td>interceptor</td><td class="ep-desc">Rotates tokens using a valid refresh token</td></tr>
+      <tr><td><span class="method POST">POST</span></td><td class="ep-path">/auth/logout</td><td>—</td><td>topbar/</td><td class="ep-desc">Invalidates the refresh token in DB</td></tr>
+      <tr><td><span class="method POST">POST</span></td><td class="ep-path">/auth/forgot-password</td><td>—</td><td>forgot-password/</td><td class="ep-desc">Sends password-reset OTP</td></tr>
+      <tr><td><span class="method POST">POST</span></td><td class="ep-path">/auth/reset-password</td><td>—</td><td>reset-password/</td><td class="ep-desc">Validates OTP and sets new password (BCrypt)</td></tr>
+      <tr><td><td><span class="method GET">GET</span></td><td class="ep-path">/oauth2/authorization/google</td><td>—</td><td>login/</td><td class="ep-desc">Starts Google OAuth2 flow → redirects to /oauth2-callback</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- DASHBOARD -->
+<section id="dashboard">
+  <div class="section-head">
+    <div class="icon" style="background:rgba(99,102,241,.15)">📊</div>
+    <h2>Dashboard</h2>
+    <span class="route">/dashboard</span>
+  </div>
+
+  <div class="map-grid">
+    <div class="map-col">
+      <div class="col-head fe">Frontend</div>
+      <div class="map-row"><span class="label">Component</span><span class="val"><code>features/dashboard/dashboard.component.ts</code></span></div>
+      <div class="map-row"><span class="label">Service</span><span class="val"><code>core/services/dashboard.service.ts</code></span></div>
+      <div class="map-row"><span class="label">Charts</span><span class="val">ngx-echarts — Bar (income vs expenses) · Donut (spending by category) · Combo bar+line (daily trend)</span></div>
+      <div class="map-row"><span class="label">Signals</span><span class="val">overview · charts · loading all use Angular signal()</span></div>
+    </div>
+    <div class="map-arrow"><div class="arrow-line"></div><div class="arrow-label">HTTP<br>REST</div></div>
+    <div class="map-col be">
+      <div class="col-head be">Backend</div>
+      <div class="map-row"><span class="label">Controller</span><span class="val"><code>dashboard/DashboardController.java</code></span></div>
+      <div class="map-row"><span class="label">Service</span><span class="val"><code>dashboard/DashboardService.java</code></span></div>
+      <div class="map-row"><span class="label">Queries</span><span class="val">TransactionRepository.sumByTypeAndPeriod · groupByCategory · getDailyTrend</span></div>
+    </div>
+  </div>
+
+  <table class="ep-table">
+    <thead><tr><th>Method</th><th>Endpoint</th><th>Returns</th></tr></thead>
+    <tbody>
+      <tr><td><span class="method GET">GET</span></td><td class="ep-path">/dashboard/overview</td><td class="ep-desc">totalBalance · monthlyIncome · monthlyExpenses · netSavings · netWorth · topCategory · recentTransactions[]</td></tr>
+      <tr><td><span class="method GET">GET</span></td><td class="ep-path">/dashboard/charts/income-vs-expenses?months=6</td><td class="ep-desc">Array of {month, income, expense} for last N months</td></tr>
+      <tr><td><span class="method GET">GET</span></td><td class="ep-path">/dashboard/charts/spending-by-category?from=&amp;to=</td><td class="ep-desc">Array of {category, amount, color} for donut chart</td></tr>
+      <tr><td><span class="method GET">GET</span></td><td class="ep-path">/dashboard/charts/daily-trend?month=&amp;year=</td><td class="ep-desc">Array of {date, income, expense} for line chart</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- TRANSACTIONS -->
+<section id="transactions">
+  <div class="section-head">
+    <div class="icon" style="background:rgba(6,182,212,.15)">💳</div>
+    <h2>Transactions</h2>
+    <span class="route">/transactions</span>
+  </div>
+
+  <div class="map-grid">
+    <div class="map-col">
+      <div class="col-head fe">Frontend</div>
+      <div class="map-row"><span class="label">Component</span><span class="val"><code>features/transactions/transactions.component.ts</code></span></div>
+      <div class="map-row"><span class="label">Service</span><span class="val"><code>core/services/transaction.service.ts</code></span></div>
+      <div class="map-row"><span class="label">Model</span><span class="val"><code>core/models/transaction.model.ts</code></span></div>
+      <div class="map-row"><span class="label">UI modules</span><span class="val">TableModule · ChipModule · InputTextareaModule · CalendarModule · FileUploadModule · DropdownModule</span></div>
+      <div class="map-row"><span class="label">Features</span><span class="val">Paginated table · CRUD modal · Notes field · Tags (chip input) · CSV import · Receipt upload · Bulk delete</span></div>
+    </div>
+    <div class="map-arrow"><div class="arrow-line"></div><div class="arrow-label">HTTP<br>REST</div></div>
+    <div class="map-col be">
+      <div class="col-head be">Backend</div>
+      <div class="map-row"><span class="label">Controller</span><span class="val"><code>transaction/TransactionController.java</code></span></div>
+      <div class="map-row"><span class="label">Services</span><span class="val"><code>TransactionService.java</code> · <code>CsvImportService.java</code> · <code>AutoCategorizationService.java</code> · <code>BudgetUpdateService.java</code></span></div>
+      <div class="map-row"><span class="label">Entity</span><span class="val">Transaction (id · amount · type · description · notes · date · tags · receipt · recurringId · transferPairId · transferCredit)</span></div>
+      <div class="map-row"><span class="label">DB Tables</span><span class="val">transactions · transaction_tags</span></div>
+    </div>
+  </div>
+
+  <table class="ep-table">
+    <thead><tr><th>Method</th><th>Endpoint</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td><span class="method GET">GET</span></td><td class="ep-path">/transactions</td><td class="ep-desc">Query params: page · size · startDate · endDate · type · categoryId · accountId · search. Returns paginated Page&lt;TransactionResponse&gt;.</td></tr>
+      <tr><td><span class="method GET">GET</span></td><td class="ep-path">/transactions/{id}</td><td class="ep-desc">Single transaction by ID</td></tr>
+      <tr><td><span class="method POST">POST</span></td><td class="ep-path">/transactions</td><td class="ep-desc">Body: accountId · categoryId? · amount · type · description? · notes? · date · tags[]. Auto-categorizes if categoryId omitted.</td></tr>
+      <tr><td><span class="method PUT">PUT</span></td><td class="ep-path">/transactions/{id}</td><td class="ep-desc">Same body as POST. Handles account-switch balance correction.</td></tr>
+      <tr><td><span class="method DELETE">DELETE</span></td><td class="ep-path">/transactions/{id}</td><td class="ep-desc">Reverses account balance. If transfer leg → also deletes paired leg and reverses both balances.</td></tr>
+      <tr><td><span class="method POST">POST</span></td><td class="ep-path">/transactions/transfer</td><td class="ep-desc">Body: fromAccountId · toAccountId · amount · date · description?. Creates two linked TRANSFER records atomically.</td></tr>
+      <tr><td><span class="method POST">POST</span></td><td class="ep-path">/transactions/bulk-delete</td><td class="ep-desc">Body: { ids: UUID[] }. Loops delete — each reverses balance and cleans up transfer pairs.</td></tr>
+      <tr><td><span class="method POST">POST</span></td><td class="ep-path">/transactions/import</td><td class="ep-desc">multipart/form-data: accountId (UUID) + file (CSV). Format: date,description,amount,type. Returns { imported: N }.</td></tr>
+      <tr><td><span class="method POST">POST</span></td><td class="ep-path">/transactions/{id}/receipt</td><td class="ep-desc">multipart/form-data: file (image or PDF). Stores in uploads/receipts/{userId}/. Returns file URL.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ACCOUNTS -->
+<section id="accounts">
+  <div class="section-head">
+    <div class="icon" style="background:rgba(16,185,129,.15)">🏦</div>
+    <h2>Accounts — <span style="color:var(--amber)">★ Bank Details Here</span></h2>
+    <span class="route">/accounts</span>
+  </div>
+
+  <div class="highlight green">
+    <strong>Where to configure bank account details in the UI:</strong> Navigate to <strong>Accounts</strong> in the sidebar (under Finance) → click <strong>"Add Account"</strong> in the top-right corner → scroll to the bottom of the form. You will find <strong>Institution Name</strong> (e.g. "Chase Bank") and <strong>Last 4 Digits</strong> (e.g. "4821"). These appear on the account card as: <code>Bank · Chase Bank ···· 4821</code>.
+  </div>
+
+  <div class="ui-locator">
+    <div class="steps">
+      <div style="font-weight:700;font-size:.85rem;margin-bottom:10px;color:var(--text)">Step-by-step — Adding a bank account with details</div>
+      <div class="step"><div class="step-num">1</div><div>Click <strong>Accounts</strong> in the left sidebar (Finance section)</div></div>
+      <div class="step"><div class="step-num">2</div><div>Click the <strong>"Add Account"</strong> button (top-right, blue, with + icon)</div></div>
+      <div class="step"><div class="step-num">3</div><div>Fill in <strong>Name</strong> (e.g. "Main Checking") and set <strong>Type</strong> to BANK</div></div>
+      <div class="step"><div class="step-num">4</div><div>Enter <strong>Initial Balance</strong> to match your actual bank balance today</div></div>
+      <div class="step"><div class="step-num">5</div><div><strong>(New)</strong> Enter <strong>Institution Name</strong>: the name of your bank (e.g. "Chase Bank", "HSBC")</div></div>
+      <div class="step"><div class="step-num">6</div><div><strong>(New)</strong> Enter <strong>Last 4 Digits</strong>: the last 4 digits of your account or card number (e.g. "4821"). Exactly 4 digits required.</div></div>
+      <div class="step"><div class="step-num">7</div><div>Click <strong>Create</strong>. The card will show: <code>Bank · Chase Bank ···· 4821</code></div></div>
+    </div>
+  </div>
+
+  <div class="map-grid">
+    <div class="map-col">
+      <div class="col-head fe">Frontend</div>
+      <div class="map-row"><span class="label">Component</span><span class="val"><code>features/accounts/accounts.component.ts</code></span></div>
+      <div class="map-row"><span class="label">Service</span><span class="val"><code>core/services/account.service.ts</code></span></div>
+      <div class="map-row"><span class="label">Model</span><span class="val"><code>core/models/account.model.ts</code> — Account · AccountType</span></div>
+      <div class="map-row"><span class="label">Form fields</span><span class="val">name · type · initialBalance · currency · color · <strong>institutionName</strong> · <strong>lastFour</strong></span></div>
+      <div class="map-row"><span class="label">Transfer form</span><span class="val">fromAccountId · toAccountId · amount · date · description → calls TransactionService.transfer()</span></div>
+      <div class="map-row"><span class="label">UI modules</span><span class="val">DropdownModule · CalendarModule · ConfirmDialogModule</span></div>
+    </div>
+    <div class="map-arrow"><div class="arrow-line"></div><div class="arrow-label">HTTP<br>REST</div></div>
+    <div class="map-col be">
+      <div class="col-head be">Backend</div>
+      <div class="map-row"><span class="label">Controller</span><span class="val"><code>account/AccountController.java</code></span></div>
+      <div class="map-row"><span class="label">Service</span><span class="val"><code>account/AccountService.java</code></span></div>
+      <div class="map-row"><span class="label">Entity</span><span class="val">Account (id · name · type · balance · currency · color · icon · isDefault · <strong>institutionName</strong> · <strong>lastFour</strong> · createdAt)</span></div>
+      <div class="map-row"><span class="label">Migration</span><span class="val"><strong>V5</strong> adds institution_name VARCHAR(100) + last_four CHAR(4) to accounts table</span></div>
+    </div>
+  </div>
+
+  <table class="ep-table">
+    <thead><tr><th>Method</th><th>Endpoint</th><th>Key Fields</th></tr></thead>
+    <tbody>
+      <tr><td><span class="method GET">GET</span></td><td class="ep-path">/accounts</td><td class="ep-desc">Returns all accounts sorted by isDefault DESC, name ASC. Includes institutionName + lastFour.</td></tr>
+      <tr><td><span class="method GET">GET</span></td><td class="ep-path">/accounts/{id}</td><td class="ep-desc">Single account</td></tr>
+      <tr><td><span class="method POST">POST</span></td><td class="ep-path">/accounts</td><td class="ep-desc">Body: name* · type* · initialBalance · currency · color · icon · isDefault · <strong>institutionName</strong> · <strong>lastFour</strong></td></tr>
+      <tr><td><span class="method PUT">PUT</span></td><td class="ep-path">/accounts/{id}</td><td class="ep-desc">Same body. initialBalance ignored on update. Clearing isDefault flag handled automatically.</td></tr>
+      <tr><td><span class="method DELETE">DELETE</span></td><td class="ep-path">/accounts/{id}</td><td class="ep-desc">Returns 409 ACCOUNT_HAS_TRANSACTIONS if any transactions reference this account.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="card">
+    <h3>Account Types</h3>
+    <span class="tag tag-purple">CASH</span>
+    <span class="tag tag-green">BANK</span>
+    <span class="tag tag-amber">CREDIT_CARD</span>
+    <span class="tag tag-cyan">SAVINGS</span>
+    <span class="tag tag-red">INVESTMENT</span>
+    <p style="margin-top:10px;font-size:.78rem;color:var(--muted)">The <strong>Transfer</strong> button in the header (disabled with &lt;2 accounts) opens a dialog to move money between accounts. It calls <code>POST /transactions/transfer</code> which creates two linked TRANSFER transactions atomically.</p>
+  </div>
+</section>
+
+<!-- BUDGETS -->
+<section id="budgets">
+  <div class="section-head">
+    <div class="icon" style="background:rgba(245,158,11,.15)">📈</div>
+    <h2>Budgets</h2>
+    <span class="route">/budgets</span>
+  </div>
+
+  <div class="map-grid">
+    <div class="map-col">
+      <div class="col-head fe">Frontend</div>
+      <div class="map-row"><span class="label">Component</span><span class="val"><code>features/budgets/budgets.component.ts</code></span></div>
+      <div class="map-row"><span class="label">Service</span><span class="val"><code>core/services/budget.service.ts</code></span></div>
+      <div class="map-row"><span class="label">UI</span><span class="val">Month/year selector · Progress bars (80% amber / 100% red alert) · Category dropdown · Rollover toggle</span></div>
+    </div>
+    <div class="map-arrow"><div class="arrow-line"></div><div class="arrow-label">HTTP<br>REST</div></div>
+    <div class="map-col be">
+      <div class="col-head be">Backend</div>
+      <div class="map-row"><span class="label">Controller</span><span class="val"><code>budget/BudgetController.java</code></span></div>
+      <div class="map-row"><span class="label">Service</span><span class="val"><code>budget/BudgetService.java</code> · <code>transaction/BudgetUpdateService.java</code></span></div>
+      <div class="map-row"><span class="label">Entity</span><span class="val">Budget · BudgetAlert</span></div>
+      <div class="map-row"><span class="label">Logic</span><span class="val">BudgetUpdateService called on every transaction create/update/delete to recalculate spent amount and trigger alerts</span></div>
+    </div>
+  </div>
+
+  <table class="ep-table">
+    <thead><tr><th>Method</th><th>Endpoint</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td><span class="method GET">GET</span></td><td class="ep-path">/budgets?month=5&amp;year=2026</td><td class="ep-desc">Returns budgets for period with spent amounts computed from transactions</td></tr>
+      <tr><td><span class="method POST">POST</span></td><td class="ep-path">/budgets</td><td class="ep-desc">Body: categoryId · amount · period (MONTHLY) · month · year · rollover</td></tr>
+      <tr><td><span class="method PUT">PUT</span></td><td class="ep-path">/budgets/{id}</td><td class="ep-desc">Update limit amount or rollover setting</td></tr>
+      <tr><td><span class="method DELETE">DELETE</span></td><td class="ep-path">/budgets/{id}</td><td class="ep-desc">Removes budget; does not affect transactions</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- GOALS -->
+<section id="goals">
+  <div class="section-head">
+    <div class="icon" style="background:rgba(16,185,129,.15)">🎯</div>
+    <h2>Savings Goals</h2>
+    <span class="route">/goals</span>
+  </div>
+
+  <div class="map-grid">
+    <div class="map-col">
+      <div class="col-head fe">Frontend</div>
+      <div class="map-row"><span class="label">Component</span><span class="val"><code>features/goals/goals.component.ts</code></span></div>
+      <div class="map-row"><span class="label">Service</span><span class="val"><code>core/services/goal.service.ts</code></span></div>
+      <div class="map-row"><span class="label">UI</span><span class="val">Goal cards with progress bars · Contribute modal · Status pills (ACTIVE / PAUSED / COMPLETED) · Deadline display · Milestone insights</span></div>
+    </div>
+    <div class="map-arrow"><div class="arrow-line"></div><div class="arrow-label">HTTP<br>REST</div></div>
+    <div class="map-col be">
+      <div class="col-head be">Backend</div>
+      <div class="map-row"><span class="label">Controller</span><span class="val"><code>goal/GoalController.java</code></span></div>
+      <div class="map-row"><span class="label">Service</span><span class="val"><code>goal/GoalService.java</code></span></div>
+      <div class="map-row"><span class="label">Entities</span><span class="val">SavingsGoal · GoalContribution</span></div>
+    </div>
+  </div>
+
+  <table class="ep-table">
+    <thead><tr><th>Method</th><th>Endpoint</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td><span class="method GET">GET</span></td><td class="ep-path">/goals</td><td class="ep-desc">All goals with currentAmount computed from contributions</td></tr>
+      <tr><td><span class="method POST">POST</span></td><td class="ep-path">/goals</td><td class="ep-desc">Body: name · targetAmount · deadline · icon · color</td></tr>
+      <tr><td><span class="method PUT">PUT</span></td><td class="ep-path">/goals/{id}</td><td class="ep-desc">Update goal metadata</td></tr>
+      <tr><td><span class="method POST">POST</span></td><td class="ep-path">/goals/{id}/contribute</td><td class="ep-desc">Body: { amount, note }. Creates GoalContribution record. Returns 400 if exceeds target.</td></tr>
+      <tr><td><span class="method PATCH">PATCH</span></td><td class="ep-path">/goals/{id}/status</td><td class="ep-desc">Body: { status }. Values: ACTIVE · PAUSED · COMPLETED</td></tr>
+      <tr><td><span class="method DELETE">DELETE</span></td><td class="ep-path">/goals/{id}</td><td class="ep-desc">Deletes goal and all contributions</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- RECURRING -->
+<section id="recurring">
+  <div class="section-head">
+    <div class="icon" style="background:rgba(99,102,241,.15)">🔄</div>
+    <h2>Recurring Transactions</h2>
+    <span class="route">/recurring</span>
+  </div>
+
+  <div class="map-grid">
+    <div class="map-col">
+      <div class="col-head fe">Frontend</div>
+      <div class="map-row"><span class="label">Component</span><span class="val"><code>features/recurring/recurring.component.ts</code></span></div>
+      <div class="map-row"><span class="label">Service</span><span class="val"><code>core/services/recurring.service.ts</code></span></div>
+      <div class="map-row"><span class="label">UI</span><span class="val">Frequency badge · Next-due date · Pause/Resume toggle · CRUD modal</span></div>
+    </div>
+    <div class="map-arrow"><div class="arrow-line"></div><div class="arrow-label">HTTP<br>REST</div></div>
+    <div class="map-col be">
+      <div class="col-head be">Backend</div>
+      <div class="map-row"><span class="label">Controller</span><span class="val"><code>recurring/RecurringController.java</code></span></div>
+      <div class="map-row"><span class="label">Service</span><span class="val"><code>recurring/RecurringService.java</code></span></div>
+      <div class="map-row"><span class="label">Scheduler</span><span class="val"><code>recurring/RecurringScheduler.java</code> — @Scheduled, runs every hour. Finds all active rules with nextDue ≤ now, creates transactions, advances nextDue.</span></div>
+      <div class="map-row"><span class="label">Entity</span><span class="val">RecurringTransaction (frequency · startDate · nextDue · active)</span></div>
+    </div>
+  </div>
+
+  <table class="ep-table">
+    <thead><tr><th>Method</th><th>Endpoint</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td><span class="method GET">GET</span></td><td class="ep-path">/recurring</td><td class="ep-desc">All recurring rules for user</td></tr>
+      <tr><td><span class="method POST">POST</span></td><td class="ep-path">/recurring</td><td class="ep-desc">Body: accountId · categoryId · amount · type · description · frequency · startDate. Frequencies: DAILY · WEEKLY · BIWEEKLY · MONTHLY · QUARTERLY · YEARLY</td></tr>
+      <tr><td><span class="method POST">POST</span></td><td class="ep-path">/recurring/{id}/toggle</td><td class="ep-desc">Flips active flag — pauses or resumes the rule</td></tr>
+      <tr><td><span class="method DELETE">DELETE</span></td><td class="ep-path">/recurring/{id}</td><td class="ep-desc">Deletes rule only; already-posted transactions are preserved</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- CATEGORIES -->
+<section id="categories">
+  <div class="section-head">
+    <div class="icon" style="background:rgba(6,182,212,.15)">🏷️</div>
+    <h2>Categories</h2>
+    <span class="route">/categories</span>
+  </div>
+
+  <div class="map-grid">
+    <div class="map-col">
+      <div class="col-head fe">Frontend</div>
+      <div class="map-row"><span class="label">Component</span><span class="val"><code>features/categories/categories.component.ts</code></span></div>
+      <div class="map-row"><span class="label">Service</span><span class="val"><code>core/services/category.service.ts</code></span></div>
+      <div class="map-row"><span class="label">UI</span><span class="val">Two-column layout (INCOME / EXPENSE) · Accordion for subcategories · Icon picker grid (70+ PrimeNG icons) · Color picker · Keyword rule management</span></div>
+    </div>
+    <div class="map-arrow"><div class="arrow-line"></div><div class="arrow-label">HTTP<br>REST</div></div>
+    <div class="map-col be">
+      <div class="col-head be">Backend</div>
+      <div class="map-row"><span class="label">Controller</span><span class="val"><code>category/CategoryController.java</code></span></div>
+      <div class="map-row"><span class="label">Service</span><span class="val"><code>category/CategoryService.java</code> — <strong>@Cacheable("categories", key=userId)</strong> on getAll(); evicted on create/update/delete</span></div>
+      <div class="map-row"><span class="label">Cache</span><span class="val">Redis key: <code>categories::&lt;userId&gt;</code> · TTL: 10 min · Values use ArrayList (not List.of) to avoid Jackson deserialization errors</span></div>
+      <div class="map-row"><span class="label">Entities</span><span class="val">Category (system flag · parentId · hierarchy) · AutoCategorizationRule (keyword)</span></div>
+    </div>
+  </div>
+
+  <table class="ep-table">
+    <thead><tr><th>Method</th><th>Endpoint</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td><span class="method GET">GET</span></td><td class="ep-path">/categories</td><td class="ep-desc">All categories (system + user) with children nested. Result is Redis-cached per user.</td></tr>
+      <tr><td><span class="method POST">POST</span></td><td class="ep-path">/categories</td><td class="ep-desc">Body: name · type (INCOME/EXPENSE) · icon · color · parentId?</td></tr>
+      <tr><td><span class="method PUT">PUT</span></td><td class="ep-path">/categories/{id}</td><td class="ep-desc">Update user-owned category only</td></tr>
+      <tr><td><span class="method DELETE">DELETE</span></td><td class="ep-path">/categories/{id}</td><td class="ep-desc">Returns 403 CANNOT_DELETE_SYSTEM_CATEGORY for built-in categories</td></tr>
+      <tr><td><span class="method POST">POST</span></td><td class="ep-path">/categories/{id}/rules</td><td class="ep-desc">Add keyword rule: { keyword }. Used for auto-categorization of new transactions.</td></tr>
+      <tr><td><span class="method DELETE">DELETE</span></td><td class="ep-path">/categories/rules/{ruleId}</td><td class="ep-desc">Remove a keyword rule</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- CALENDAR -->
+<section id="calendar">
+  <div class="section-head">
+    <div class="icon" style="background:rgba(99,102,241,.15)">📅</div>
+    <h2>Financial Calendar</h2>
+    <span class="route">/calendar</span>
+  </div>
+
+  <div class="map-grid">
+    <div class="map-col">
+      <div class="col-head fe">Frontend</div>
+      <div class="map-row"><span class="label">Component</span><span class="val"><code>features/calendar/calendar.component.ts</code></span></div>
+      <div class="map-row"><span class="label">Service</span><span class="val"><code>core/services/transaction.service.ts</code> (reuses getAll)</span></div>
+      <div class="map-row"><span class="label">Signals</span><span class="val">viewDate · transactions · days (computed) · monthIncome (computed) · monthExpense (computed)</span></div>
+      <div class="map-row"><span class="label">UI</span><span class="val">Month navigator · Summary pills (income/expense/net) · 7-column day grid · Skeleton loading · Transaction pills per day (max 3 + overflow count)</span></div>
+    </div>
+    <div class="map-arrow"><div class="arrow-line"></div><div class="arrow-label">HTTP<br>REST</div></div>
+    <div class="map-col be">
+      <div class="col-head be">Backend</div>
+      <div class="map-row"><span class="label">Endpoint</span><span class="val">Reuses <code>GET /transactions?startDate=&amp;endDate=&amp;size=500</code> — no dedicated calendar endpoint needed</span></div>
+      <div class="map-row"><span class="label">Logic</span><span class="val">Grouping by day is done client-side using Angular computed() signals. Server returns a flat list; client builds the calendar grid.</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- INSIGHTS -->
+<section id="insights">
+  <div class="section-head">
+    <div class="icon" style="background:rgba(245,158,11,.15)">💡</div>
+    <h2>Insights</h2>
+    <span class="route">/insights</span>
+  </div>
+
+  <div class="map-grid">
+    <div class="map-col">
+      <div class="col-head fe">Frontend</div>
+      <div class="map-row"><span class="label">Component</span><span class="val"><code>features/insights/insights.component.ts</code></span></div>
+      <div class="map-row"><span class="label">Service</span><span class="val"><code>core/services/insight.service.ts</code></span></div>
+      <div class="map-row"><span class="label">UI</span><span class="val">Insight cards with type badges · "Generate" button (on-demand) · Dismiss button</span></div>
+    </div>
+    <div class="map-arrow"><div class="arrow-line"></div><div class="arrow-label">HTTP<br>REST</div></div>
+    <div class="map-col be">
+      <div class="col-head be">Backend</div>
+      <div class="map-row"><span class="label">Controller</span><span class="val"><code>insight/InsightController.java</code></span></div>
+      <div class="map-row"><span class="label">Service</span><span class="val"><code>insight/InsightService.java</code> — 11 rule-based insight types: spending spikes, budget alerts, goal milestones, recurring cost analysis, savings rate, etc.</span></div>
+      <div class="map-row"><span class="label">Scheduler</span><span class="val">Monthly scheduled job regenerates insights for all users automatically</span></div>
+    </div>
+  </div>
+
+  <table class="ep-table">
+    <thead><tr><th>Method</th><th>Endpoint</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td><span class="method GET">GET</span></td><td class="ep-path">/insights</td><td class="ep-desc">Active (non-dismissed) insights for the user</td></tr>
+      <tr><td><span class="method POST">POST</span></td><td class="ep-path">/insights/generate</td><td class="ep-desc">On-demand generation — analyses current month, creates new Insight records</td></tr>
+      <tr><td><span class="method PATCH">PATCH</span></td><td class="ep-path">/insights/{id}/dismiss</td><td class="ep-desc">Marks insight as dismissed; removed from GET /insights response</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- REPORTS -->
+<section id="reports">
+  <div class="section-head">
+    <div class="icon" style="background:rgba(239,68,68,.15)">📄</div>
+    <h2>Reports</h2>
+    <span class="route">/reports</span>
+  </div>
+
+  <div class="map-grid">
+    <div class="map-col">
+      <div class="col-head fe">Frontend</div>
+      <div class="map-row"><span class="label">Component</span><span class="val"><code>features/reports/reports.component.ts</code></span></div>
+      <div class="map-row"><span class="label">Service</span><span class="val"><code>core/services/report.service.ts</code></span></div>
+      <div class="map-row"><span class="label">UI</span><span class="val">Month/year selector · Summary stats · Category breakdown table · CSV and PDF export buttons</span></div>
+    </div>
+    <div class="map-arrow"><div class="arrow-line"></div><div class="arrow-label">HTTP<br>REST</div></div>
+    <div class="map-col be">
+      <div class="col-head be">Backend</div>
+      <div class="map-row"><span class="label">Controller</span><span class="val"><code>report/ReportController.java</code></span></div>
+      <div class="map-row"><span class="label">Service</span><span class="val"><code>report/ReportService.java</code> — generates CSV using OpenCSV and PDF using iText</span></div>
+    </div>
+  </div>
+
+  <table class="ep-table">
+    <thead><tr><th>Method</th><th>Endpoint</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td><span class="method GET">GET</span></td><td class="ep-path">/reports/monthly?month=5&amp;year=2026</td><td class="ep-desc">Monthly summary: income · expenses · savings · category breakdown</td></tr>
+      <tr><td><span class="method GET">GET</span></td><td class="ep-path">/reports/export/csv?month=5&amp;year=2026</td><td class="ep-desc">Returns application/csv attachment — all transactions for the period</td></tr>
+      <tr><td><span class="method GET">GET</span></td><td class="ep-path">/reports/export/pdf?month=5&amp;year=2026</td><td class="ep-desc">Returns application/pdf — formatted monthly report with charts</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- NOTIFICATIONS -->
+<section id="notifications">
+  <div class="section-head">
+    <div class="icon" style="background:rgba(6,182,212,.15)">🔔</div>
+    <h2>Notifications</h2>
+    <span class="route">topbar (bell icon)</span>
+  </div>
+
+  <div class="map-grid">
+    <div class="map-col">
+      <div class="col-head fe">Frontend</div>
+      <div class="map-row"><span class="label">Component</span><span class="val"><code>layout/topbar/topbar.component.ts</code> — notification panel in the header</span></div>
+      <div class="map-row"><span class="label">Service</span><span class="val"><code>core/services/notification.service.ts</code></span></div>
+      <div class="map-row"><span class="label">UI</span><span class="val">Bell icon with unread count badge · Dropdown list · Mark all read button</span></div>
+    </div>
+    <div class="map-arrow"><div class="arrow-line"></div><div class="arrow-label">HTTP<br>REST</div></div>
+    <div class="map-col be">
+      <div class="col-head be">Backend</div>
+      <div class="map-row"><span class="label">Controller</span><span class="val"><code>notification/NotificationController.java</code></span></div>
+      <div class="map-row"><span class="label">Service</span><span class="val"><code>notification/NotificationService.java</code> — creates notifications on budget alerts (80%/100%), goal milestones, weekly summaries</span></div>
+    </div>
+  </div>
+
+  <table class="ep-table">
+    <thead><tr><th>Method</th><th>Endpoint</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td><span class="method GET">GET</span></td><td class="ep-path">/notifications</td><td class="ep-desc">All notifications, most recent first</td></tr>
+      <tr><td><span class="method GET">GET</span></td><td class="ep-path">/notifications/unread-count</td><td class="ep-desc">Returns { count: N } for badge display</td></tr>
+      <tr><td><span class="method PATCH">PATCH</span></td><td class="ep-path">/notifications/{id}/read</td><td class="ep-desc">Mark single notification as read</td></tr>
+      <tr><td><span class="method PATCH">PATCH</span></td><td class="ep-path">/notifications/read-all</td><td class="ep-desc">Mark all notifications as read</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- SETTINGS -->
+<section id="settings">
+  <div class="section-head">
+    <div class="icon" style="background:rgba(99,102,241,.15)">⚙️</div>
+    <h2>Settings</h2>
+    <span class="route">/settings</span>
+  </div>
+
+  <div class="map-grid">
+    <div class="map-col">
+      <div class="col-head fe">Frontend</div>
+      <div class="map-row"><span class="label">Component</span><span class="val"><code>features/settings/settings.component.ts</code></span></div>
+      <div class="map-row"><span class="label">Service</span><span class="val"><code>core/services/user.service.ts</code></span></div>
+      <div class="map-row"><span class="label">Tabs</span><span class="val">Profile (name, avatar) · Financial (currency, income, timezone) · Security (password change, 2FA toggle) · Notifications (3 toggles)</span></div>
+    </div>
+    <div class="map-arrow"><div class="arrow-line"></div><div class="arrow-label">HTTP<br>REST</div></div>
+    <div class="map-col be">
+      <div class="col-head be">Backend</div>
+      <div class="map-row"><span class="label">Controller</span><span class="val"><code>user/UserController.java</code></span></div>
+      <div class="map-row"><span class="label">Service</span><span class="val"><code>user/UserService.java</code></span></div>
+      <div class="map-row"><span class="label">Entities</span><span class="val">User · UserProfile (currency · monthlyIncome · timezone · notification prefs)</span></div>
+    </div>
+  </div>
+
+  <table class="ep-table">
+    <thead><tr><th>Method</th><th>Endpoint</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td><span class="method GET">GET</span></td><td class="ep-path">/users/me</td><td class="ep-desc">Current user profile + settings</td></tr>
+      <tr><td><span class="method PUT">PUT</span></td><td class="ep-path">/users/profile</td><td class="ep-desc">Body: { name, avatar }. Updates display name and avatar URL.</td></tr>
+      <tr><td><span class="method PUT">PUT</span></td><td class="ep-path">/users/settings</td><td class="ep-desc">Body: currency · monthlyIncome · timezone · notifyBudgetAlerts · notifyGoalReminders · notifyWeeklySummary</td></tr>
+      <tr><td><span class="method PUT">PUT</span></td><td class="ep-path">/users/password</td><td class="ep-desc">Body: { currentPassword, newPassword }. Verifies old password before hashing new one with BCrypt.</td></tr>
+      <tr><td><span class="method POST">POST</span></td><td class="ep-path">/users/2fa/enable</td><td class="ep-desc">Enables 2FA — next login sends OTP to email</td></tr>
+      <tr><td><span class="method POST">POST</span></td><td class="ep-path">/users/2fa/disable</td><td class="ep-desc">Disables 2FA</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- DATA MODELS -->
+<section id="datamodel">
+  <div class="section-head">
+    <div class="icon" style="background:rgba(16,185,129,.15)">🗄️</div>
+    <h2>Database Schema (Key Tables)</h2>
+  </div>
+
+  <div class="two-col">
+    <div>
+      <div class="card">
+        <h3>accounts</h3>
+        <pre><code>id               UUID PK
+user_id          UUID FK → users
+name             VARCHAR(100)
+type             VARCHAR(20)  <span class="cmt">-- CASH|BANK|CREDIT_CARD|SAVINGS|INVESTMENT</span>
+balance          DECIMAL(19,4)
+currency         VARCHAR(3)
+color            VARCHAR(7)
+icon             VARCHAR(50)
+is_default       BOOLEAN
+institution_name VARCHAR(100)  <span class="cmt">-- V5 ★ NEW</span>
+last_four        CHAR(4)       <span class="cmt">-- V5 ★ NEW</span>
+created_at       TIMESTAMP
+updated_at       TIMESTAMP</code></pre>
+      </div>
+      <div class="card">
+        <h3>transactions</h3>
+        <pre><code>id               UUID PK
+user_id          UUID FK → users
+account_id       UUID FK → accounts
+category_id      UUID FK → categories (nullable)
+amount           DECIMAL(19,4)
+type             VARCHAR(20)  <span class="cmt">-- INCOME|EXPENSE|TRANSFER</span>
+description      VARCHAR(255)
+notes            TEXT
+date             TIMESTAMP
+receipt          VARCHAR(500)
+is_recurring     BOOLEAN
+recurring_id     UUID
+transfer_pair_id UUID         <span class="cmt">-- V4 links the two legs</span>
+transfer_credit  BOOLEAN      <span class="cmt">-- V4 true=destination leg</span>
+created_at       TIMESTAMP
+updated_at       TIMESTAMP
+
+transaction_tags (transaction_id, tag VARCHAR(50))</code></pre>
+      </div>
+    </div>
+    <div>
+      <div class="card">
+        <h3>Flyway Migration History</h3>
+        <table class="ep-table" style="margin-bottom:0">
+          <thead><tr><th>Version</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><span class="tag tag-green">V1</span></td><td class="ep-desc">Full init schema — all tables</td></tr>
+            <tr><td><span class="tag tag-green">V2</span></td><td class="ep-desc">Seed system categories (INCOME/EXPENSE)</td></tr>
+            <tr><td><span class="tag tag-green">V3</span></td><td class="ep-desc">Add oauth_provider column to users</td></tr>
+            <tr><td><span class="tag tag-green">V4</span></td><td class="ep-desc">Add transfer_pair_id + transfer_credit to transactions</td></tr>
+            <tr><td><span class="tag tag-amber">V5 ★</span></td><td class="ep-desc">Add institution_name + last_four to accounts — <strong>restart backend to apply</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card">
+        <h3>API Response Envelope</h3>
+        <pre><code><span class="cmt">// All endpoints return this wrapper:</span>
+{
+  <span class="key">"success"</span>: <span class="kw">true</span>,
+  <span class="key">"message"</span>: <span class="str">"OK"</span>,
+  <span class="key">"data"</span>: { <span class="cmt">/* payload */</span> },
+  <span class="key">"error"</span>: <span class="kw">null</span>
+}
+
+<span class="cmt">// Error response:</span>
+{
+  <span class="key">"success"</span>: <span class="kw">false</span>,
+  <span class="key">"message"</span>: <span class="str">"Account not found"</span>,
+  <span class="key">"data"</span>: <span class="kw">null</span>,
+  <span class="key">"error"</span>: <span class="str">"ACCOUNT_NOT_FOUND"</span>
+}
+
+<span class="cmt">// Paginated response (transactions):</span>
+{
+  <span class="key">"data"</span>: {
+    <span class="key">"content"</span>: [...],
+    <span class="key">"page"</span>: <span class="num">0</span>,
+    <span class="key">"size"</span>: <span class="num">20</span>,
+    <span class="key">"totalElements"</span>: <span class="num">134</span>,
+    <span class="key">"totalPages"</span>: <span class="num">7</span>
+  }
+}</code></pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SCHEDULER -->
+<section id="scheduler">
+  <div class="section-head">
+    <div class="icon" style="background:rgba(245,158,11,.15)">⏰</div>
+    <h2>Scheduled Jobs</h2>
+  </div>
+
+  <table class="ep-table">
+    <thead><tr><th>Job</th><th>Class</th><th>Schedule</th><th>Action</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>Recurring Processor</strong></td>
+        <td><code>RecurringScheduler</code></td>
+        <td class="ep-desc">Every hour (<code>@Scheduled</code>)</td>
+        <td class="ep-desc">Finds all active RecurringTransaction rules where nextDue ≤ now. Creates a transaction for each, advances nextDue by frequency, sends notification.</td>
+      </tr>
+      <tr>
+        <td><strong>Insight Generator</strong></td>
+        <td><code>InsightService</code></td>
+        <td class="ep-desc">Monthly (1st of month)</td>
+        <td class="ep-desc">Runs 11 insight rules for all users. Creates Insight records. Sends notification if new insights generated.</td>
+      </tr>
+      <tr>
+        <td><strong>Weekly Summary</strong></td>
+        <td><code>NotificationService</code></td>
+        <td class="ep-desc">Weekly (Monday)</td>
+        <td class="ep-desc">For users with notifyWeeklySummary=true: creates a summary notification with weekly income/expense totals.</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+</main>
+
+<script>
+// Active nav link highlight
+const links = document.querySelectorAll('.sidenav a');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      links.forEach(l => l.classList.remove('active'));
+      const id = e.target.id;
+      const active = document.querySelector(`.sidenav a[href="#${id}"]`);
+      if (active) active.classList.add('active');
+    }
+  });
+}, { threshold: 0.3 });
+document.querySelectorAll('section[id]').forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
